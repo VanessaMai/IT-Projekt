@@ -1,3 +1,3 @@
 # IT-Projekt
 
-IT-Projekt Raumplanungssystem
+IT-Projekt Raumplanungssystem.
