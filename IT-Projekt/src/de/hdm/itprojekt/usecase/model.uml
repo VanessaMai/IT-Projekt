@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Model xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xmi:id="_20CsgGHTEeSAyME_4jBd-A" name="model">
+  <packagedElement xmi:type="uml:Package" xmi:id="_494G0GHTEeSAyME_4jBd-A" name="Raumbelegungssystem">
+    <packagedElement xmi:type="uml:Association" xmi:id="_uljLoGHUEeSAyME_4jBd-A" name="" memberEnd="_uljLoWHUEeSAyME_4jBd-A _uljLpGHUEeSAyME_4jBd-A">
+      <ownedEnd xmi:type="uml:Property" xmi:id="_uljLoWHUEeSAyME_4jBd-A" name="raum anlegen" type="_GWyBoGHUEeSAyME_4jBd-A" association="_uljLoGHUEeSAyME_4jBd-A">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_uljLomHUEeSAyME_4jBd-A" value="1"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_uljLo2HUEeSAyME_4jBd-A" value="1"/>
+      </ownedEnd>
+      <ownedEnd xmi:type="uml:Property" xmi:id="_uljLpGHUEeSAyME_4jBd-A" name="nutzer" type="_EglVAGHUEeSAyME_4jBd-A" association="_uljLoGHUEeSAyME_4jBd-A">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_uljLpWHUEeSAyME_4jBd-A" value="1"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_uljLpmHUEeSAyME_4jBd-A" value="1"/>
+      </ownedEnd>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Association" xmi:id="_5_mNEGHUEeSAyME_4jBd-A" name="" memberEnd="_5_mNEWHUEeSAyME_4jBd-A _5_mNFGHUEeSAyME_4jBd-A">
+      <ownedEnd xmi:type="uml:Property" xmi:id="_5_mNEWHUEeSAyME_4jBd-A" name="belegung erstellen" type="_i9N2kGHUEeSAyME_4jBd-A" association="_5_mNEGHUEeSAyME_4jBd-A">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_5_mNEmHUEeSAyME_4jBd-A" value="1"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_5_mNE2HUEeSAyME_4jBd-A" value="1"/>
+      </ownedEnd>
+      <ownedEnd xmi:type="uml:Property" xmi:id="_5_mNFGHUEeSAyME_4jBd-A" name="nutzer" type="_EglVAGHUEeSAyME_4jBd-A" association="_5_mNEGHUEeSAyME_4jBd-A">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_5_mNFWHUEeSAyME_4jBd-A" value="1"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_5_mNFmHUEeSAyME_4jBd-A" value="1"/>
+      </ownedEnd>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Association" xmi:id="_6qMCMGHUEeSAyME_4jBd-A" name="" memberEnd="_6qMCMWHUEeSAyME_4jBd-A _6qMCNGHUEeSAyME_4jBd-A">
+      <ownedEnd xmi:type="uml:Property" xmi:id="_6qMCMWHUEeSAyME_4jBd-A" name="belegung löschen" type="_keVEAGHUEeSAyME_4jBd-A" association="_6qMCMGHUEeSAyME_4jBd-A">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_6qMCMmHUEeSAyME_4jBd-A" value="1"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_6qMCM2HUEeSAyME_4jBd-A" value="1"/>
+      </ownedEnd>
+      <ownedEnd xmi:type="uml:Property" xmi:id="_6qMCNGHUEeSAyME_4jBd-A" name="nutzer" type="_EglVAGHUEeSAyME_4jBd-A" association="_6qMCMGHUEeSAyME_4jBd-A">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_6qMCNWHUEeSAyME_4jBd-A" value="1"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_6qMCNmHUEeSAyME_4jBd-A" value="1"/>
+      </ownedEnd>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Association" xmi:id="_7Y4UMGHUEeSAyME_4jBd-A" name="" memberEnd="_7Y4UMWHUEeSAyME_4jBd-A _7Y4UNGHUEeSAyME_4jBd-A">
+      <ownedEnd xmi:type="uml:Property" xmi:id="_7Y4UMWHUEeSAyME_4jBd-A" name="belegung modifizieren" type="_l-VeMGHUEeSAyME_4jBd-A" association="_7Y4UMGHUEeSAyME_4jBd-A">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_7Y4UMmHUEeSAyME_4jBd-A" value="1"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_7Y4UM2HUEeSAyME_4jBd-A" value="1"/>
+      </ownedEnd>
+      <ownedEnd xmi:type="uml:Property" xmi:id="_7Y4UNGHUEeSAyME_4jBd-A" name="nutzer" type="_EglVAGHUEeSAyME_4jBd-A" association="_7Y4UMGHUEeSAyME_4jBd-A">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_7Y4UNWHUEeSAyME_4jBd-A" value="1"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_7Y4UNmHUEeSAyME_4jBd-A" value="1"/>
+      </ownedEnd>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Package" xmi:id="_AR2OQGHVEeSAyME_4jBd-A" name="Report Generator">
+      <packagedElement xmi:type="uml:UseCase" xmi:id="_WWpiMGHVEeSAyME_4jBd-A" name="Belegungen anzeigen"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Package" xmi:id="_DzgXIGHVEeSAyME_4jBd-A" name="Editor/Viewer">
+      <packagedElement xmi:type="uml:UseCase" xmi:id="_l-VeMGHUEeSAyME_4jBd-A" name="Belegung modifizieren"/>
+      <packagedElement xmi:type="uml:UseCase" xmi:id="_keVEAGHUEeSAyME_4jBd-A" name="Belegung löschen"/>
+      <packagedElement xmi:type="uml:UseCase" xmi:id="_i9N2kGHUEeSAyME_4jBd-A" name="Belegung erstellen"/>
+      <packagedElement xmi:type="uml:UseCase" xmi:id="_bOjhwGHUEeSAyME_4jBd-A" name="Raum modifizieren"/>
+      <packagedElement xmi:type="uml:UseCase" xmi:id="_Y9CLEGHUEeSAyME_4jBd-A" name="Raum löschen"/>
+      <packagedElement xmi:type="uml:UseCase" xmi:id="_GWyBoGHUEeSAyME_4jBd-A" name="Raum anlegen">
+        <ownedUseCase xmi:type="uml:UseCase" xmi:id="_XBvjEGHUEeSAyME_4jBd-A" name="Raum anlegen"/>
+        <ownedUseCase xmi:type="uml:UseCase" xmi:id="_X9BfkGHUEeSAyME_4jBd-A" name="CopyOf_Raum anlegen_1">
+          <ownedUseCase xmi:type="uml:UseCase" xmi:id="_X9BfkWHUEeSAyME_4jBd-A" name="Raum anlegen"/>
+        </ownedUseCase>
+        <ownedUseCase xmi:type="uml:UseCase" xmi:id="_iLJgcGHUEeSAyME_4jBd-A" name="CopyOf_Raum anlegen_2">
+          <ownedUseCase xmi:type="uml:UseCase" xmi:id="_iLJgcWHUEeSAyME_4jBd-A" name="Raum anlegen"/>
+          <ownedUseCase xmi:type="uml:UseCase" xmi:id="_iLJgcmHUEeSAyME_4jBd-A" name="CopyOf_Raum anlegen_1">
+            <ownedUseCase xmi:type="uml:UseCase" xmi:id="_iLJgc2HUEeSAyME_4jBd-A" name="Raum anlegen"/>
+          </ownedUseCase>
+        </ownedUseCase>
+      </packagedElement>
+      <packagedElement xmi:type="uml:UseCase" xmi:id="_AHRggGHWEeSAyME_4jBd-A" name="Gegenüber System authentifizieren"/>
+      <packagedElement xmi:type="uml:Association" xmi:id="_PKSzwGHWEeSAyME_4jBd-A" name="" memberEnd="_PKSzwWHWEeSAyME_4jBd-A _PKSzxGHWEeSAyME_4jBd-A">
+        <ownedEnd xmi:type="uml:Property" xmi:id="_PKSzwWHWEeSAyME_4jBd-A" name="gegenüber system authentifizieren" type="_AHRggGHWEeSAyME_4jBd-A" association="_PKSzwGHWEeSAyME_4jBd-A">
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_PKSzwmHWEeSAyME_4jBd-A" value="1"/>
+          <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_PKSzw2HWEeSAyME_4jBd-A" value="1"/>
+        </ownedEnd>
+        <ownedEnd xmi:type="uml:Property" xmi:id="_PKSzxGHWEeSAyME_4jBd-A" name="nutzer" type="_EglVAGHUEeSAyME_4jBd-A" association="_PKSzwGHWEeSAyME_4jBd-A">
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_PKSzxWHWEeSAyME_4jBd-A" value="1"/>
+          <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_PKSzxmHWEeSAyME_4jBd-A" value="1"/>
+        </ownedEnd>
+      </packagedElement>
+      <packagedElement xmi:type="uml:UseCase" xmi:id="_l4WgEGHWEeSAyME_4jBd-A" name="Teilnahmeeinladung annehmen">
+        <ownedUseCase xmi:type="uml:UseCase" xmi:id="_nNAl4GHWEeSAyME_4jBd-A" name="Einladung annehmen"/>
+      </packagedElement>
+      <packagedElement xmi:type="uml:UseCase" xmi:id="_nbr7EGHWEeSAyME_4jBd-A" name="Teilnahmeeinladung ablehnen"/>
+      <packagedElement xmi:type="uml:Association" xmi:id="__Nuz8GHWEeSAyME_4jBd-A" name="" memberEnd="__Nuz8WHWEeSAyME_4jBd-A __Nuz9GHWEeSAyME_4jBd-A">
+        <ownedEnd xmi:type="uml:Property" xmi:id="__Nuz8WHWEeSAyME_4jBd-A" name="teilnahmeeinladung ablehnen" type="_nbr7EGHWEeSAyME_4jBd-A" association="__Nuz8GHWEeSAyME_4jBd-A">
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="__Nuz8mHWEeSAyME_4jBd-A" value="1"/>
+          <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="__Nuz82HWEeSAyME_4jBd-A" value="1"/>
+        </ownedEnd>
+        <ownedEnd xmi:type="uml:Property" xmi:id="__Nuz9GHWEeSAyME_4jBd-A" name="nutzer" type="_EglVAGHUEeSAyME_4jBd-A" association="__Nuz8GHWEeSAyME_4jBd-A">
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="__Nuz9WHWEeSAyME_4jBd-A" value="1"/>
+          <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="__Nuz9mHWEeSAyME_4jBd-A" value="1"/>
+        </ownedEnd>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Association" xmi:id="_BckDAGHXEeSAyME_4jBd-A" name="" memberEnd="_BckDAWHXEeSAyME_4jBd-A _BckDBGHXEeSAyME_4jBd-A">
+        <ownedEnd xmi:type="uml:Property" xmi:id="_BckDAWHXEeSAyME_4jBd-A" name="teilnahmeeinladung annehmen" type="_l4WgEGHWEeSAyME_4jBd-A" association="_BckDAGHXEeSAyME_4jBd-A">
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_BckDAmHXEeSAyME_4jBd-A" value="1"/>
+          <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_BckDA2HXEeSAyME_4jBd-A" value="1"/>
+        </ownedEnd>
+        <ownedEnd xmi:type="uml:Property" xmi:id="_BckDBGHXEeSAyME_4jBd-A" name="nutzer" type="_EglVAGHUEeSAyME_4jBd-A" association="_BckDAGHXEeSAyME_4jBd-A">
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_BckDBWHXEeSAyME_4jBd-A" value="1"/>
+          <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_BckDBmHXEeSAyME_4jBd-A" value="1"/>
+        </ownedEnd>
+      </packagedElement>
+    </packagedElement>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Actor" xmi:id="_EglVAGHUEeSAyME_4jBd-A" name="Nutzer"/>
+  <packagedElement xmi:type="uml:Association" xmi:id="_4KqEsGHUEeSAyME_4jBd-A" name="" memberEnd="_4KqEsWHUEeSAyME_4jBd-A _4KqEtGHUEeSAyME_4jBd-A">
+    <ownedEnd xmi:type="uml:Property" xmi:id="_4KqEsWHUEeSAyME_4jBd-A" name="nutzer" type="_EglVAGHUEeSAyME_4jBd-A" association="_4KqEsGHUEeSAyME_4jBd-A">
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_4KqEsmHUEeSAyME_4jBd-A" value="1"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_4KqEs2HUEeSAyME_4jBd-A" value="1"/>
+    </ownedEnd>
+    <ownedEnd xmi:type="uml:Property" xmi:id="_4KqEtGHUEeSAyME_4jBd-A" name="raum löschen" type="_Y9CLEGHUEeSAyME_4jBd-A" association="_4KqEsGHUEeSAyME_4jBd-A">
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_4KqEtWHUEeSAyME_4jBd-A" value="1"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_4KqEtmHUEeSAyME_4jBd-A" value="1"/>
+    </ownedEnd>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Association" xmi:id="_5YTjkGHUEeSAyME_4jBd-A" name="" memberEnd="_5YTjkWHUEeSAyME_4jBd-A _5YTjlGHUEeSAyME_4jBd-A">
+    <ownedEnd xmi:type="uml:Property" xmi:id="_5YTjkWHUEeSAyME_4jBd-A" name="nutzer" type="_EglVAGHUEeSAyME_4jBd-A" association="_5YTjkGHUEeSAyME_4jBd-A">
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_5YTjkmHUEeSAyME_4jBd-A" value="1"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_5YTjk2HUEeSAyME_4jBd-A" value="1"/>
+    </ownedEnd>
+    <ownedEnd xmi:type="uml:Property" xmi:id="_5YTjlGHUEeSAyME_4jBd-A" name="raum modifizieren" type="_bOjhwGHUEeSAyME_4jBd-A" association="_5YTjkGHUEeSAyME_4jBd-A">
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_5YTjlWHUEeSAyME_4jBd-A" value="1"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_5YTjlmHUEeSAyME_4jBd-A" value="1"/>
+    </ownedEnd>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Association" xmi:id="_XvEGoGHVEeSAyME_4jBd-A" name="" memberEnd="_XvEGoWHVEeSAyME_4jBd-A _XvEGpGHVEeSAyME_4jBd-A">
+    <ownedEnd xmi:type="uml:Property" xmi:id="_XvEGoWHVEeSAyME_4jBd-A" name="nutzer" type="_EglVAGHUEeSAyME_4jBd-A" association="_XvEGoGHVEeSAyME_4jBd-A">
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_XvEGomHVEeSAyME_4jBd-A" value="1"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_XvEGo2HVEeSAyME_4jBd-A" value="1"/>
+    </ownedEnd>
+    <ownedEnd xmi:type="uml:Property" xmi:id="_XvEGpGHVEeSAyME_4jBd-A" name="belegungen anzeigen" type="_WWpiMGHVEeSAyME_4jBd-A" association="_XvEGoGHVEeSAyME_4jBd-A">
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_XvEGpWHVEeSAyME_4jBd-A" value="1"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_XvEGpmHVEeSAyME_4jBd-A" value="1"/>
+    </ownedEnd>
+  </packagedElement>
+</uml:Model>
