@@ -1,6 +1,6 @@
-package de.hdm.raumreservierungssystem.client;
+package de.hdm.gruppe7.RoomReservationService.client;
 
-import de.hdm.raumreservierungssystem.shared.FieldVerifier;
+import de.hdm.gruppe7.RoomReservationService.shared.FieldVerifier;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -20,7 +20,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
-public class Raumreservierungssystem implements EntryPoint {
+public class RoomReservationService implements EntryPoint {
 	/**
 	 * The message displayed to the user when the server cannot be reached or
 	 * returns an error.

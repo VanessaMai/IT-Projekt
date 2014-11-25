@@ -1,4 +1,4 @@
-package de.hdm.raumreservierungssystem.shared;
+package de.hdm.gruppe7.RoomReservationService.shared;
 
 /**
  * <p>

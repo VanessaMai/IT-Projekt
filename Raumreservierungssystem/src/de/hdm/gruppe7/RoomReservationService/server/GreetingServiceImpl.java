@@ -1,7 +1,7 @@
-package de.hdm.raumreservierungssystem.server;
+package de.hdm.gruppe7.RoomReservationService.server;
 
-import de.hdm.raumreservierungssystem.client.GreetingService;
-import de.hdm.raumreservierungssystem.shared.FieldVerifier;
+import de.hdm.gruppe7.RoomReservationService.client.GreetingService;
+import de.hdm.gruppe7.RoomReservationService.shared.FieldVerifier;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 /**

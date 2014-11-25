@@ -1,4 +1,4 @@
-package de.hdm.raumreservierungssystem.client;
+package de.hdm.gruppe7.RoomReservationService.client;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
