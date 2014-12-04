@@ -54,29 +54,15 @@ public abstract class BusinessObject implements Serializable{
   @Override
 public String toString() {
     /*
-     * Wir geben den Klassennamen gefolgt von der ID des Objekts zurück.
+     * Rückgabe des Klassennamens, der ID und des Erstellungszeitpunkts des Objekts.
      */
     return this.getClass().getName() + " #" + this.id + " Erstellungszeitpunkt: " + this.getCreationDate();
   }
 
   /**
-   * <p>
    * Feststellen der <em>inhaltlichen</em> Gleichheit zweier
-   * <code>BusinessObject</code>-Objekte. Die Gleichheit wird in diesem Beispiel auf eine
+   * <code>BusinessObject</code>-Objekte. Die Gleichheit ist hier auf eine
    * identische ID beschränkt.
-   * </p>
-   * <p>
-   * <b>ACHTUNG:</b> Die inhaltliche Gleichheit nicht mit dem Vergleich der
-   * <em>Identität</em> eines Objekts mit einem anderen verwechseln!!! Dies
-   * würde durch den Operator <code>==</code> bestimmt. Bei Unklarheit hierzu
-   * können Sie nocheinmal in die Definition des Sprachkerns von Java schauen.
-   * Die Methode <code>equals(...)</code> ist für jeden Referenzdatentyp
-   * definiert, da sie bereits in der Klasse <code>Object</code> in einfachster
-   * Form realisiert ist. Dort ist sie allerdings auf die simple Bestimmung der
-   * Gleicheit der Java-internen Objekt-ID der verglichenen Objekte beschränkt.
-   * In unseren eigenen Klassen können wir diese Methode überschreiben und ihr
-   * mehr Intelligenz verleihen.
-   * </p>
    */
   @Override
 public boolean equals(Object o) {
@@ -92,27 +78,19 @@ public boolean equals(Object o) {
       }
       catch (IllegalArgumentException e) {
         /*
-         * Wenn irgendetwas schief geht, dann geben wir sicherheitshalber false
-         * zurück.
+         * Falls eine Exception geworfen wird, wird false zurückgegeben.
          */
         return false;
       }
     }
     /*
-     * Wenn bislang keine Gleichheit bestimmt werden konnte, dann müssen
-     * schließlich false zurückgeben.
+     * Sind die beiden Objekt nicht gleicht, wird false zurückgeben.
      */
     return false;
   }
   
   /**
-   * <p>
    * Erzeugen einer ganzen Zahl, die für das <code>BusinessObject</code> charakteristisch ist.
-   * </p>
-   * <p>
-   * Zusammen mit <code>equals</code> sollte diese Methode immer definiert werden. Manche Java-Klassen
-   * verwendenden <code>hashCode</code>, um initial ein Objekt (z.B. in einer Hashtable) zu identifizieren. Erst danach
-   * würde mit <code>equals</code> festgestellt, ob es sich tatsächlich um das gesuchte Objekt handelt.
    */
   @Override
 public int hashCode() {

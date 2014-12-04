@@ -12,10 +12,30 @@ public class User extends BusinessObject {
 
 
 // Attribute des Users
+
+/**
+ * Vorname des Nutzers.
+ */
 private String firstName = "";
+
+/**
+ * Nachname des Nutzers.
+ */
 private String lastName = "";
+
+/**
+ * E-Mailadresse des Nutzers.
+ */
 private String email = "";
+
+/**
+ * Access Token des Nutzers.
+ */
 private String accessToken = "";
+
+/**
+ * Access Token Secret des Nutzers.
+ */
 private String accessTokenSecret = "";
 
 
@@ -23,7 +43,6 @@ private String accessTokenSecret = "";
 
 /**
  * Gibt den Vornamen aus. 
- * @return fistName
  */
 public String getFirstName() {
 	return firstName;
@@ -31,7 +50,7 @@ public String getFirstName() {
 
 /**
  * Setzt den Vornamen auf einen neuen Wert.
- * @param firstName
+ * @param firstName	Neuer Vorname.
  */
 public void setFirstName(String firstName) {
 	this.firstName = firstName;
@@ -39,7 +58,6 @@ public void setFirstName(String firstName) {
 
 /**
  * Ausgeben des Nachnamens.
- * @return lastName
  */
 public String getLastName() {
 	return lastName;
@@ -47,7 +65,7 @@ public String getLastName() {
 
 /**
  * Setzt den Nachnamen auf einen neuen Wert.
- * @param lastName
+ * @param lastName	Neuer Nachname.
  */
 public void setLastName(String lastName) {
 	this.lastName = lastName;
@@ -55,7 +73,6 @@ public void setLastName(String lastName) {
 
 /**
  * Ausgeben der E-Mailadresse.
- * @return email
  */
 public String getEmail() {
 	return email;
@@ -63,7 +80,7 @@ public String getEmail() {
 
 /**
  * Setzt die Mailadersse auf einen neuen Wert.
- * @param email
+ * @param email	Neue E-Mailadresse.
  */
 public void setEmail(String email) {
 	this.email = email;
@@ -71,7 +88,6 @@ public void setEmail(String email) {
 
 /**
  * Ausgeben des AccessTokens.
- * @return accessToken
  */
 public String getAccessToken() {
 	return accessToken;
@@ -79,7 +95,7 @@ public String getAccessToken() {
 
 /**
  * Setzen des AccessTokens.
- * @param accessToken
+ * @param accessToken	Neues Access Token.
  */
 public void setAccessToken(String accessToken) {
 	this.accessToken = accessToken;
@@ -87,7 +103,6 @@ public void setAccessToken(String accessToken) {
 
 /**
  * Ausgeben des Accesstoken Secrets.
- * @return accessTokenSecret
  */
 public String getAccessTokenSecret() {
 	return accessTokenSecret;
@@ -95,7 +110,7 @@ public String getAccessTokenSecret() {
 
 /**
  * Setzen des Accesstoken Secrets.
- * @param accessTokenSecret
+ * @param accessTokenSecret	Neues Access Token Secret.
  */
 public void setAccessTokenSecret(String accessTokenSecret) {
 	this.accessTokenSecret = accessTokenSecret;
@@ -107,8 +122,30 @@ public void setAccessTokenSecret(String accessTokenSecret) {
  */
 @Override
 public String toString() {
-  return this.getClass().getName() + " #" + this.id + " Erstellungszeitpunkt: " + this.getCreationDate() + "Vorname: " + this.getFirstName() + "Nachname: "+ this.getLastName() + "Email: " + getEmail() + "Accesstoken: " + getAccessToken() + "Accesstoken Secret: " + getAccessTokenSecret();
+  return super.toString() + "Vorname: " + this.getFirstName() + "Nachname: "+ this.getLastName() + "Email: " + getEmail() + "Accesstoken: " + getAccessToken() + "Accesstoken Secret: " + getAccessTokenSecret();
 
+	}
+
+/**
+ * Feststellen der <em>inhaltlichen</em> Gleichheit zweier
+ * <code>User</code>-Objekte.
+ */
+@Override
+public boolean equals(Object o) {
+  /*
+   * Abfragen, ob ein Objekt ungl. NULL ist und ob ein Objekt gecastet werden
+   * kann, sind immer wichtig!
+   */
+  if (o != null && o instanceof User) {
+  	User c = (User) o;
+    try {
+      return super.equals(c);
+    }
+    catch (IllegalArgumentException e) {
+      return false;
+    }
+  }
+  return false;
 }
 
 

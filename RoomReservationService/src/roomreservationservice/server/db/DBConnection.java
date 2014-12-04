@@ -1,7 +1,9 @@
 package roomreservationservice.server.db;
 
-import java.sql.*;
-import com.google.appengine.api.rdbms.AppEngineDriver;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import com.google.appengine;
 
 
 public class DBConnection {

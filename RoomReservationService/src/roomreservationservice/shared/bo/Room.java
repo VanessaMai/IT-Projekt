@@ -26,7 +26,6 @@ public class Room extends BusinessObject {
 	
 	/**
 	 * Augeben des Raumnamens.
-	 * @return roomName
 	 */
 	public String getRoomName() {
 		return roomName;
@@ -34,15 +33,14 @@ public class Room extends BusinessObject {
 	
 	/**
 	 * Setzen des Raumnamens.
-	 * @param newRoomName
+	 * @param roomName	Neuer Name des Raums.
 	 */
-	public void setRoomName(String newRoomName) {
-		 this.roomName = newRoomName;
+	public void setRoomName(String roomName) {
+		 this.roomName = roomName;
 	}
 	
 	/**
 	 * Ausgeben der Raumkapazität.
-	 * @return roomCapacity
 	 */
 	public int getRoomCapacity() {
 		return roomCapacity;
@@ -50,10 +48,10 @@ public class Room extends BusinessObject {
 	
 	/**
 	 * Setzen der Raumkapazität.
-	 * @param newRoomCapacity
+	 * @param roomCapacity	Neue Kapazität des Raums
 	 */
-	public void setRoomCapacity(int newRoomCapacity) {
-		 this.roomCapacity = newRoomCapacity;
+	public void setRoomCapacity(int roomCapacity) {
+		 this.roomCapacity = roomCapacity;
 	}
 	
 	
@@ -64,7 +62,31 @@ public class Room extends BusinessObject {
 	   */
 	  @Override
 	public String toString() {
-	    return this.getClass().getName() + " #" + this.id + " Erstellungszeitpunkt: " + this.getCreationDate() + "Raumname: " + this.getRoomName() + "Raumkapazität: "+ this.getRoomCapacity();
+	    return super.toString() + "Raumname: " + this.getRoomName() + "Raumkapazität: "+ this.getRoomCapacity();
 
 	  }
+
+	  
+	  /**
+	   * Feststellen der inhaltlichen Gleichheit zweier
+	   * <code>Room</code>-Objekte.
+	   */
+	@Override
+	public boolean equals(Object o) {
+	    /*
+	     * Abfragen, ob ein Objekt ungleich NULL ist und ob ein Objekt gecastet werden
+	     * kann.
+	     */
+	    if (o != null && o instanceof Room) {
+	    	Room c = (Room) o;
+	      try {
+	        return super.equals(c);
+	      }
+	      catch (IllegalArgumentException e) {
+	        return false;
+	      }
+	    }
+	    return false;
+	  }
+	  
 }
