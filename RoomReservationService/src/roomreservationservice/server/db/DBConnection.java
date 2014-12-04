@@ -1,6 +1,9 @@
 package roomreservationservice.server.db;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
 import com.google.appengine.api.rdbms.AppEngineDriver;
 
 
@@ -17,11 +20,11 @@ public class DBConnection {
 	
 	/**
 	 * URL der Datenbank.
-	 * TODO : Eigene Datenbank anlegen.
-	 * URL Schema: "jdbc:google:rdbms://prof-thies.de:thies-bankproject:thies-bankproject/bankproject?user=demo&password=demo"
 	 */
-	private static String url = "";
-	
+	private static String url = "jdbc:google:mysql://it-project-hdm:itproject?user=root";
+
+
+
 	/**
 	 * Diese statische Methode kann aufgrufen werden durch 
 	 * <code>DBConnection.connection()</code>. Sie stellt die 
