@@ -53,8 +53,41 @@ public interface RoomReservationServiceAdministration extends RemoteService {
 	throws IllegalArgumentException;
 	
 	/*
-	 * Speichern eines Raumobjektes in der Date
+	 * Speichern eines Roomobjektes in der Datenbank
+	 * @param Room Raum der gespeichert werden soll
+	 * @throws IllegalArgumentException
 	 */
+	public void save(Room room) throws IllegalArgumentException;
+	
+	/*
+	 * Speichern eines Userobjektes in der Datenbank
+	 * @param user Nutzerobjekt das gespeichert werden soll
+	 * @throws IllegalArgumentException
+	 */
+	public void save(User user) throws IllegalArgumentException;
+	
+	/*
+	 * Speichern eines Eventobjektes in der Datenbank
+	 * @param Event Eventobjekt das gespeichert werden soll
+	 * @throws IllegalArgumentException
+	 */
+	public void save(Event event) throws IllegalArgumentException;
+	
+	/*
+	 * Speichern eines Invitationobjektes in der Datenbank
+	 * @param Invitation Invitationobjekt das gespeichert werden soll
+	 * @throws IllegalArgumentException
+	 */
+	public void save(Invitation invitation) throws IllegalArgumentException;
+	
+	/*
+	 * Löschen des übergebenen Roomobjektes
+	 * @param room zu löschendes Raumobjekt
+	 * @throws IllegalArgumentException
+	 */
+	public void delete(Room room) throws IllegalArgumentException;
+	
+	
 	
 	
 
