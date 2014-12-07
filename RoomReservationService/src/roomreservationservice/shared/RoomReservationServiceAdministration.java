@@ -3,13 +3,17 @@ package roomreservationservice.shared;
 import java.util.Date;
 import java.util.Vector;
 
+import roomreservationservice.shared.bo.Event;
+import roomreservationservice.shared.bo.Invitation;
+import roomreservationservice.shared.bo.Room;
+import roomreservationservice.shared.bo.User;
+
 import com.google.gwt.user.client.rpc.RemoteService;
 
 
 /* 
  * Synchrone Schnittstelle für eine RPC-fähige Klasse zur Verwaltung von Raumbelegungen.
  */
-
 public interface RoomReservationServiceAdministration extends RemoteService {
 	
 	/*
@@ -39,7 +43,7 @@ public interface RoomReservationServiceAdministration extends RemoteService {
 	 * @throw IllegalArgumentException
 	 */
 	public User createUser(String firstName, String lastName, String email, String accessToken, String accessTokenSecret)
-	throws IllegalArgumentException;
+			throws IllegalArgumentException;
 	
 	/*
 	 * Belegung anlegen
@@ -50,7 +54,7 @@ public interface RoomReservationServiceAdministration extends RemoteService {
 	 * @param participants Eine Liste der Nutzer, die zu dieser Raumbelegung eingeladen werden
 	 */
 	public Event createEvent(String topic, Date startDate, Date endDate, User organizer, Vector <User> participants)
-	throws IllegalArgumentException;
+			throws IllegalArgumentException;
 	
 	/*
 	 * Speichern eines Roomobjektes in der Datenbank
@@ -87,8 +91,129 @@ public interface RoomReservationServiceAdministration extends RemoteService {
 	 */
 	public void delete(Room room) throws IllegalArgumentException;
 	
+	/*
+	 * Löschen des übergebenen Userobjektes
+	 * @param user zu löschendes Raumobjekt
+	 * @throws IllegalArgumentException
+	 */
+	public void delete(User user) throws IllegalArgumentException;
 	
+	/*
+	 * Löschen des übergebenen Eventobjektes
+	 * @param event zu löschendes Raumobjekt
+	 * @throws IllegalArgumentException
+	 */
+	public void delete(Event event) throws IllegalArgumentException;
 	
+	/*
+	 * Löschen des übergebenen Invitationobjektes
+	 * @param invitation zu löschendes Raumobjekt
+	 * @throws IllegalArgumentException
+	 */
+	public void delete(Invitation invitation) throws IllegalArgumentException;
 	
-
-}
+	/*
+	 * Ausgeben aller Raum-Objekte in einer Liste
+	 * @return Vector-Objekt mit allen vorhandenen Raum-Objekten
+	 * @throws IllegalArgumentException
+	 */
+	public Vector<Room> getAllRooms() throws IllegalArgumentException;
+	
+	/*
+	 * Ausgeben aller User-Objekte in einer Liste
+	 * @return Vector-Objekt mit allen vorhandenen User-Objekten
+	 * @throws IllegalArgumentException
+	 */
+	public Vector<User> getAllUsers() throws IllegalArgumentException;
+	
+	/*
+	 * Ausgeben aller Event-Objekte in einer Liste
+	 * @return Vector-Objekt mit allen vorhandenen Event-Objekten
+	 * @throws IllegalArgumentException
+	 */
+	public Vector<Event> getAllEvents() throws IllegalArgumentException;
+	
+	/*
+	 * Ausgeben aller Invitation-Objekte in einer Liste
+	 * @return Vector-Objekt mit allen vorhanden Invitation-Objekten
+	 * @throws IllegalArgumentException
+	 */
+	public Vector<Invitation> getAllInvitations() throws IllegalArgumentException;
+	
+	/*
+	 * Suchen eines User-Objektes, dessen Name bekannt ist
+	 * @param name Name eines User-Objektes (kann vor oder Nachname sein)
+	 * @return Vector-Objekt mit allen Customer-Objekten, welche die Suchkriterien erfüllen
+	 * @throws IllegalArgumentException
+	 */
+	public Vector<User> getUsersByName(String name) throws IllegalArgumentException;
+	
+	/*
+	 * Ausgeben aller User-Objekte, die zu einem Event-Objekt gehören und 
+	 * einen bestimmten Annahmestatus in der Einladung haben
+	 * @param event Raumbelegung zu der die User-Objekte gehören
+	 * @param participationStatus der Status der Einladung zu einer bestimmten Belegung, true oder false
+	 * @return Vector Objekten mit den User-Objekten, welche die Suchkriterien erfüllen
+	 * @throws IllegalArgumentException
+	 */
+	public Vector<User> getUsersByParticipationStatusForEvent(Event event, boolean participationStatus)
+			throws IllegalArgumentException;
+	
+	/*
+	 * Ausgeben aller Belegungen in einem Raum
+	 * @param room Raum-Objekt in dem die Belegungen sind
+	 * @return Vector-Objekt mit den Event-Objekten, welche die Suchkriterien erfüllen
+	 * @throws IllegalArgumentException
+	 */
+	public Vector<Event> getEventsByRoom(Room room) throws IllegalArgumentException;
+	
+	/*
+	 * Ausgeben aller Event-Objekte von dem übergebenen User in einer Liste
+	 * User können Teilnehmer, als auch Organisator sein. 
+	 * @param user Teilnehmer oder Organisator eines Events
+	 * @return Vector-Objekt mit den Event-Objekten, welche die User enthalten
+	 * @throws IllegalArgumentException
+	 */
+	public Vector<Event> getEventsByUser(User user) throws IllegalArgumentException;
+	
+	/*
+	 * Ausgeben aller Event-Objekte zum übergebenen Zeitraum in einer Liste
+	 * @param startDate Startzeitpunkt des Zeitraums in der die Belegung stattfindet
+	 * @param endDate Endzeitpunkt des Zeitraums
+	 * @return Vector-Objekt mit Events, welche die Suchkriterien erfüllen
+	 * throws IllegalArgumentException
+	 */
+	public Vector<Event> getEventsByPeriodOfTime(Date startDate, Date endDate) throws IllegalArgumentException;
+	
+	/* 
+	 * Ausgeben aller Event-Objekte mit übergebenem Thema 
+	 * @param topic Thema einer Belegung
+	 * @return Vector-Objekt mit Event-Objekten mit dem übergebenen Thema
+	 * @throws IllegalArgumentException
+	 */
+	public Vector<Event> getEventsByTopic(String topic) throws IllegalArgumentException;
+	
+	/*
+	 * Ausgeben aller Event-Objekte im übergebenen Raum zur übergebenen Zeit. 
+	 * @param room Raum-Objekt in dem die Belegungen sind
+	 * @param startDate Startzeitpunkt des Zeitraums in der die Belegung stattfindet
+	 * @param endDate Endzeitpunkt des Zeitraums
+	 * @return Vector-Objekt mit Events, welche die Suchkriterien erfüllen
+	 * @throws IllegalArgumentException
+	 */
+	public Vector<Event> getEventsByRoomForPeriodOfTime(Room room, Date startDate, Date endDate) 
+			throws IllegalArgumentException;
+	
+	/*
+	 * Ausgeben aller Event-Objekte des übergebenen User zur übergebenen Zeit. 
+	 * User können sowohl Teilnehmer als auch Organisator sein.
+	 * @param user Teilnehmer oder Organisator eines Events
+	 * @param startDate Startzeitpunkt des Zeitraums in der die Belegung stattfindet
+	 * @param endDate Endzeitpunkt des Zeitraums
+	 * @return Vector-Objekt mit Events, welche die Suchkriterien erfüllen
+	 * @throws IllegalArgumentException
+	 */
+	public Vector<Event> getEventsByUserForPeriodOfTime(User user, Date startDate, Date endDate) 
+			throws IllegalArgumentException;
+	
+	}
