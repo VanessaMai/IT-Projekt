@@ -1,7 +1,7 @@
 package roomreservationservice.shared.bo;
 
 /**
- * Klasse, die einen Raum im Raumplanungssystem abbilden soll.
+ * Klasse, die einen Raum im Raumplanungssystem abbildet.
  */
 public class Room extends BusinessObject {
 	
