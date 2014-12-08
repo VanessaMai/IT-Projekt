@@ -1,5 +1,8 @@
 package roomreservationservice.server.db;
 
-public class RoomMapper {
 
+public class RoomMapper {
+	
+
+	
 }
