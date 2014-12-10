@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 import com.google.appengine.api.rdbms.AppEngineDriver;
+import com.google.appengine.api.utils.SystemProperty;
 
 
 public class DBConnection {
@@ -17,11 +18,6 @@ public class DBConnection {
 	 * 
 	 */
 	private static Connection con = null;
-	
-	/**
-	 * URL der Datenbank.
-	 */
-	private static String url = "jdbc:google:mysql://it-project-hdm:itproject?user=root";
 
 
 
@@ -47,24 +43,50 @@ public class DBConnection {
 	 * @see con
 	 */
 	public static Connection connection() {
-		// Prüfen, ob es bisher noch keine Verbindung zur DB gab.
+		// Variable in der die URL zur DB gespeichert werden wird.
+		String url = null;
+		
+		// Prüfen, ob es bisher noch kein Objekt gibt, in der die Verbindung zur DB gespeichert sit
 		if ( con == null ) {
 			try {
-				// Laden des DB-Treibers
-				DriverManager.registerDriver(new AppEngineDriver());
-
 				
-				 // Aufbau der Verbindung mit der DB und Speicherung in der Variabel <code>con</code>.
-				con = DriverManager.getConnection(url);
-			} 
-			// SQL-Exception abfangen, falls eine geworfen wird.
-			catch (SQLException e1) {
-				con = null;
-				e1.printStackTrace();
-			}
+					/**
+					 * Wenn direkt von Google App Enginge darauf zugegriffen wird,
+					 * reicht es den URI zur Datenbank mit dem Prefix "jdbc:google:mysql://"
+					 * anzugeben. Da die App Enginge App in der Google Entwickler Console Zugriff
+					 * auf die DB bekommen hat, muss hier nicht noch das Passwort übergeben werden.
+					 */
+					if (SystemProperty.environment.value() ==
+						SystemProperty.Environment.Value.Production) {
+						Class.forName("com.mysql.jdbc.GoogleDriver");
+						url = "jdbc:google:mysql://it-project-hdm:roomreservationdb?user=root";
+					}
+					
+					/** Wenn von einem externen Netz (z.B. während der Entwicklungsphase) darauf
+					  * zugegriffen werden soll, dann muss das DB-Passwort mit übergeben werden.
+					  */
+					else {
+						Class.forName("com.mysql.jdbc.Driver");
+						url = "jdbc:mysql://173.194.250.147:3306?user=root&password=mec-uch-jac-vaj-ne-ghoi-heir-om-";
+					}
+					
+					
+				 // Anschließend wir die Verbindung in der Variable <code>con</code> gespeichert.
+				Connection con = DriverManager.getConnection(url);
+				
+				
+				// Abfangen verschiedener Exceptions, falls etwas schiefgeht.
+				} catch (SQLException e1) {
+					con = null;
+					e1.printStackTrace();
+				} catch (ClassNotFoundException e) {
+					e.printStackTrace();
+				}
+			
 		}
 		
-		// Rückgabe der Verbindung
+		// Rückgabe der Verbindung in der Variable <code>con</code>.
 		return con;
 	}
 }
+
