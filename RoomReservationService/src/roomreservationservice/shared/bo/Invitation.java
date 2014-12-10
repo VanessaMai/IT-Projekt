@@ -1,4 +1,6 @@
 package roomreservationservice.shared.bo;
+
+
 /**
  * Klasse, die eine Einladung im Raumplanungssystem abbilden soll.
  */
@@ -9,6 +11,20 @@ public class Invitation extends BusinessObject {
 	 */
 	private static final long serialVersionUID = -5271320310832622823L;
 
+	
+	/**
+	 * Konstruktor der Klasse Invitation.
+	 * Standardmäßig ist der Teilnahmestatus aller User auf <code>false</code> gesetzt,
+	 * daher muss er hier nicht übergeben werden.
+	 */
+	
+	public Invitation(Event event, User invitee) {
+		this.event = event; 
+		this.invitee = invitee;
+	}
+	
+	
+	
 	
 	// Attribute
 	
