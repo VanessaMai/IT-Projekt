@@ -1,6 +1,6 @@
 package roomreservationservice.server;
 
-import java.util.Date;
+import java.sql.Timestamp;
 import java.util.Vector;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
@@ -150,7 +150,7 @@ implements RoomReservationServiceAdministration{
 	}
 
 	@Override
-	public Event createEvent(String topic, Date startDate, Date endDate,
+	public Event createEvent(String topic, Timestamp startDate, Timestamp endDate,
 			Room room, User organizer, Vector<User> invitees)
 			throws IllegalArgumentException {
 		// TODO Auto-generated method stub
@@ -259,7 +259,7 @@ implements RoomReservationServiceAdministration{
 	}
 
 	@Override
-	public Vector<Event> getEventsByPeriodOfTime(Date startDate, Date endDate)
+	public Vector<Event> getEventsByPeriodOfTime(Timestamp startDate, Timestamp endDate)
 			throws IllegalArgumentException {
 		// TODO Auto-generated method stub
 		return null;
@@ -274,14 +274,14 @@ implements RoomReservationServiceAdministration{
 
 	@Override
 	public Vector<Event> getEventsByRoomForPeriodOfTime(Room room,
-			Date startDate, Date endDate) throws IllegalArgumentException {
+			Timestamp startDate, Timestamp endDate) throws IllegalArgumentException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Vector<Event> getEventsByUserForPeriodOfTime(User user,
-			Date startDate, Date endDate) throws IllegalArgumentException {
+			Timestamp startDate, Timestamp endDate) throws IllegalArgumentException {
 		// TODO Auto-generated method stub
 		return null;
 	}

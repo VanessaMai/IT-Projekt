@@ -1,6 +1,6 @@
 package roomreservationservice.shared;
 
-import java.util.Date;
+import java.sql.Timestamp;
 import java.util.Vector;
 
 import roomreservationservice.shared.bo.Event;
@@ -57,7 +57,7 @@ public interface RoomReservationServiceAdministration extends RemoteService {
 	 * @param organizer Nutzer der diese Raumbelegung angelegt hat
 	 * @param invitees Eine Liste der Nutzer, die zu dieser Raumbelegung eingeladen werden
 	 */
-	public Event createEvent(String topic, Date startDate, Date endDate, Room room, User organizer, Vector <User> invitees)
+	public Event createEvent(String topic, Timestamp startDate, Timestamp endDate, Room room, User organizer, Vector <User> invitees)
 			throws IllegalArgumentException;
 	
 	
@@ -196,7 +196,7 @@ public interface RoomReservationServiceAdministration extends RemoteService {
 	 * @return Vector-Objekt mit Events, welche die Suchkriterien erfüllen
 	 * throws IllegalArgumentException
 	 */
-	public Vector<Event> getEventsByPeriodOfTime(Date startDate, Date endDate) throws IllegalArgumentException;
+	public Vector<Event> getEventsByPeriodOfTime(Timestamp startDate, Timestamp endDate) throws IllegalArgumentException;
 	
 	/**
 	 * Ausgeben aller Event-Objekte mit übergebenem Thema 
@@ -214,7 +214,7 @@ public interface RoomReservationServiceAdministration extends RemoteService {
 	 * @return Vector-Objekt mit Events, welche die Suchkriterien erfüllen
 	 * @throws IllegalArgumentException
 	 */
-	public Vector<Event> getEventsByRoomForPeriodOfTime(Room room, Date startDate, Date endDate) 
+	public Vector<Event> getEventsByRoomForPeriodOfTime(Room room, Timestamp startDate, Timestamp endDate) 
 			throws IllegalArgumentException;
 	
 	/**
@@ -226,7 +226,7 @@ public interface RoomReservationServiceAdministration extends RemoteService {
 	 * @return Vector-Objekt mit Events, welche die Suchkriterien erfüllen
 	 * @throws IllegalArgumentException
 	 */
-	public Vector<Event> getEventsByUserForPeriodOfTime(User user, Date startDate, Date endDate) 
+	public Vector<Event> getEventsByUserForPeriodOfTime(User user, Timestamp startDate, Timestamp endDate) 
 			throws IllegalArgumentException;
 	
 	}

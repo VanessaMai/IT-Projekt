@@ -1,6 +1,6 @@
 package roomreservationservice.shared;
 
-import java.util.Date;
+import java.sql.Timestamp;
 import java.util.Vector;
 
 import roomreservationservice.shared.bo.Event;
@@ -26,7 +26,7 @@ public interface RoomReservationServiceAdministrationAsync {
 			String accessToken, String accessTokenSecret,
 			AsyncCallback<User> callback);
 
-	void createEvent(String topic, Date startDate, Date endDate, Room room,
+	void createEvent(String topic, Timestamp startDate, Timestamp endDate, Room room,
 			User organizer, Vector<User> invitees, AsyncCallback<Event> callback);
 
 	void save(Room room, AsyncCallback<Void> callback);
@@ -62,15 +62,15 @@ public interface RoomReservationServiceAdministrationAsync {
 
 	void getEventsByUser(User user, AsyncCallback<Vector<Event>> callback);
 
-	void getEventsByPeriodOfTime(Date startDate, Date endDate,
+	void getEventsByPeriodOfTime(Timestamp startDate, Timestamp endDate,
 			AsyncCallback<Vector<Event>> callback);
 
 	void getEventsByTopic(String topic, AsyncCallback<Vector<Event>> callback);
 
-	void getEventsByRoomForPeriodOfTime(Room room, Date startDate,
-			Date endDate, AsyncCallback<Vector<Event>> callback);
+	void getEventsByRoomForPeriodOfTime(Room room, Timestamp startDate,
+			Timestamp endDate, AsyncCallback<Vector<Event>> callback);
 
-	void getEventsByUserForPeriodOfTime(User user, Date startDate,
-			Date endDate, AsyncCallback<Vector<Event>> callback);
+	void getEventsByUserForPeriodOfTime(User user, Timestamp startDate,
+			Timestamp endDate, AsyncCallback<Vector<Event>> callback);
 
 }
