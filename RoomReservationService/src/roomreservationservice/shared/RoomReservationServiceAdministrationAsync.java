@@ -9,7 +9,13 @@ import roomreservationservice.shared.bo.Room;
 import roomreservationservice.shared.bo.User;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
-
+/**
+ * Das asynchrone Gegenstück zu dem Interface RoomReservationServiceAdministration
+ * Dies wird semiautomatisch vom Google Plug In erstellt
+ * Mehr Informationen: {@link RoomReservationServiceAdministration}
+ * @author vanessa
+ *
+ */
 public interface RoomReservationServiceAdministrationAsync {
 
 	void init(AsyncCallback<Void> callback);
