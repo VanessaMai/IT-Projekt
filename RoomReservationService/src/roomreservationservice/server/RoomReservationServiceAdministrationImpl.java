@@ -180,7 +180,11 @@ implements RoomReservationServiceAdministration{
 		// TODO Auto-generated method stub
 		
 	}
-
+	/**
+	 * Löschen eines Raumes aus der Datenbank
+	 * Dazu müssen auch die Events in diesem Raum 
+	 * gelöscht werden
+	 */
 	@Override
 	public void delete(Room room) throws IllegalArgumentException {
 		// TODO Auto-generated method stub
