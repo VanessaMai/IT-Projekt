@@ -3,8 +3,6 @@ package roomreservationservice.server.db;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-
-import com.google.appengine.api.rdbms.AppEngineDriver;
 import com.google.appengine.api.utils.SystemProperty;
 
 
@@ -17,7 +15,7 @@ public class DBConnection {
 	 * einzige Instanz dieser Klasse.
 	 * 
 	 */
-	private static Connection con = null;
+	 private static Connection con = null;
 
 
 
@@ -72,7 +70,7 @@ public class DBConnection {
 					
 					
 				 // Anschließend wir die Verbindung in der Variable <code>con</code> gespeichert.
-				Connection con = DriverManager.getConnection(url);
+				 con = DriverManager.getConnection(url);
 				
 				
 				// Abfangen verschiedener Exceptions, falls etwas schiefgeht.
