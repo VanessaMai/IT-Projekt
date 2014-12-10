@@ -30,15 +30,14 @@ public abstract class BusinessObject implements Serializable {
 	/**
 	 * Auslesen des Erstellungszeitpunkts.
 	 * 
-	 * @return der Erstellungszeitpunkt.
+	 * @return creationDate Der Erstellungszeitpunkt.
 	 */
 	public Timestamp getCreationDate() {
 		return this.creationDate;
 	}
 
 	/**
-	 * Setzen der jetzigen Zeit und des jetzigen Datums als Erstellungszeitpunktes der Instanz. Hierfür wird der
-	 * aktuelle
+	 * Setzen der jetzigen Zeit und des jetzigen Datums als Erstellungszeitpunktes der Instanz.
 	 */
 	public void setCreationDate() {
 		creationDate = new Timestamp(calendar.getTime().getTime());
@@ -62,7 +61,7 @@ public abstract class BusinessObject implements Serializable {
 	/**
 	 * Auslesen der ID.
 	 * 
-	 * @return Die ID des Objekts.
+	 * @return id Die ID des Objekts.
 	 */
 	public int getId() {
 		return this.id;
@@ -79,6 +78,14 @@ public abstract class BusinessObject implements Serializable {
 	}
 
 	/**
+	 * Kleines Helferlein, um bei den toString()-Methoden schnell einen Zeilenumbruch zur besseren Lesbarkeit einfügen
+	 * zu können.
+	 */
+	static String lineBreak = System.getProperty("line.separator");
+	
+	
+	
+	/**
 	 * Textuelle Darstellung jeweiligen Klasseninstanz erzeugen (Klasse, Name und ID). Diese wird durch die Unterklassen
 	 * noch erweitert.
 	 * 
@@ -89,7 +96,8 @@ public abstract class BusinessObject implements Serializable {
 		/*
 		 * Rückgabe des Klassennamens, der ID und des Erstellungszeitpunkts des Objekts.
 		 */
-		return this.getClass().getName() + " #" + this.id + " Erstellungszeitpunkt: " + this.getCreationDate();
+		return "Klassenname: " + this.getClass().getName() + lineBreak + "Objekt-ID: " + this.id + lineBreak
+				+ "Erstellungszeitpunkt: " + this.getCreationDate() + lineBreak;
 	}
 
 	/**

@@ -1,37 +1,64 @@
 package roomreservationservice.shared.bo;
 
+import java.sql.Timestamp;
+
 /**
  * Klasse, die einen Raum im Raumplanungssystem abbildet.
  */
 public class Room extends BusinessObject {
 
-
 	/**
 	 * Serial UID.
 	 */
-	
+
 	private static final long serialVersionUID = 59441838292066082L;
 
 	/**
-	 * Der Konstruktor der Klasse Room.
-	 * @param roomName	Der Name des Raums.
-	 * @param roomCapacity	Die Kapazitäts des Raums.
+	 * Der Konstruktor der Klasse Room. Dieser soll verwendet werden, wenn ein komplett neues Objekt erstellt werden
+	 * soll, für das der Erstellungszeitpunkt der Aufruf dieses Konstruktors sein soll. Wenn das Objekt schon existiert
+	 * und nur aus wiederhergestellt werden soll (zum Beispiel aus der DB), dann bitte den Konstruktor verwenden, der
+	 * zusätzlich den originalen Erstellugnszeitpunkt entgegen nimmt.
+	 * 
+	 * @param roomName
+	 *            Der Name des Raums.
+	 * @param roomCapacity
+	 *            Die Kapazitäts des Raums.
 	 */
 	public Room(String roomName, int roomCapacity) {
 		this.roomName = roomName;
 		this.roomCapacity = roomCapacity;
+		setCreationDate();
+	}
+
+	/**
+	 * Ein zweiter Konstruktor für die Klasse Room. Dieser soll verwendet werden, wenn ein Objekt bereits ein
+	 * Erstellungsdatum und eine ID besitzt und diese nicht neu erstellt werden müssen. Dies der Fall, wenn ein Objekt
+	 * aus einem DB-Eintrag wiederhergestellt werden soll.
+	 * 
+	 * @param roomName
+	 *            Der Name des Raums.
+	 * @param roomCapacity
+	 *            Die Kapazität des Raums
+	 * @param creationDate
+	 *            Der originale Erstellnugszeitpunkt des Objekts.
+	 * @param roomID
+	 *            Die ID des Objekts aus der DB.
+	 */
+	public Room(String roomName, int roomCapacity, Timestamp creationDate, int roomID) {
+		this.roomName = roomName;
+		this.roomCapacity = roomCapacity;
+		setCreationDate(creationDate);
+		this.id = roomID;
 	}
 
 	// Attribute
 
 	/**
-	 * Der Name des Raums.
-	 * Standardmäßig "unbekannt". 
+	 * Der Name des Raums. Standardmäßig "unknown".
 	 */
-	private String roomName = "unbekannt, lol";
+	private String roomName = "unknown";
 	/**
-	 * Die Kapazität des Raums.
-	 * Standardmäßig 0.
+	 * Die Kapazität des Raums. Standardmäßig 0.
 	 */
 	private int roomCapacity = 0;
 
@@ -39,6 +66,8 @@ public class Room extends BusinessObject {
 
 	/**
 	 * Augeben des Raumnamens.
+	 * 
+	 * @return roomName Der Name des Raums.
 	 */
 	public String getRoomName() {
 		return roomName;
@@ -48,7 +77,7 @@ public class Room extends BusinessObject {
 	 * Setzen des Raumnamens.
 	 * 
 	 * @param roomName
-	 *            Neuer Name des Raums.
+	 *            Der neue Name des Raums.
 	 */
 	public void setRoomName(String roomName) {
 		this.roomName = roomName;
@@ -56,6 +85,8 @@ public class Room extends BusinessObject {
 
 	/**
 	 * Ausgeben der Raumkapazität.
+	 * 
+	 * @return roomCapacity Die Kapazität des Raums.
 	 */
 	public int getRoomCapacity() {
 		return roomCapacity;
@@ -78,7 +109,7 @@ public class Room extends BusinessObject {
 	 */
 	@Override
 	public String toString() {
-		return super.toString() + "Raumname: " + this.getRoomName() + "Raumkapazität: " + this.getRoomCapacity();
+		return super.toString() + "Raumname: " + getRoomName() + lineBreak + "Raumkapazität: " + getRoomCapacity() + lineBreak;
 
 	}
 
