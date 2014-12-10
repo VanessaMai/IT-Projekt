@@ -70,19 +70,17 @@ public class RoomMapper {
 				// Zuerst werden die Attribute einzeln aus der DB abgefragt...
 				String roomName = resultSet.getString("name");
 				int roomCapacity = resultSet.getInt("capacity");
+				Timestamp creationDate = resultSet.getTimestamp("creation_date");
+				int roomID = resultSet.getInt("id");
 
 				/**
 				 * ...und anschließend an den Konstruktor für ein neues Room-Objekt übergeben. Es wäre zwar auch möglich
 				 * mit einem entsprechendem Konstruktor einen leeres Room-Objekt zu erstellen und dann diekt alle
 				 * nötigen Attribute per Set-Methode zu setzen, allerdings läuft man dann Gefahr, dass man bei einem
-				 * Mapper ein Attribut vergisst und halbfertige Objekte erstellt. Daher gibt es hier nur einen
-				 * Konstruktor, der alle Attribute (bis auf die ID der DB, da diese erst beim Eintrag in die DB
-				 * entsteht) fordert.
+				 * Mapper ein Attribut vergisst und halbfertige Objekte erstellt. Daher gibt es hier diesen Konstruktor,
+				 * der alle Attribute fordert.
 				 */
-				Room room = new Room(roomName, roomCapacity);
-
-				// Anschließend bekommt das Room-Obekt die ID aus der DB als ID gesetzt.
-				room.setId(resultSet.getInt("id"));
+				Room room = new Room(roomName, roomCapacity, creationDate, roomID);
 
 				// Zuletzt wird das Room-Objekt zurückgegebn.
 				return room;
@@ -119,19 +117,17 @@ public class RoomMapper {
 				// Zuerst werden die Attribute einzeln aus der DB abgefragt...
 				String roomName = resultSet.getString("name");
 				int roomCapacity = resultSet.getInt("capacity");
+				Timestamp creationDate = resultSet.getTimestamp("creation_date");
+				int roomID = resultSet.getInt("id");
 
 				/**
 				 * ...und anschließend an den Konstruktor für ein neues Room-Objekt übergeben. Es wäre zwar auch möglich
 				 * mit einem entsprechendem Konstruktor einen leeres Room-Objekt zu erstellen und dann diekt alle
 				 * nötigen Attribute per Set-Methode zu setzen, allerdings läuft man dann Gefahr, dass man bei einem
-				 * Mapper ein Attribut vergisst und halbfertige Objekte erstellt. Daher gibt es hier nur einen
-				 * Konstruktor, der alle Attribute (bis auf die ID der DB, da diese erst beim Eintrag in die DB
-				 * entsteht) fordert.
+				 * Mapper ein Attribut vergisst und halbfertige Objekte erstellt. Daher gibt es hier diesen Konstruktor,
+				 * der alle Attribute fordert.
 				 */
-				Room room = new Room(roomName, roomCapacity);
-
-				// Anschließend bekommt das Room-Obekt die ID aus der DB als ID gesetzt.
-				room.setId(resultSet.getInt("id"));
+				Room room = new Room(roomName, roomCapacity, creationDate, roomID);
 
 				// Hinzufügen des neuen Objekts zum Ergebnisvektor
 				result.addElement(room);
@@ -142,6 +138,94 @@ public class RoomMapper {
 
 		// Ergebnisvektor zurückgeben
 		return result;
+	}
+
+	/**
+	 * Einfügen eines neuen Room-Datensatzes in die DB.
+	 * 
+	 * @param room
+	 *            Das Room-Objekt, dass eingefügt werden soll.
+	 * 
+	 * @return Das aktualisierte Room-Objekt (hat jetzt von der DB eine ID bekommen).
+	 */
+	public Room insert(Room room) {
+		Connection con = DBConnection.connection();
+
+		try {
+			Statement stmt = con.createStatement();
+
+			/*
+			 * Zunächst schauen wir nach, welches der momentan höchste Primärschlüsselwert ist.
+			 */
+			ResultSet rs = stmt.executeQuery("SELECT MAX(id) AS maxid " + "FROM rooms ");
+
+			// Wenn wir etwas zurückerhalten, kann dies nur einzeilig sein
+			if (rs.next()) {
+				/*
+				 * Das Room-Objekt erhält den bisher maximalen, nun um 1 erhöhten Primärschlüssel.
+				 */
+				room.setId(rs.getInt("maxid") + 1);
+
+				stmt = con.createStatement();
+
+				// Jetzt erst erfolgt die tatsächliche Einfügeoperation
+				stmt.executeUpdate("INSERT INTO rooms (id, name, capacity, creation_date) " + "VALUES (" + room.getId()
+						+ ",'" + room.getRoomName() + "'," + room.getRoomCapacity() + ", '" + room.getCreationDate()
+						+ "')");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		/*
+		 * Rückgabe, des nun veränderten Raum Objekts. Es hat von der DB eine ID zugewiesen bekommen, die sie
+		 * fortanverwendet, falls man den Datenastz zum Beispiel aus der DB löschen oder ihn updaten möchte.
+		 */
+
+		return room;
+	}
+
+	/**
+	 * Update eines Room-Datensatzes in der Datenbank. Das Erstellungsdatum wird hier jedoch nicht aktualisiert, da dies
+	 * nach der Erstellung einer Instanz ein fester Wert ist.
+	 * 
+	 * @param room
+	 *            das Room-Objekt, dessen DB-Eintrag aktualisiert werden soll.
+	 * @return das als Parameter übergebene Objekt
+	 */
+	public Room update(Room room) {
+		Connection con = DBConnection.connection();
+
+		try {
+			Statement stmt = con.createStatement();
+
+			stmt.executeUpdate("UPDATE rooms SET name= '" + room.getRoomName() + "', capacity= "
+					+ room.getRoomCapacity() + " WHERE id= " + room.getId());
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		// Um Analogie zu insert(Room room) zu wahren, geben wir das Room-Obejekt wieder zurück.
+		return room;
+	}
+
+	/**
+	 * Löschen des Datensatzes eines Room-Objekts aus der Datenbank.
+	 * 
+	 * @param room
+	 *            Das Room-Objekt, dess DB-Datensatz gelöscht werden soll.
+	 */
+	public void delete(Room room) {
+		Connection con = DBConnection.connection();
+
+		try {
+			Statement stmt = con.createStatement();
+
+			stmt.executeUpdate("DELETE FROM rooms " + "WHERE id=" + room.getId());
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 }
