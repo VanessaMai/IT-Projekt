@@ -1,5 +1,6 @@
 package roomreservationservice.shared.bo;
 
+import java.sql.Timestamp;
 /**
  * Klasse, die einen User im Raumplanungssystem abbilden soll.
  */
@@ -11,7 +12,21 @@ public class User extends BusinessObject {
 	private static final long serialVersionUID = 6111824407973818207L;
 
 	/**
-	 * Der Konstruktor der Klasse User.
+	 * Der Konstruktor der Klasse User. Dieser soll verwendet werden, wenn ein komplett neues Objekt erstellt werden
+	 * soll, für das der Erstellungszeitpunkt der Aufruf dieses Konstruktors sein soll. Wenn das Objekt schon existiert
+	 * und nur aus wiederhergestellt werden soll (zum Beispiel aus der DB), dann bitte den Konstruktor verwenden, der
+	 * zusätzlich den originalen Erstellugnszeitpunkt entgegen nimmt.
+	 * 
+	 * @param firstName
+	 *            Der Vorname des Nutzers.
+	 * @param lastName
+	 *            Der Nachname des Nutzers.
+	 * @param email
+	 *            Die E-Mailadresse des Nutzers.
+	 * @param accessToken
+	 *            Das Accesstoken des Nutzers.
+	 * @param accessTokenSecret
+	 *            Das Accesstoken Secret des Nutzers.
 	 */
 	public User(String firstName, String lastName, String email, String accessToken, String accessTokenSecret) {
 		this.firstName = firstName;
@@ -20,39 +35,71 @@ public class User extends BusinessObject {
 		this.accessToken = accessToken;
 		this.accessTokenSecret = accessTokenSecret;
 	}
-	
+
+	/**
+	 * Ein zweiter Konstruktor für die Klasse User. Dieser soll verwendet werden, wenn ein Objekt bereits ein
+	 * Erstellungsdatum und eine ID besitzt und diese nicht neu erstellt werden müssen. Dies der Fall, wenn ein Objekt
+	 * aus einem DB-Eintrag wiederhergestellt werden soll.
+	 * 
+	 * @param firstName
+	 *            Der Vorname des Nutzers.
+	 * @param lastName
+	 *            Der Nachname des Nutzers.
+	 * @param email
+	 *            Die E-Mailadresse des Nutzers.
+	 * @param accessToken
+	 *            Das Accesstoken des Nutzers.
+	 * @param accessTokenSecret
+	 *            Das Accesstoken Secret des Nutzers.
+	 * @param creationDate
+	 *            Der originale Erstellnugszeitpunkt des Objekts.
+	 * @param userID
+	 *            Die ID des Objekts aus der DB.
+	 */
+	public User(String firstName, String lastName, String email, String accessToken, String accessTokenSecret,
+			Timestamp creationDate, int userID) {
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.email = email;
+		this.accessToken = accessToken;
+		this.accessTokenSecret = accessTokenSecret;
+		setCreationDate(creationDate);
+		this.id = userID;
+	}
 
 	// Attribute des Users
 
 	/**
 	 * Vorname des Nutzers.
 	 */
-	private String firstName = "";
+	private String firstName = "unknown";
 
 	/**
 	 * Nachname des Nutzers.
 	 */
-	private String lastName = "";
+	private String lastName = "unknown";
 
 	/**
 	 * E-Mailadresse des Nutzers.
 	 */
-	private String email = "";
+	private String email = "unknown";
 
 	/**
 	 * Access Token des Nutzers.
 	 */
-	private String accessToken = "";
+	private String accessToken = "unknown";
 
 	/**
 	 * Access Token Secret des Nutzers.
 	 */
-	private String accessTokenSecret = "";
+	private String accessTokenSecret = "unknown";
 
 	// Methoden
 
 	/**
 	 * Gibt den Vornamen aus.
+	 * 
+	 * @return firstName Der Vorname des Nutzers.
 	 */
 	public String getFirstName() {
 		return firstName;
@@ -62,7 +109,7 @@ public class User extends BusinessObject {
 	 * Setzt den Vornamen auf einen neuen Wert.
 	 * 
 	 * @param firstName
-	 *            Neuer Vorname.
+	 *            Der neue Vorname des Nutzers.
 	 */
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
@@ -70,6 +117,8 @@ public class User extends BusinessObject {
 
 	/**
 	 * Ausgeben des Nachnamens.
+	 * 
+	 * @return lastName Der Nachname des Nutzers.
 	 */
 	public String getLastName() {
 		return lastName;
@@ -79,7 +128,7 @@ public class User extends BusinessObject {
 	 * Setzt den Nachnamen auf einen neuen Wert.
 	 * 
 	 * @param lastName
-	 *            Neuer Nachname.
+	 *            Der neue Nachname des Nutzers.
 	 */
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
@@ -87,6 +136,8 @@ public class User extends BusinessObject {
 
 	/**
 	 * Ausgeben der E-Mailadresse.
+	 * 
+	 * @return email Die E-Mailadresse des Nutzers.
 	 */
 	public String getEmail() {
 		return email;
@@ -96,7 +147,7 @@ public class User extends BusinessObject {
 	 * Setzt die Mailadersse auf einen neuen Wert.
 	 * 
 	 * @param email
-	 *            Neue E-Mailadresse.
+	 *            Die neue E-Mailadresse des Nutzers.
 	 */
 	public void setEmail(String email) {
 		this.email = email;
@@ -104,6 +155,8 @@ public class User extends BusinessObject {
 
 	/**
 	 * Ausgeben des AccessTokens.
+	 * 
+	 * @return accessToken Das Accesstoken des Nutzers.
 	 */
 	public String getAccessToken() {
 		return accessToken;
@@ -113,14 +166,16 @@ public class User extends BusinessObject {
 	 * Setzen des AccessTokens.
 	 * 
 	 * @param accessToken
-	 *            Neues Access Token.
+	 *            Das neue Accesstoken des Nutzers.
 	 */
 	public void setAccessToken(String accessToken) {
 		this.accessToken = accessToken;
 	}
 
 	/**
-	 * Ausgeben des Accesstoken Secrets.
+	 * Ausgeben des Accesstoken Secrets
+	 * 
+	 * @return accessTokenScret Das Accesstoken Scret des Nutzers.
 	 */
 	public String getAccessTokenSecret() {
 		return accessTokenSecret;
@@ -130,7 +185,7 @@ public class User extends BusinessObject {
 	 * Setzen des Accesstoken Secrets.
 	 * 
 	 * @param accessTokenSecret
-	 *            Neues Access Token Secret.
+	 *            Das neue Access Token Secret des Nutzers.
 	 */
 	public void setAccessTokenSecret(String accessTokenSecret) {
 		this.accessTokenSecret = accessTokenSecret;
@@ -143,11 +198,13 @@ public class User extends BusinessObject {
 	 */
 	@Override
 	public String toString() {
-		return super.toString() + "Vorname: " + this.getFirstName() + "Nachname: " + this.getLastName() + "Email: "
-				+ getEmail() + "Accesstoken: " + getAccessToken() + "Accesstoken Secret: " + getAccessTokenSecret();
+		return super.toString() + "Vorname: " + getFirstName() + lineBreak + "Nachname: " + getLastName() + lineBreak
+				+ "Email: " + getEmail() + lineBreak + "Accesstoken: " + getAccessToken() + lineBreak
+				+ "Accesstoken Secret: " + getAccessTokenSecret() + lineBreak;
 
 	}
 
+	
 	/**
 	 * Feststellen der <em>inhaltlichen</em> Gleichheit zweier <code>User</code> -Objekte.
 	 */
