@@ -1,6 +1,7 @@
 package roomreservationservice.server.db;
 
 import java.sql.*;
+
 import java.util.Vector;
 import roomreservationservice.shared.bo.Room;
 
@@ -64,7 +65,8 @@ public class RoomMapper {
 			ResultSet resultSet = stmt.executeQuery("SELECT * FROM rooms " + "WHERE id=" + id);
 
 			/*
-			 * Da id Primärschlüssel ist, kann max. nur ein Tupel zurückgegeben werden. Prüfe, ob ein Ergebnis vorliegt.
+			 * Da die ID der Primärschlüssel ist, kann max. nur ein Tupel zurückgegeben werden. Prüfe, ob ein Ergebnis
+			 * vorliegt.
 			 */
 			if (resultSet.next()) {
 				// Zuerst werden die Attribute einzeln aus der DB abgefragt...
@@ -85,14 +87,17 @@ public class RoomMapper {
 				// Zuletzt wird das Room-Objekt zurückgegebn.
 				return room;
 			}
+			// wenn das Resultset leer ist, wird <code>null</code> zurückgegeben.
+			else {
+				return null;
+			}
 		}
 		// SQL Exception abfangen, sollte etwas schiefgehen.
-		catch (SQLException e2) {
-			e2.printStackTrace();
+		catch (SQLException e1) {
+			e1.printStackTrace();
 			return null;
 		}
 
-		return null;
 	}
 
 	/**
@@ -111,29 +116,26 @@ public class RoomMapper {
 
 			ResultSet resultSet = stmt.executeQuery("SELECT * FROM rooms " + " ORDER BY id");
 
-			// Für jeden Eintrag im Suchergebnis wird nun ein Room-Objekt erstellt.
-			while (resultSet.next()) {
+			// Prüfen, ob Einträge gefunden wurden.
+			if (resultSet.next()) {
+				// Für jeden Eintrag im Suchergebnis wird nun ein Room-Objekt erstellt.
+				while (resultSet.next()) {
 
-				// Zuerst werden die Attribute einzeln aus der DB abgefragt...
-				String roomName = resultSet.getString("name");
-				int roomCapacity = resultSet.getInt("capacity");
-				Timestamp creationDate = resultSet.getTimestamp("creation_date");
-				int roomID = resultSet.getInt("id");
+					// Für jeden Eintrag wird die findByKey-Methode aufgerufen, die das Room-Obejekt zurückliefert.
+					Room room = findByKey(resultSet.getInt("id"));
 
-				/**
-				 * ...und anschließend an den Konstruktor für ein neues Room-Objekt übergeben. Es wäre zwar auch möglich
-				 * mit einem entsprechendem Konstruktor einen leeres Room-Objekt zu erstellen und dann diekt alle
-				 * nötigen Attribute per Set-Methode zu setzen, allerdings läuft man dann Gefahr, dass man bei einem
-				 * Mapper ein Attribut vergisst und halbfertige Objekte erstellt. Daher gibt es hier diesen Konstruktor,
-				 * der alle Attribute fordert.
-				 */
-				Room room = new Room(roomName, roomCapacity, creationDate, roomID);
-
-				// Hinzufügen des neuen Objekts zum Ergebnisvektor
-				result.addElement(room);
+					// Hinzufügen des neuen Objekts zum Ergebnisvektor
+					result.addElement(room);
+				}
 			}
-		} catch (SQLException e2) {
-			e2.printStackTrace();
+			// wenn das Resultset leer ist, wird <code>null</code> zurückgegeben.
+			else {
+				return null;
+			}
+		} // SQL Exception abfangen, sollte etwas schiefgehen.
+		catch (SQLException e1) {
+			e1.printStackTrace();
+			return null;
 		}
 
 		// Ergebnisvektor zurückgeben
@@ -202,8 +204,15 @@ public class RoomMapper {
 			stmt.executeUpdate("UPDATE rooms SET name= '" + room.getRoomName() + "', capacity= "
 					+ room.getRoomCapacity() + " WHERE id= " + room.getId());
 
-		} catch (SQLException e) {
-			e.printStackTrace();
+		} // SQL Exception abfangen, sollte etwas schiefgehen.
+		catch (SQLException e1) {
+			e1.printStackTrace();
+			return null;
+		}
+		// Falls auf etwas verwiesen wird, das nicht vorhanden ist.
+		catch (NullPointerException e2) {
+			e2.printStackTrace();
+			return null;
 		}
 
 		// Um Analogie zu insert(Room room) zu wahren, geben wir das Room-Obejekt wieder zurück.
@@ -226,6 +235,11 @@ public class RoomMapper {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		// Falls auf etwas verwiesen wird, das nicht vorhanden ist.
+		catch (NullPointerException e2) {
+			e2.printStackTrace();
+		}
+
 	}
 
 }
