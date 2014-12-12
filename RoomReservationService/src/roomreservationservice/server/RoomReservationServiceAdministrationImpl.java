@@ -300,10 +300,52 @@ implements RoomReservationServiceAdministration{
 	}
 
 	@Override
+	public User getOrganizerOfEvent(Event event)
+			throws IllegalArgumentException {
+		// zuerst die OrganizerId dieses events auslesen
+		int id = event.getOrganizerId();
+		// mit dieser kann man den entsprechenden User finden
+		return this.uMapper.findByKey(id);
+		
+	}
+
+	@Override
+	public Vector<User> getInviteesOfEvent(Event event)
+			throws IllegalArgumentException {
+		// Variable in der die Liste der Eingeladenen gespeichert wird
+		Vector<User> inviteesOfEvent = new Vector<User>();
+		// alle Invitation-Objekte dieser Belegung in Variable speichern
+		Vector<Invitation> invitationsOfEvent= this.getInvitationsByEvent(event);
+		
+		// für jede einzelne Einladung in dieser Belegung
+		for (Invitation i : invitationsOfEvent){
+			// es wird die Invitee-Id der Invitation ausgelesen und mit findByKey-Methode von Usermapper
+			// wird dann der betroffene User ausgewählt 
+			// dieser User wird mit add-methode der Variable inviteesOfEvent hinzugefügt
+			inviteesOfEvent.add(this.uMapper.findByKey(i.getInviteeId()));			
+		}
+		// letztendlich wird die Liste der eingeladenen User ausgegeben
+		return inviteesOfEvent;
+	}
+
+	
+	@Override
 	public Vector<User> getUsersByParticipationStatusForEvent(Event event,
-			boolean participationStatus) throws IllegalArgumentException {
-		// TODO Auto-generated method stub
-		return null;
+			int participationStatus) throws IllegalArgumentException {
+		// Variable in der die Liste der User mit bestimmten Annahmestatus gespeichert werden
+		Vector<User> inviteesStatus = new Vector<User>();
+		// alle Einladungen dieses events
+		Vector<Invitation> invitationsOfEvent = this.getInvitationsByEvent(event);
+		
+		// für jede einladung in dieser Liste wird der Annahmestatus ausgelesen und
+		// mit dem übergebenen verglichen, falls diese übereinstimmen, wird der User 
+		// dieser Einladung ausgelesen und InviteesStatus hinzugefügt
+		for (Invitation i : invitationsOfEvent){
+			if (i.getParticipationStatus() == participationStatus){
+				inviteesStatus.add(this.uMapper.findByKey(i.getInviteeId()));
+			}
+		}
+		return inviteesStatus;
 	}
 
 	@Override
@@ -347,8 +389,11 @@ implements RoomReservationServiceAdministration{
 	@Override
 	public Vector<Event> getEventsByUserForPeriodOfTime(User user,
 			Timestamp startDate, Timestamp endDate) throws IllegalArgumentException {
-				return null;
-		// TODO Auto-generated method stub
+		
+		
+		return null;
+		
+		//		TODO Auto-generated method stub
 	}
 	
 
@@ -376,7 +421,6 @@ implements RoomReservationServiceAdministration{
 		}
 		return invitations;
 	}
-
 
 
 	
