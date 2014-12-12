@@ -128,10 +128,9 @@ implements RoomReservationServiceAdministration{
 	@Override 
 	public void init() throws IllegalArgumentException{
 		this.rMapper = RoomMapper.roomMapper();
-		// TODO MEthode ergänzen wenn, UserMapper-Klasse fertig ist
-		//this.uMapper = UserMapper. //
-		//this.eMapper = EventMapper
-		//this.iMapper = InvitationMapper.
+		this.uMapper = UserMapper.userMapper();
+		this.eMapper = EventMapper.eventMapper();
+		this.iMapper = InvitationMapper.invitationMapper();
 	}
 	
 	@Override
@@ -211,8 +210,7 @@ implements RoomReservationServiceAdministration{
 
 	@Override
 	public Vector<Room> getAllRooms() throws IllegalArgumentException {
-		// TODO Auto-generated method stub
-		return null;
+		//return this.rMapper.findAll();
 	}
 
 	@Override
