@@ -201,28 +201,48 @@ implements RoomReservationServiceAdministration{
 		// TODO Auto-generated method stub
 		
 	}
-
+	/**
+	 * Löschen des übergegebenen Invitation-Objekts
+	 * @param invitation
+	 * @throws IllegalArgumentException
+	 */
 	@Override
 	public void delete(Invitation invitation) throws IllegalArgumentException {
-		// TODO Auto-generated method stub
+		this.iMapper.delete(invitation);
 		
 	}
-
+	
+	/**
+	 * Gibt alle Room-Objekte in einem Vector aus
+	 * Greift auf die findAll() Methode in der Mapperklasse
+	 * @return Vector 
+	 * @throws IllegalArgumentException
+	 */
 	@Override
 	public Vector<Room> getAllRooms() throws IllegalArgumentException {
-		//return this.rMapper.findAll();
+		return this.rMapper.findAll();
 	}
-
+	
+	/**
+	 * Gibt alle User-Objekte in einem Vector aus
+	 * Greift auf die findAll() Methode in der Mapperklasse zu
+	 * @return Vector
+	 * @throws IllegalArgumentException
+	 */
 	@Override
 	public Vector<User> getAllUsers() throws IllegalArgumentException {
-		// TODO Auto-generated method stub
-		return null;
+		return this.uMapper.findAll();
 	}
 
+	/**
+	 * Gibt alle Event-Objekte in einem Vector aus
+	 * Greift auf die findAll() Methode in der Mapperklasse zu
+	 * @return Vector
+	 * @throws IllegalArgumentException
+	 */
 	@Override
 	public Vector<Event> getAllEvents() throws IllegalArgumentException {
-		// TODO Auto-generated method stub
-		return null;
+		return this.eMapper.findAll();
 	}
 
 	@Override
