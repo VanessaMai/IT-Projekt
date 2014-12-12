@@ -210,7 +210,7 @@ implements RoomReservationServiceAdministration{
 			Room room, User organizer, Vector<User> invitees)
 			throws IllegalArgumentException {
 		//Probleme mit @Timestamp @author Anh Duc
-		Event event = new Event("topic", 2014-01-01, 2014-12-31, room, organizer, invitees);
+		Event event = new Event("topic", Timestamp.valueOf("2014-01-01"), Timestamp.valueOf("2014-12-31"), room, organizer, invitees);
 		event.setTopic(topic);
 		event.setStartDate(startDate);
 		event.setEndDate(endDate);
