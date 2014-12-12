@@ -13,6 +13,13 @@ public class Room extends BusinessObject {
 
 	private static final long serialVersionUID = 59441838292066082L;
 
+	/*
+	 * Zero-Argument-Konstruktor. Wird von GWT benötigt. Zum Erstellen der Objekte bitte einen der beiden anderen
+	 * Konstuktoren verwenden.
+	 */
+	private Room() {
+	};
+	
 	/**
 	 * Der Konstruktor der Klasse Room. Dieser soll verwendet werden, wenn ein komplett neues Objekt erstellt werden
 	 * soll, für das der Erstellungszeitpunkt der Aufruf dieses Konstruktors sein soll. Wenn das Objekt schon existiert
