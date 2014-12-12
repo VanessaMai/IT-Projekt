@@ -1,8 +1,6 @@
 package roomreservationservice.shared.bo;
 
 import java.sql.Timestamp;
-import java.util.Vector;
-
 /**
  * Klasse, die eine Belegung im Raumplanungssystem abbilden soll.
  */
@@ -25,20 +23,18 @@ public class Event extends BusinessObject {
 	 *            Der Startzeitpunkt der Belegung.
 	 * @param endDate
 	 *            Der Endzeitpunkt der Belegung.
-	 * @param organizer
-	 *            Der User, der als Organisator der Belegung eingetragen werden soll.
-	 * @param room
-	 *            Der Raum der belegt werden soll.
-	 * @param invitees
-	 *            Ein Vector mit allen eingeladenen Nutzern. Diese sollen später alle eine Einladung erhalten.
+	 * @param organizerId
+	 *            ID des Nutzers, der als Organisator der Belegung eingetragen werden soll.
+	 * @param roomId
+	 *            ID des Raums der belegt werden soll.
 	 */
-	public Event(String topic, Timestamp startDate, Timestamp endDate, User organizer, Room room, Vector<User> invitees) {
+	public Event(String topic, Timestamp startDate, Timestamp endDate, int organizerId, int roomId) {
 		this.topic = topic;
 		this.startDate = startDate;
 		this.endDate = endDate;
-		this.organizer = organizer;
-		this.room = room;
-		this.invitees = invitees;
+		this.organizerId = organizerId;
+		this.roomId = roomId;
+		setCreationDate();
 	}
 
 	/**
@@ -52,25 +48,22 @@ public class Event extends BusinessObject {
 	 *            Der Startzeitpunkt der Belegung.
 	 * @param endDate
 	 *            Der Endzeitpunkt der Belegung.
-	 * @param organizer
-	 *            Der User, der als Organisator der Belegung eingetragen werden soll.
-	 * @param room
-	 *            Der Raum der belegt werden soll.
-	 * @param invitees
-	 *            Ein Vector mit allen eingeladenen Nutzern. Diese sollen später alle eine Einladung erhalten.
+	 * @param organizerId
+	 *            ID des Nutzers, der als Organisator der Belegung eingetragen werden soll.
+	 * @param roomId
+	 *            ID des Raums der belegt werden soll.
 	 * @param creationDate
 	 *            Der originale Erstellnugszeitpunkt des Objekts.
 	 * @param eventID
 	 *            Die ID des Objekts aus der DB.
 	 */
-	public Event(String topic, Timestamp startDate, Timestamp endDate, User organizer, Room room,
-			Vector<User> invitees, Timestamp creationDate, int eventID) {
+	public Event(String topic, Timestamp startDate, Timestamp endDate, int organizerId, int roomId,
+			Timestamp creationDate, int eventID) {
 		this.topic = topic;
 		this.startDate = startDate;
 		this.endDate = endDate;
-		this.organizer = organizer;
-		this.room = room;
-		this.invitees = invitees;
+		this.organizerId = organizerId;
+		this.roomId = roomId;
 		setCreationDate(creationDate);
 		this.id = eventID;
 	}
@@ -93,19 +86,14 @@ public class Event extends BusinessObject {
 	private Timestamp endDate;
 
 	/**
-	 * User, der als Organisator der Belegung auftritt.
+	 * ID des Users, der als Organisator der Belegung auftritt.
 	 */
-	private User organizer;
+	private int organizerId = 0;
 
 	/**
-	 * Der Belegung zugeordneter Raum.
+	 * ID des Raums, der der Belegung zugeordneter ist.
 	 */
-	private Room room;
-
-	/**
-	 * Vector mit den der Belegung zugeordneten Nutzer, also der Eingeladenen.
-	 */
-	private Vector<User> invitees;
+	private int roomId = 0;
 
 	// Methoden
 
@@ -167,97 +155,54 @@ public class Event extends BusinessObject {
 	}
 
 	/**
-	 * Ausgeben des Organisators der Belegung.
+	 * Ausgeben der ID des Organisators der Belegung.
 	 * 
-	 * @return organizer Der Nutzer, der als Oransator des Event eingetragen ist.
+	 * @return ID des Nutzers, der als Oransator des Event eingetragen ist.
 	 */
-	public User getOrganizer() {
-		return organizer;
+	public int getOrganizerId() {
+		return organizerId;
 	}
 
 	/**
-	 * Setzen des Organisators der Belegung.
+	 * Setzen der ID des Organisators der Belegung.
 	 * 
-	 * @param organizer
-	 *            Der Nutzer, der als Organisator des Events auftritt.
+	 * @param organizerId
+	 *            Die ID des Nutzers, der als Organisator des Events auftritt.
 	 */
-	public void setOrganizer(User organizer) {
-		this.organizer = organizer;
+	public void setOrganizer(int organizerId) {
+		this.organizerId = organizerId;
 	}
 
 	/**
-	 * Ausgeben des zugeordneten Raums einer Belegung.
+	 * Ausgeben der ID des zugeordneten Raums einer Belegung.
 	 * 
-	 * @return room Der zugeordnete Raum der Belegung.
+	 * @return Die ID des zugeordneten Raums der Belegung.
 	 */
-	public Room getRoom() {
-		return room;
+	public int getRoomId() {
+		return roomId;
 	}
 
 	/**
-	 * Setzen des Raums einer Belegung
+	 * Setzen der ID des Raums einer Belegung.
 	 * 
-	 * @param room
-	 *            Neuer, der Belegung zugeordneter Raum.
+	 * @param roomId
+	 *            ID des neuen, der Belegung zugeordneter Raums.
 	 */
-	public void setRoom(Room room) {
-		this.room = room;
-	}
-
-	/**
-	 * Auslesen der Eingeladenen einer Belegung.
-	 * 
-	 * @return invitess Vector mit allen der Belegung zugeordneten Nutzern.
-	 */
-	public Vector<User> getInvitees() {
-		return invitees;
-	}
-
-	/**
-	 * Setzer des Vectors mit den Eingeladenen einer Belegung.
-	 * 
-	 * @param invitees
-	 *            Vector mit den Eingeladenen einer Belegung.
-	 */
-	public void setInvitees(Vector<User> invitees) {
-		this.invitees = invitees;
+	public void setRoomId(int roomId) {
+		this.roomId = roomId;
 	}
 
 	/**
 	 * Erzeugung der textuellen Darstellung der jeweiligen Instanz und Erweiterung des Textes, der durch die
 	 * <code>toString()</code>-Methode der Superklasse erzeugt wird und um das Belegungsthema, den Start- und
-	 * Endzeitpunkt, sowie den Organisator der Belegung und den belegten Raum erweitert wird.
+	 * Endzeitpunkt, sowie die ID des Organisators der Belegung und die ID des belegten Raums erweitert wird.
 	 */
 	@Override
 	public String toString() {
 		return super.toString() + "Belegungsthema: " + getTopic() + lineBreak + "Startzeitpunkt: " + getStartDate()
-				+ lineBreak + "Endzeitpunkt: " + getEndDate() + lineBreak + "Organisator: "
-				+ getOrganizer().getFirstName() + " " + getOrganizer().getLastName() + " (User-ID: "
-				+ getOrganizer().getId() + ")" + lineBreak + "Belegter Raum: " + getRoom().getRoomName()
-				+ " (Raum-ID: " + getRoom().getId() + ")" + lineBreak + "Eingeladene: " +  lineBreak 
-				+ makeReadableUserList(getInvitees())
-				+ lineBreak;
+				+ lineBreak + "Endzeitpunkt: " + getEndDate() + lineBreak + "Organisator-ID: " + getOrganizerId()
+				+ lineBreak + "Belegter Raum-ID: " + getRoomId() + lineBreak;
 
-	}
-
-	/**
-	 * Kleine Hilfsfunktion, die aus einem Vector mit User einen String macht, in dem jeder User mit Vor-, Nachname und
-	 * seiner ID aufgeführt ist. Dies wird hier getan um bei toString()-Methoden mit User-Vektoren diese in gut lesbarer
-	 * Form ausgeben zu können.
-	 * 
-	 * @param userVector
-	 *            Der Vector mit User-Objekten, der in einen lesbaren String umgewandelt werden soll.
-	 * @return Ein String mit einer kurzen und lesbaren Repräsenation der enthaltentn User.
-	 */
-	private String makeReadableUserList(Vector<User> userVector) {
-		StringBuilder stringBuilder = new StringBuilder();
-
-		for (User user : userVector) {
-			stringBuilder.append("- " + user.getFirstName() + " " + user.getLastName() + " (User-ID: " + user.getId() + ")"
-					+ lineBreak);
-		}
-		String result = stringBuilder.toString();
-		return result;
 	}
 
 	/**

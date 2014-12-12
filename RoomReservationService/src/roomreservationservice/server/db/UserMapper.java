@@ -7,6 +7,8 @@ import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.Vector;
 
+import roomreservationservice.shared.bo.BusinessObject;
+import roomreservationservice.shared.bo.Event;
 import roomreservationservice.shared.bo.User;
 
 public class UserMapper {
@@ -295,6 +297,50 @@ public class UserMapper {
 			return null;
 		}
 
+	}
+	
+	public Vector<User> findAllUserByParticipationStatusForEvent(Event event, Boolean participationStatus) {
+		// Vorbereiten des Ergebnisvectors.
+		Vector<User> result = new Vector<User>();
+
+		// User-Mapper vorbereiten
+		UserMapper userMapper = UserMapper.userMapper();
+
+		// Boolschen Wert in Datenbankfreundlichen Integer-Wert umwandeln.
+		int participationStatusAsInt = BusinessObject.getBooleanRepresentationAsInt(participationStatus);
+
+		// DB-Connection holen.
+		Connection con = DBConnection.connection();
+
+		try {
+
+			// Leeres Statement vorbereiten.
+			Statement stmt = con.createStatement();
+
+			// Query ausführen.
+			ResultSet resultSet = stmt.executeQuery("SELECT invitation_invitee FROM invitations "
+					+ "WHERE invitation_event= " + event.getId() + " AND participation_status = "
+					+ participationStatusAsInt);
+
+			while (resultSet.next()) {
+				User user = userMapper.findByKey(resultSet.getInt("invitation_invitee"));
+				result.addElement(user);
+
+			}
+
+		} // SQL Exception abfangen, sollte etwas schiefgehen.
+		catch (SQLException e1) {
+			e1.printStackTrace();
+			return null;
+		}
+		// Wenn kein Eintrag vorhanden ist.
+		catch (NullPointerException e2) {
+			e2.printStackTrace();
+			return null;
+		}
+
+		// Ergebnisvector zurückgeben.
+		return result;
 	}
 
 }

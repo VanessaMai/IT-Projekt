@@ -1,15 +1,14 @@
 package roomreservationservice.server.db;
 
 import java.sql.Connection;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.Vector;
-
-import roomreservationservice.shared.bo.Event;
+import roomreservationservice.shared.bo.BusinessObject;
 import roomreservationservice.shared.bo.Invitation;
-import roomreservationservice.shared.bo.User;
 
 public class InvitationMapper {
 	/**
@@ -69,10 +68,10 @@ public class InvitationMapper {
 			 */
 			if (resultSet.next()) {
 				// Zuerst werden die Attribute einzeln aus der DB abgefragt...
-				Event event = getEventOfInvitation(resultSet.getInt("invitation_event"));
-				User invitee = getUserOfInvitation(resultSet.getInt("invitation_invitee"));
+				int eventId = resultSet.getInt("invitation_event");
+				int inviteeId = resultSet.getInt("invitation_invitee");
 				Timestamp creationDate = resultSet.getTimestamp("creation_date");
-				int invitationID = resultSet.getInt("id");
+				int invitationId = resultSet.getInt("id");
 
 				/**
 				 * ...und anschließend an den Konstruktor für ein neues Invitation-Objekt übergeben. Es wäre zwar auch
@@ -81,7 +80,7 @@ public class InvitationMapper {
 				 * bei einem Mapper ein Attribut vergisst und halbfertige Objekte erstellt. Daher gibt es hier diesen
 				 * Konstruktor, der alle Attribute fordert.
 				 */
-				Invitation invitation = new Invitation(event, invitee, creationDate, invitationID);
+				Invitation invitation = new Invitation(eventId, inviteeId, creationDate, invitationId);
 
 				// Zuletzt wird das Room-Objekt zurückgegebn.
 				return invitation;
@@ -159,14 +158,14 @@ public class InvitationMapper {
 			/*
 			 * Zunächst schauen wir nach, welches der momentan höchste Primärschlüsselwert ist.
 			 */
-			ResultSet rs = stmt.executeQuery("SELECT MAX(id) AS maxid " + "FROM invitations ");
+			ResultSet resultSet = stmt.executeQuery("SELECT MAX(id) AS maxid " + "FROM invitations ");
 
 			// Wenn wir etwas zurückerhalten, kann dies nur einzeilig sein
-			if (rs.next()) {
+			if (resultSet.next()) {
 				/*
 				 * Das Invitation-Objekt erhält den bisher maximalen, nun um 1 erhöhten Primärschlüssel.
 				 */
-				invitation.setId(rs.getInt("maxid") + 1);
+				invitation.setId(resultSet.getInt("maxid") + 1);
 
 				stmt = con.createStatement();
 
@@ -175,11 +174,11 @@ public class InvitationMapper {
 						+ "VALUES ("
 						+ invitation.getId()
 						+ ", "
-						+ getBooleanRepresentationAsInt(invitation.getParticipationStatus())
+						+ BusinessObject.getBooleanRepresentationAsInt(invitation.getParticipationStatus())
 						+ ", "
-						+ invitation.getEvent().getId()
+						+ invitation.getEventId()
 						+ ", "
-						+ invitation.getInvitee().getId()
+						+ invitation.getInviteeId()
 						+ ", '"
 						+ invitation.getCreationDate() + "')");
 			}
@@ -211,9 +210,9 @@ public class InvitationMapper {
 			Statement stmt = con.createStatement();
 
 			stmt.executeUpdate("UPDATE invitations SET id= " + invitation.getId() + ", participation_status= "
-					+ getBooleanRepresentationAsInt(invitation.getParticipationStatus()) + ", invitation_event= "
-					+ invitation.getEvent().getId() + ", invitation_user= " + invitation.getInvitee().getId()
-					+ " WHERE id= " + invitation.getId());
+					+ BusinessObject.getBooleanRepresentationAsInt(invitation.getParticipationStatus())
+					+ ", invitation_event= " + invitation.getEventId() + ", invitation_invitee= "
+					+ invitation.getInviteeId() + " WHERE id= " + invitation.getId());
 
 		} // SQL Exception abfangen, sollte etwas schiefgehen.
 		catch (SQLException e1) {
@@ -253,97 +252,6 @@ public class InvitationMapper {
 		catch (NullPointerException e2) {
 			e2.printStackTrace();
 		}
-	}
-
-	public Vector<User> findAllUserByParticipationStatusForEvent(Event event, Boolean participationStatus) {
-		// Vorbereiten des Ergebnisvectors.
-		Vector<User> result = new Vector<User>();
-
-		// User-Mapper vorbereiten
-		UserMapper userMapper = UserMapper.userMapper();
-
-		// Boolschen Wert in Datenbankfreundlichen Integer-Wert umwandeln.
-		int participationStatusAsInt = getBooleanRepresentationAsInt(participationStatus);
-
-		// DB-Connection holen.
-		Connection con = DBConnection.connection();
-
-		try {
-
-			// Leeres Statement vorbereiten.
-			Statement stmt = con.createStatement();
-
-			// Query ausführen.
-			ResultSet resultSet = stmt.executeQuery("SELECT invitation_invitee FROM invitations "
-					+ "WHERE invitation_event= " + event.getId() + " AND participation_status = "
-					+ participationStatusAsInt);
-
-			while (resultSet.next()) {
-				User user = userMapper.findByKey(resultSet.getInt("invitation_invitee"));
-				result.addElement(user);
-
-			}
-
-		} // SQL Exception abfangen, sollte etwas schiefgehen.
-		catch (SQLException e1) {
-			e1.printStackTrace();
-			return null;
-		}
-		// Wenn kein Eintrag vorhanden ist.
-		catch (NullPointerException e2) {
-			e2.printStackTrace();
-			return null;
-		}
-
-		// Ergebnisvector zurückgeben.
-		return result;
-	}
-
-	/**
-	 * Hilfsfunktion, um das in der Tabelle per Fremdschlüssel verwiesene Event-Objekt abzufragen und dieses zu holen.
-	 * 
-	 * @param invitation_event
-	 *            Fremdschlüssel, der auf den Belegungseintrag verweist.
-	 * @return event Ein Event-Objekt, dass den Datensatz repräsentiert, auf den verwiesen wurde.
-	 */
-	private Event getEventOfInvitation(int invitation_event) {
-		EventMapper eventMapper = EventMapper.eventMapper();
-		Event event = eventMapper.findByKey(invitation_event);
-		return event;
-	}
-
-	/**
-	 * Hilfsfunktion, um das in der Tabelle per Fremdschlüssel verwiesene User-Objekt abzufragen und dieses zu holen.
-	 * 
-	 * @param invitation_event
-	 *            Fremdschlüssel, der auf den Belegungseintrag verweist.
-	 * @return user Ein User-Objekt, dass den Datensatz repräsentiert, auf den verwiesen wurde.
-	 */
-	private User getUserOfInvitation(int invitation_invitee) {
-		UserMapper userMapper = UserMapper.userMapper();
-		User user = userMapper.findByKey(invitation_invitee);
-		return user;
-	}
-
-	/**
-	 * Hilfsfunktion, um die boolschen Werte als Integer darzustellen.
-	 * <p>
-	 * 0 = false und 1 = true
-	 * </p>
-	 * In dieser Form werden sie dann in die DB geschrieben.
-	 * 
-	 * @param b
-	 *            Der boolsche Wert, der als Integer repräsentiert werden soll.
-	 * @return intRepresentation Repräsentation des boolschen Wertes als Integer (0 = false, 1 = true);
-	 */
-	private int getBooleanRepresentationAsInt(boolean b) {
-		int intRepresentation;
-		if (b == false) {
-			intRepresentation = 0;
-		} else {
-			intRepresentation = 1;
-		}
-		return intRepresentation;
 	}
 
 }

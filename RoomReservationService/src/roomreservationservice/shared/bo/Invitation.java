@@ -20,14 +20,16 @@ public class Invitation extends BusinessObject {
 	 * 
 	 * Standardmäßig ist der Teilnahmestatus auf <code>false</code> gesetzt, daher muss er hier nicht übergeben werden.
 	 * 
-	 * @param event
-	 *            Die zugehörige Belegung.
-	 * @param invitee
-	 *            Der zugehörige eingeladene User.
+	 * @param eventId
+	 *            Die ID der zugehörigen Belegung.
+	 * @param inviteeId
+	 *            Die ID des zugehörigen eingeladenen Nutzers.
 	 */
-	public Invitation(Event event, User invitee) {
-		this.event = event;
-		this.invitee = invitee;
+	public Invitation(int eventId, int inviteeId) {
+		this.eventId = eventId;
+		this.inviteeId = inviteeId;
+		setCreationDate();
+
 	}
 
 	/**
@@ -35,20 +37,20 @@ public class Invitation extends BusinessObject {
 	 * Erstellungsdatum und eine ID besitzt und diese nicht neu erstellt werden müssen. Dies der Fall, wenn ein Objekt
 	 * aus einem DB-Eintrag wiederhergestellt werden soll.
 	 * 
-	 * @param event
-	 *            Die zugehörige Belegung.
+	 * @param eventId
+	 *            Die ID der zugehörigen Belegung.
 	 * @param invitee
-	 *            Der zugehörige eingeladene User.
+	 *            Die ID des zugehörigen eingeladenen Nutzers.
 	 * @param creationDate
 	 *            Der originale Erstellnugszeitpunkt des Objekts.
-	 * @param invitationID
+	 * @param invitationId
 	 *            Die ID des Objekts aus der DB.
 	 */
-	public Invitation(Event event, User invitee, Timestamp creationDate, int invitationID) {
-		this.event = event;
-		this.invitee = invitee;
+	public Invitation(int eventId, int inviteeId, Timestamp creationDate, int invitationId) {
+		this.eventId = eventId;
+		this.inviteeId = inviteeId;
 		setCreationDate(creationDate);
-		this.id = invitationID;
+		this.id = invitationId;
 	}
 
 	// Attribute
@@ -59,21 +61,22 @@ public class Invitation extends BusinessObject {
 	private boolean participationStatus = false;
 
 	/**
-	 * Jede Einladung bezieht ist auch eine Belegung. Diese wird in der variabel <code>event</code> gespeichert.
+	 * Jede Einladung bezieht auf eine Belegung. Der Verweis auf die entsprechende Belegung wird in dieser Variabe
+	 * gespeichert.
 	 */
-	private Event event = null;
+	private int eventId = 0;
 
 	/**
-	 * Jede Einladung ist einem Nutzer zugeordnet. Dieser wird in der Variable <code>invitee</code> gespeichert.
+	 * Jede Einladung ist einem Nutzer zugeordnet. Der Verweis auf diesen wird in dieser Variable gespeichert.
 	 */
-	private User invitee = null;
+	private int inviteeId = 0;
 
 	// Methoden
 
 	/**
 	 * Auslesen des Teilnahmestatuses
 	 * 
-	 * @return participationStatus Der Teilnahmestatus (wahr oder falsch).
+	 * @return Der Teilnahmestatus für eine Einladung (wahr oder falsch).
 	 */
 	public boolean getParticipationStatus() {
 		return participationStatus;
@@ -83,61 +86,59 @@ public class Invitation extends BusinessObject {
 	 * Setzen des neuen Teilnahmestatusses der Einladung.
 	 * 
 	 * @param participationStatus
-	 *            Der neue Teilnahmestatus (wahr oder falsch).
+	 *            Der neue Teilnahmestatus für diese Einladung (wahr oder falsch).
 	 */
 	public void setParticipationStatus(boolean participationStatus) {
 		this.participationStatus = participationStatus;
 	}
 
 	/**
-	 * Auslesen des der Belegung zugehörigen Events.
+	 * Auslesen des der Belegungs-ID zugehörigen Events.
 	 * 
-	 * @return event Das zugehöroge Event.
+	 * @return Die ID der zugehörigen Belegung.
 	 */
-	public Event getEvent() {
-		return event;
+	public int getEventId() {
+		return eventId;
 	}
 
 	/**
-	 * Setzen der der Einladung zugehörigen Belegung.
+	 * Setzen der Belegungs-ID für eine Einladung.
 	 * 
-	 * @param event
-	 *            Die zugehörige Belegung.
+	 * @param eventId
+	 *            Die zugehörige Belegungs-ID.
 	 */
-	public void setEvent(Event event) {
-		this.event = event;
+	public void setEventId(int eventId) {
+		this.eventId = eventId;
 	}
 
 	/**
-	 * Auslesen des der Einladung zugehörogen Nutzers.
+	 * Auslesen der ID des der Einladung zugehörigen Nutzers.
 	 * 
-	 * @return invitee Der der Einladung zugehörige Nuzter.
+	 * @return Die ID des der Einladung zugehörigen Nuzters.
 	 */
-	public User getInvitee() {
-		return invitee;
+	public int getInviteeId() {
+		return inviteeId;
 	}
 
 	/**
-	 * Setzen des der Einladung zugehörigen Nutzers.
+	 * Setzen der ID des eingeladenen Nutzers.
 	 * 
-	 * @param invitee
-	 *            Der Nutzer der Einladung zugewiesen werden soll.
+	 * @param inviteeId
+	 *            Die ID des der Einladung zugewiesen Nutzers.
 	 */
-	public void setInvitee(User invitee) {
-		this.invitee = invitee;
+	public void setInviteeId(int inviteeId) {
+		this.inviteeId = inviteeId;
 	}
 
 	/**
 	 * Erzeugung der textuellen Darstellung der jeweiligen Instanz und Erweiterung des Textes, der durch die
-	 * <code>toString()</code>-Methode der Superklasse erzeugt wird und um die zugehörige Belegung, den zugehörigen
-	 * Nutzer und den Teilnahmestatus dessen erweitert wird.
+	 * <code>toString()</code>-Methode der Superklasse erzeugt wird und um die zugehörige Belegungs-ID, die zugehörigen
+	 * Nutzer-ID und den Teilnahmestatus dessen erweitert wird.
 	 */
 	@Override
 	public String toString() {
-		return super.toString() + "Einladung für Event: " + getEvent().getTopic() + " von "
-				+ getEvent().getOrganizer().getFirstName() + " " + getEvent().getOrganizer().getLastName()
-				+ "(User-ID: " + getEvent().getOrganizer().getId() + ")" + lineBreak + "Eingeladener: " + getInvitee()
-				+ lineBreak + "Teilnahmestatus: " + getParticipationStatus() + lineBreak;
+		return super.toString() + "Einladung für Event-ID: " + getEventId() + lineBreak + "Eingeladener-ID: "
+				+ getInviteeId() + lineBreak + "Teilnahmestatus: " + getParticipationStatus() + lineBreak;
 	}
 
 	/**

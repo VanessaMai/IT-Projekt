@@ -1,6 +1,7 @@
 package roomreservationservice.shared.bo;
 
 import java.sql.Timestamp;
+
 /**
  * Klasse, die einen User im Raumplanungssystem abbilden soll.
  */
@@ -34,6 +35,7 @@ public class User extends BusinessObject {
 		this.email = email;
 		this.accessToken = accessToken;
 		this.accessTokenSecret = accessTokenSecret;
+		setCreationDate();
 	}
 
 	/**

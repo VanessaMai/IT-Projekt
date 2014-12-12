@@ -134,4 +134,25 @@ public abstract class BusinessObject implements Serializable {
 	public int hashCode() {
 		return this.id;
 	}
+	
+	/**
+	 * Hilfsfunktion, um die boolschen Werte als Integer darzustellen.
+	 * <p>
+	 * 0 = false und 1 = true
+	 * </p>
+	 * In dieser Form werden sie dann in die DB geschrieben.
+	 * 
+	 * @param b
+	 *            Der boolsche Wert, der als Integer repräsentiert werden soll.
+	 * @return intRepresentation Repräsentation des boolschen Wertes als Integer (0 = false, 1 = true);
+	 */
+	public static int getBooleanRepresentationAsInt(boolean b) {
+		int intRepresentation;
+		if (b == false) {
+			intRepresentation = 0;
+		} else {
+			intRepresentation = 1;
+		}
+		return intRepresentation;
+	}
 }
