@@ -1,6 +1,7 @@
 package roomreservationservice.server;
 
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.Vector;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
@@ -125,60 +126,137 @@ implements RoomReservationServiceAdministration{
 	 * Diese Methode muss für jede Instanz von RoomReservationServiceAdministrationImpl 
 	 * aufgerufen werden.
 	 */
-	@Override 
 	public void init() throws IllegalArgumentException{
+		 /**
+	     * Die RoomReservationServiceAdministration besitzt einen vollständigen Satz
+	     * von Mappern, mit deren Hilfe sie mit der Datenbank
+	     * kommunizieren kann.
+	     */
+		
+		/**
+		 * Mapper für den Raum.
+		 */
 		this.rMapper = RoomMapper.roomMapper();
-		// TODO MEthode ergänzen wenn, UserMapper-Klasse fertig ist
-		//this.uMapper = UserMapper. //
-		//this.eMapper = EventMapper
-		//this.iMapper = InvitationMapper.
+		/**
+		 * Mapper für den Nutzer.
+		 */
+		this.uMapper = UserMapper.userMapper();
+		/**
+		 * Mapper für die Reservierung.
+		 */
+		this.eMapper = EventMapper.eventMapper();
+		/**
+		 * Mapper für die Einladung.
+		 */
+		this.iMapper = InvitationMapper.invitationMapper();
 	}
 	
-	@Override
-	public Room createRoom(String roomName, int capacity)
+	/**
+	   * Übergeben eines neuen Raumes an den rMapper. Dies führt zu einem Speichern des
+	   * neuen Raumes in der Datenbank.
+	   * 
+	   *HINWEIS: Änderungen an Room-Objekten müssen stets durch Aufruf
+	   * von {@link #save(Room room)} in die Datenbank transferiert werden.
+	   * 
+	   * @see save(Room room)
+	   */
+	public Room createRoom(String roomName, int roomCapacity)
 			throws IllegalArgumentException {
-		// TODO Auto-generated method stub
-		return null;
+		Room room = new Room("neuer Raum", 1);
+		room.setRoomName(roomName);
+		room.setRoomCapacity(roomCapacity);;
+		/**
+		 * Abspeichern des Raum-Objektes in der Datenbank mithilfe von 
+		 * {@link #insert(Room room)}
+		 */
+		return this.rMapper.insert(room);
 	}
 
-	@Override
+	/**
+	   * Übergabe eines neuen Nutzers an den uMapper. Dies führt zu einem Speichern des
+	   * neuen Nutzers in der Datenbank.
+	   * 
+	   *HINWEIS: Änderungen an Nutzer-Objekten müssen stets durch Aufruf
+	   * von {@link #save(User user)} in die Datenbank transferiert werden.
+	   * 
+	   * @see save(User user)
+	   */
 	public User createUser(String firstName, String lastName, String email,
 			String accessToken, String accessTokenSecret)
 			throws IllegalArgumentException {
-		// TODO Auto-generated method stub
-		return null;
+		User user = new User("Vorname","Nachname", "Email", "accessToken", "accessTokenSecret");
+		user.setFirstName(firstName);
+		user.setLastName(lastName);
+		user.setEmail(email);
+		user.setAccessToken(accessToken);
+		user.setAccessTokenSecret(accessTokenSecret);
+		/**
+		 * Abspeichern des Nutzer-Objektes in der Datenbank mithilfe von 
+		 * {@link #insert(User user)}
+		 */
+		return this.uMapper.insert(user);
 	}
 
-	@Override
+	/**
+	   * Übergabe einer neuen Reservierung an den eMapper. Dies führt zu einem Speichern der
+	   * neuen Veranstaltung in der Datenbank.
+	   * 
+	   *HINWEIS: Änderungen an Veranstaltungs-Objekten müssen stets durch Aufruf
+	   * von {@link #save(Event event)} in die Datenbank transferiert werden.
+	   * 
+	   * @see save(Event event)
+	   */
 	public Event createEvent(String topic, Timestamp startDate, Timestamp endDate,
 			Room room, User organizer, Vector<User> invitees)
 			throws IllegalArgumentException {
-		// TODO Auto-generated method stub
-		return null;
+		//Probleme mit @Timestamp @author Anh Duc
+		Event event = new Event("topic", 2014-01-01, 2014-12-31, room, organizer, invitees);
+		event.setTopic(topic);
+		event.setStartDate(startDate);
+		event.setEndDate(endDate);
+		event.setOrganizer(organizer);
+		event.setInvitees(invitees);
+		/**
+		 * Abspeichern des Veranstaltungs-Objektes in der Datenbank mithilfe von 
+		 * {@link #insert(Event event)}
+		 */
+		return this.eMapper.insert(event);
 	}
 
-	@Override
+	/**
+	 * speichern eines Raumes.
+	 * @param room
+	 * @throws IllegalArgumentException
+	 */
 	public void save(Room room) throws IllegalArgumentException {
-		// TODO Auto-generated method stub
-		
+		rMapper.update(room);	
 	}
 
-	@Override
+	/**
+	 * speichern eines Nutzers.
+	 * @param user
+	 * @throws IllegalArgumentException
+	 */
 	public void save(User user) throws IllegalArgumentException {
-		// TODO Auto-generated method stub
-		
+		uMapper.update(user);	
 	}
 
-	@Override
+	/**
+	 * speichern einer Reservierung/Veranstaltung.
+	 * @param event
+	 * @throws IllegalArgumentException
+	 */
 	public void save(Event event) throws IllegalArgumentException {
-		// TODO Auto-generated method stub
-		
+		eMapper.update(event);	
 	}
 
-	@Override
+	/**
+	 * speichern einer Einladung.
+	 * @param invitation
+	 * @throws IllegalArgumentException
+	 */
 	public void save(Invitation invitation) throws IllegalArgumentException {
-		// TODO Auto-generated method stub
-		
+		iMapper.update(invitation);
 	}
 	/**
 	 * Löschen eines Raumes aus der Datenbank
