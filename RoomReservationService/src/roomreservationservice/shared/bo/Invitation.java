@@ -12,6 +12,13 @@ public class Invitation extends BusinessObject {
 	 */
 	private static final long serialVersionUID = -5271320310832622823L;
 
+	/*
+	 * Zero-Argument-Konstruktor. Wird von GWT benötigt. Zum Erstellen der Objekte bitte einen der beiden anderen
+	 * Konstuktoren verwenden.
+	 */
+	private Invitation() {
+	};
+	
 	/**
 	 * Der Konstruktor der Klasse Invitation. Dieser soll verwendet werden, wenn ein komplett neues Objekt erstellt
 	 * werden soll, für das der Erstellungszeitpunkt der Aufruf dieses Konstruktors sein soll. Wenn das Objekt schon
@@ -46,8 +53,9 @@ public class Invitation extends BusinessObject {
 	 * @param invitationId
 	 *            Die ID des Objekts aus der DB.
 	 */
-	public Invitation(int eventId, int inviteeId, Timestamp creationDate, int invitationId) {
+	public Invitation(int eventId, int participationStatus, int inviteeId, Timestamp creationDate, int invitationId) {
 		this.eventId = eventId;
+		this.participationStatus = participationStatus;
 		this.inviteeId = inviteeId;
 		setCreationDate(creationDate);
 		this.id = invitationId;
@@ -56,9 +64,14 @@ public class Invitation extends BusinessObject {
 	// Attribute
 
 	/**
-	 * Der Teilnahmestatus einer Einladung. Standardmäßig ist dieser auf <code>false</code> gesetzt.
+	 * <p>
+	 * <b>0 = flase, 1 = true </b>
+	 * </p>
+	 * Der Teilnahmestatus einer Einladung. Standardmäßig ist dieser auf <code>0</code> gesetzt. Um in Verbindung mit
+	 * der DB nicht immer zwischen boolean und int umwandeln zu müssen, sollen hier direkt nur Integers verwendet
+	 * werden.
 	 */
-	private boolean participationStatus = false;
+	private int participationStatus = 0;
 
 	/**
 	 * Jede Einladung bezieht auf eine Belegung. Der Verweis auf die entsprechende Belegung wird in dieser Variabe
@@ -78,7 +91,7 @@ public class Invitation extends BusinessObject {
 	 * 
 	 * @return Der Teilnahmestatus für eine Einladung (wahr oder falsch).
 	 */
-	public boolean getParticipationStatus() {
+	public int getParticipationStatus() {
 		return participationStatus;
 	}
 
@@ -88,7 +101,7 @@ public class Invitation extends BusinessObject {
 	 * @param participationStatus
 	 *            Der neue Teilnahmestatus für diese Einladung (wahr oder falsch).
 	 */
-	public void setParticipationStatus(boolean participationStatus) {
+	public void setParticipationStatus(int participationStatus) {
 		this.participationStatus = participationStatus;
 	}
 

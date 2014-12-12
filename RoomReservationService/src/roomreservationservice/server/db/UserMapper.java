@@ -1,13 +1,12 @@
 package roomreservationservice.server.db;
 
 import java.sql.Connection;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.Vector;
-
-import roomreservationservice.shared.bo.BusinessObject;
 import roomreservationservice.shared.bo.Event;
 import roomreservationservice.shared.bo.User;
 
@@ -299,15 +298,15 @@ public class UserMapper {
 
 	}
 	
-	public Vector<User> findAllUserByParticipationStatusForEvent(Event event, Boolean participationStatus) {
+	public Vector<User> findAllUserByParticipationStatusForEvent(Event event, int participationStatus) {
 		// Vorbereiten des Ergebnisvectors.
 		Vector<User> result = new Vector<User>();
 
 		// User-Mapper vorbereiten
 		UserMapper userMapper = UserMapper.userMapper();
 
-		// Boolschen Wert in Datenbankfreundlichen Integer-Wert umwandeln.
-		int participationStatusAsInt = BusinessObject.getBooleanRepresentationAsInt(participationStatus);
+		// Teilnahmestatus als Integer. 0 = false, 1 = true.
+		int participationStatusAsInt = participationStatus;
 
 		// DB-Connection holen.
 		Connection con = DBConnection.connection();

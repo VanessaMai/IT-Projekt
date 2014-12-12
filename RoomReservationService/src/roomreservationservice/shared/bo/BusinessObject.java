@@ -2,8 +2,7 @@ package roomreservationservice.shared.bo;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.util.Calendar;
-
+import java.util.Date;
 /**
  * Abstrakte Superklasse aller Businessobjects.
  */
@@ -13,11 +12,6 @@ public abstract class BusinessObject implements Serializable {
 	 */
 	private static final long serialVersionUID = -2101367372041454677L;
 
-	/**
-	 * Eine Instanz des Kalenders wird in der Variable <code>calendar</code> gespeichert. Mithilfe dessen, kann die
-	 * aktuelle Zeit ausgelesen werden und für den Erstellungszeitpunkt verwendet werden.
-	 */
-	Calendar calendar = Calendar.getInstance();
 
 	/**
 	 * In diesem Timestamp wird das Erstellungsdatum gespeichert. Der Grund, warum dies in einem Timestamp und nicht in
@@ -38,9 +32,10 @@ public abstract class BusinessObject implements Serializable {
 
 	/**
 	 * Setzen der jetzigen Zeit und des jetzigen Datums als Erstellungszeitpunktes der Instanz.
+	 * Date.getTime() liefert eine Long-Repräsentation der aktuellen Zeit.
 	 */
 	public void setCreationDate() {
-		creationDate = new Timestamp(calendar.getTime().getTime());
+		creationDate = new Timestamp(new Date().getTime());
 	}
 
 	/**
@@ -81,7 +76,7 @@ public abstract class BusinessObject implements Serializable {
 	 * Kleines Helferlein, um bei den toString()-Methoden schnell einen Zeilenumbruch zur besseren Lesbarkeit einfügen
 	 * zu können.
 	 */
-	static String lineBreak = System.getProperty("line.separator");
+	static String lineBreak = "\n";
 	
 	
 	
@@ -135,24 +130,4 @@ public abstract class BusinessObject implements Serializable {
 		return this.id;
 	}
 	
-	/**
-	 * Hilfsfunktion, um die boolschen Werte als Integer darzustellen.
-	 * <p>
-	 * 0 = false und 1 = true
-	 * </p>
-	 * In dieser Form werden sie dann in die DB geschrieben.
-	 * 
-	 * @param b
-	 *            Der boolsche Wert, der als Integer repräsentiert werden soll.
-	 * @return intRepresentation Repräsentation des boolschen Wertes als Integer (0 = false, 1 = true);
-	 */
-	public static int getBooleanRepresentationAsInt(boolean b) {
-		int intRepresentation;
-		if (b == false) {
-			intRepresentation = 0;
-		} else {
-			intRepresentation = 1;
-		}
-		return intRepresentation;
-	}
 }

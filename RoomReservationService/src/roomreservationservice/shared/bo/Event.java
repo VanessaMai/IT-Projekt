@@ -1,6 +1,7 @@
 package roomreservationservice.shared.bo;
 
 import java.sql.Timestamp;
+
 /**
  * Klasse, die eine Belegung im Raumplanungssystem abbilden soll.
  */
@@ -10,6 +11,13 @@ public class Event extends BusinessObject {
 	 * Automatisch generierte UID.
 	 */
 	private static final long serialVersionUID = -2587927450101616053L;
+
+	/*
+	 * Zero-Argument-Konstruktor. Wird von GWT benötigt. Zum Erstellen der Objekte bitte einen der beiden anderen
+	 * Konstuktoren verwenden.
+	 */
+	private Event() {
+	};
 
 	/**
 	 * Der Konstruktor der Klasse Invitation. Dieser soll verwendet werden, wenn ein komplett neues Objekt erstellt

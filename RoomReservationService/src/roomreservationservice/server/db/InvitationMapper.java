@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.Vector;
-import roomreservationservice.shared.bo.BusinessObject;
 import roomreservationservice.shared.bo.Invitation;
 
 public class InvitationMapper {
@@ -69,6 +68,7 @@ public class InvitationMapper {
 			if (resultSet.next()) {
 				// Zuerst werden die Attribute einzeln aus der DB abgefragt...
 				int eventId = resultSet.getInt("invitation_event");
+				int participationStatus = resultSet.getInt("participation_status");
 				int inviteeId = resultSet.getInt("invitation_invitee");
 				Timestamp creationDate = resultSet.getTimestamp("creation_date");
 				int invitationId = resultSet.getInt("id");
@@ -80,7 +80,8 @@ public class InvitationMapper {
 				 * bei einem Mapper ein Attribut vergisst und halbfertige Objekte erstellt. Daher gibt es hier diesen
 				 * Konstruktor, der alle Attribute fordert.
 				 */
-				Invitation invitation = new Invitation(eventId, inviteeId, creationDate, invitationId);
+				Invitation invitation = new Invitation(eventId, participationStatus, inviteeId, creationDate,
+						invitationId);
 
 				// Zuletzt wird das Room-Objekt zurückgegebn.
 				return invitation;
@@ -174,7 +175,7 @@ public class InvitationMapper {
 						+ "VALUES ("
 						+ invitation.getId()
 						+ ", "
-						+ BusinessObject.getBooleanRepresentationAsInt(invitation.getParticipationStatus())
+						+ invitation.getParticipationStatus()
 						+ ", "
 						+ invitation.getEventId()
 						+ ", "
@@ -210,9 +211,8 @@ public class InvitationMapper {
 			Statement stmt = con.createStatement();
 
 			stmt.executeUpdate("UPDATE invitations SET id= " + invitation.getId() + ", participation_status= "
-					+ BusinessObject.getBooleanRepresentationAsInt(invitation.getParticipationStatus())
-					+ ", invitation_event= " + invitation.getEventId() + ", invitation_invitee= "
-					+ invitation.getInviteeId() + " WHERE id= " + invitation.getId());
+					+ invitation.getParticipationStatus() + ", invitation_event= " + invitation.getEventId()
+					+ ", invitation_invitee= " + invitation.getInviteeId() + " WHERE id= " + invitation.getId());
 
 		} // SQL Exception abfangen, sollte etwas schiefgehen.
 		catch (SQLException e1) {
