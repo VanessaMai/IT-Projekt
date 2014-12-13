@@ -1,6 +1,7 @@
 package roomreservationservice.shared.bo;
 
 import java.sql.Timestamp;
+
 /**
  * Klasse, die einen User im Raumplanungssystem abbilden soll.
  */
@@ -11,6 +12,13 @@ public class User extends BusinessObject {
 	 */
 	private static final long serialVersionUID = 6111824407973818207L;
 
+	/*
+	 * Zero-Argument-Konstruktor. Wird von GWT benötigt. Zum Erstellen der Objekte bitte einen der beiden anderen
+	 * Konstuktoren verwenden.
+	 */
+	private User() {
+	};
+	
 	/**
 	 * Der Konstruktor der Klasse User. Dieser soll verwendet werden, wenn ein komplett neues Objekt erstellt werden
 	 * soll, für das der Erstellungszeitpunkt der Aufruf dieses Konstruktors sein soll. Wenn das Objekt schon existiert
@@ -34,6 +42,7 @@ public class User extends BusinessObject {
 		this.email = email;
 		this.accessToken = accessToken;
 		this.accessTokenSecret = accessTokenSecret;
+		setCreationDate();
 	}
 
 	/**

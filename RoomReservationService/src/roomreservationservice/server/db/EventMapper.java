@@ -73,12 +73,10 @@ public class EventMapper {
 				String topic = resultSet.getString("topic");
 				Timestamp startDate = resultSet.getTimestamp("start_date");
 				Timestamp endDate = resultSet.getTimestamp("end_date");
-				User organizer = getOrganizerOfEvent(resultSet.getInt("event_organizer"));
-				Room room = getRoomOfEvent(resultSet.getInt("event_room"));
+				int organizerId = resultSet.getInt("event_organizer");
+				int roomId = resultSet.getInt("event_room");
 				Timestamp creationDate = resultSet.getTimestamp("creation_date");
 				int eventID = resultSet.getInt("id");
-				Vector<User> invitees = getInviteesOfEvent(eventID);
-
 				/**
 				 * ...und anschließend an den Konstruktor für ein neues Invitation-Objekt übergeben. Es wäre zwar auch
 				 * möglich mit einem entsprechendem Konstruktor einen leeres Invitation-Objekt zu erstellen und dann
@@ -86,7 +84,7 @@ public class EventMapper {
 				 * bei einem Mapper ein Attribut vergisst und halbfertige Objekte erstellt. Daher gibt es hier diesen
 				 * Konstruktor, der alle Attribute fordert.
 				 */
-				Event event = new Event(topic, startDate, endDate, organizer, room, invitees, creationDate, eventID);
+				Event event = new Event(topic, startDate, endDate, organizerId, roomId, creationDate, eventID);
 				// Zuletzt wird das Event-Objekt zurückgegebn.
 				return event;
 			}
@@ -185,10 +183,11 @@ public class EventMapper {
 						+ "', '"
 						+ event.getTopic()
 						+ "', "
-						+ event.getOrganizer().getId()
+						+ event.getOrganizerId()
 						+ ", "
-						+ event.getRoom().getId()
-						+ ", '" + event.getCreationDate() + "')");
+						+ event.getRoomId()
+						+ ", '"
+						+ event.getCreationDate() + "')");
 			}
 		} // SQL Exception abfangen, sollte etwas schiefgehen.
 		catch (SQLException e1) {
@@ -219,8 +218,8 @@ public class EventMapper {
 			Statement stmt = con.createStatement();
 
 			stmt.executeUpdate("UPDATE events SET start_date= '" + event.getStartDate() + "', end_date= '"
-					+ event.getEndDate() + "', '" + event.getTopic() + "', " + event.getOrganizer().getId() + ", "
-					+ event.getRoom().getId() + " WHERE id= " + event.getId());
+					+ event.getEndDate() + "', '" + event.getTopic() + "', " + event.getOrganizerId() + ", "
+					+ event.getRoomId() + " WHERE id= " + event.getId());
 
 		} // SQL Exception abfangen, sollte etwas schiefgehen.
 		catch (SQLException e1) {
@@ -648,75 +647,49 @@ public class EventMapper {
 
 	}
 
-	/**
-	 * Hilfsfunktion, um das in der Tabelle per Fremdschlüssel verwiesene User-Objekt abzufragen und dieses zu holen.
-	 * 
-	 * @param event_organizer
-	 *            Fremdschlüssel, der auf den Nutzer verweist.
-	 * @return user Ein User-Objekt, dass den Datensatz repräsentiert, auf den verwiesen wurde.
-	 */
-	private User getOrganizerOfEvent(int event_organizer) {
-		UserMapper userMapper = UserMapper.userMapper();
-		User user = userMapper.findByKey(event_organizer);
-		return user;
-	}
-
-	/**
-	 * Hilfsfunktion, um das in der Tabelle per Fremdschlüssel verwiesene Room-Objekt abzufragen und dieses zu holen.
-	 * 
-	 * @param event_organizer
-	 *            Fremdschlüssel, der auf den Raum verweist.
-	 * @return room Ein Room-Objekt, dass den Datensatz repräsentiert, auf den verwiesen wurde.
-	 */
-	private Room getRoomOfEvent(int event_room) {
-		RoomMapper roomMapper = RoomMapper.roomMapper();
-		Room room = roomMapper.findByKey(event_room);
-		return room;
-	}
-
-	/**
-	 * Hilfsfunktion, um das in der Tabelle per Fremdschlüssel verwiesene User-Objekt abzufragen und dieses zu holen.
-	 * Hierfür wird abgefragt, welche Nutzer in der Einladung einer Beleung stehen und die zutreffenden werden
-	 * anschließend in den Ergebnisvector übernommen.
-	 * 
-	 * @param eventID
-	 *            Die ID der Belegung.
-	 * @return invitees Vector, aller User-Objekte, die eine Einladung für diese Belegung erhalten haben.
-	 */
-	private Vector<User> getInviteesOfEvent(int eventID) {
-		// User Mapper holen.
-		UserMapper userMapper = UserMapper.userMapper();
-
-		// Ergebnis Vector vorbereiten.
-		Vector<User> result = new Vector<User>();
-
-		// DB-Verbindung holen
-		Connection con = DBConnection.connection();
-		try {
-			// Leeres SQL-Statement (JDBC) anlegen
-			Statement stmt = con.createStatement();
-
-			// Statement ausfüllen und als Query an die DB schicken
-			ResultSet resultSet = stmt
-					.executeQuery("SELECT invitation_invitee FROM invitations WHERE invitation_event= " + eventID);
-
-			while (resultSet.next()) {
-				User user = userMapper.findByKey(resultSet.getInt("invitation_invitee"));
-				result.addElement(user);
-			}
-
-			return result;
-		}
-		// SQL Exception abfangen, sollte etwas schiefgehen.
-		catch (SQLException e1) {
-			e1.printStackTrace();
-			return null;
-		}
-		// Wenn kein Eintrag vorhanden ist.
-		catch (NullPointerException e2) {
-			e2.printStackTrace();
-			return null;
-		}
-	}
+	// /**
+	// * Hilfsfunktion, um das in der Tabelle per Fremdschlüssel verwiesene User-Objekt abzufragen und dieses zu holen.
+	// * Hierfür wird abgefragt, welche Nutzer in der Einladung einer Beleung stehen und die zutreffenden werden
+	// * anschließend in den Ergebnisvector übernommen.
+	// *
+	// * @param eventID
+	// * Die ID der Belegung.
+	// * @return invitees Vector, aller User-Objekte, die eine Einladung für diese Belegung erhalten haben.
+	// */
+	// private Vector<User> getInviteesOfEvent(int eventID) {
+	// // User Mapper holen.
+	// UserMapper userMapper = UserMapper.userMapper();
+	//
+	// // Ergebnis Vector vorbereiten.
+	// Vector<User> result = new Vector<User>();
+	//
+	// // DB-Verbindung holen
+	// Connection con = DBConnection.connection();
+	// try {
+	// // Leeres SQL-Statement (JDBC) anlegen
+	// Statement stmt = con.createStatement();
+	//
+	// // Statement ausfüllen und als Query an die DB schicken
+	// ResultSet resultSet = stmt
+	// .executeQuery("SELECT invitation_invitee FROM invitations WHERE invitation_event= " + eventID);
+	//
+	// while (resultSet.next()) {
+	// User user = userMapper.findByKey(resultSet.getInt("invitation_invitee"));
+	// result.addElement(user);
+	// }
+	//
+	// return result;
+	// }
+	// // SQL Exception abfangen, sollte etwas schiefgehen.
+	// catch (SQLException e1) {
+	// e1.printStackTrace();
+	// return null;
+	// }
+	// // Wenn kein Eintrag vorhanden ist.
+	// catch (NullPointerException e2) {
+	// e2.printStackTrace();
+	// return null;
+	// }
+	// }
 
 }
