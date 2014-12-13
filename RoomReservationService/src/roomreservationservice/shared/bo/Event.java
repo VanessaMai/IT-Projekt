@@ -177,7 +177,7 @@ public class Event extends BusinessObject {
 	 * @param organizerId
 	 *            Die ID des Nutzers, der als Organisator des Events auftritt.
 	 */
-	public void setOrganizer(int organizerId) {
+	public void setOrganizerId(int organizerId) {
 		this.organizerId = organizerId;
 	}
 

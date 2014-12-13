@@ -136,7 +136,6 @@ implements RoomReservationServiceAdministration{
 		 * Mapper für den Raum.
 		 */
 		this.rMapper = RoomMapper.roomMapper();
-<<<<<<< HEAD
 		/**
 		 * Mapper für den Nutzer.
 		 */
@@ -148,10 +147,6 @@ implements RoomReservationServiceAdministration{
 		/**
 		 * Mapper für die Einladung.
 		 */
-=======
-		this.uMapper = UserMapper.userMapper();
-		this.eMapper = EventMapper.eventMapper();
->>>>>>> refs/heads/master
 		this.iMapper = InvitationMapper.invitationMapper();
 	}
 	
@@ -210,18 +205,18 @@ implements RoomReservationServiceAdministration{
 	   * 
 	   * @see save(Event event)
 	   */
-	public Event createEvent(String topic, Timestamp startDate, Timestamp endDate,
-			Room room, User organizer, Vector<User> invitees)
+	public Event createEvent(String topic, Timestamp startDate, Timestamp endDate, int organizerId, int roomId)
 			throws IllegalArgumentException {
 		//Probleme mit @Timestamp @author Anh Duc
-		Event event = new Event("topic", Timestamp.valueOf("2014-01-01"), Timestamp.valueOf("2014-12-31"), room, organizer, invitees);
+		Event event = new Event("topic", Timestamp.valueOf("2014-01-01"), Timestamp.valueOf("2014-12-31"), 1, 1);
 		event.setTopic(topic);
 		event.setStartDate(startDate);
 		event.setEndDate(endDate);
-		event.setOrganizer(organizer);
-		event.setInvitees(invitees);
+		event.setOrganizerId(organizerId);
+		event.setRoomId(roomId);
+	
 		/**
-		 * Abspeichern des Veranstaltungs-Objektes in der Datenbank mithilfe von 
+		 * Abspeichern des Belegungs-Objektes in der Datenbank mithilfe von 
 		 * {@link #insert(Event event)}
 		 */
 		return this.eMapper.insert(event);
