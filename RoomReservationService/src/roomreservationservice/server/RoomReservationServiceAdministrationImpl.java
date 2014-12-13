@@ -1,7 +1,6 @@
 package roomreservationservice.server;
 
 import java.sql.Timestamp;
-import java.time.Instant;
 import java.util.Vector;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
@@ -137,6 +136,7 @@ implements RoomReservationServiceAdministration{
 		 * Mapper für den Raum.
 		 */
 		this.rMapper = RoomMapper.roomMapper();
+<<<<<<< HEAD
 		/**
 		 * Mapper für den Nutzer.
 		 */
@@ -148,6 +148,10 @@ implements RoomReservationServiceAdministration{
 		/**
 		 * Mapper für die Einladung.
 		 */
+=======
+		this.uMapper = UserMapper.userMapper();
+		this.eMapper = EventMapper.eventMapper();
+>>>>>>> refs/heads/master
 		this.iMapper = InvitationMapper.invitationMapper();
 	}
 	
@@ -289,8 +293,7 @@ implements RoomReservationServiceAdministration{
 
 	@Override
 	public Vector<Room> getAllRooms() throws IllegalArgumentException {
-		// TODO Auto-generated method stub
-		return null;
+		//return this.rMapper.findAll();
 	}
 
 	@Override
