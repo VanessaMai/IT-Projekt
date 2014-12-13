@@ -169,8 +169,28 @@ public interface RoomReservationServiceAdministration extends RemoteService {
 	 * @return Vector Objekten mit den User-Objekten, welche die Suchkriterien erfüllen
 	 * @throws IllegalArgumentException
 	 */
-	public Vector<User> getUsersByParticipationStatusForEvent(Event event, boolean participationStatus)
+	public Vector<User> getUsersByParticipationStatusForEvent(Event event, int participationStatus)
 			throws IllegalArgumentException;
+	
+	
+	/**
+	 * Ausgeben von UserObjekten die zu einem Event eingeladen sind
+	 * 
+	 * @param event
+	 * @return Vector mit User Objekten
+	 * @throws IllegalArgumentException
+	 */
+	public Vector<User> getInviteesOfEvent(Event event)
+			throws IllegalArgumentException;
+	
+	/**
+	 * Ausgeben eines UserObjekts, der Veranstalter einer Belegung ist
+	 * @param event
+	 * @return User-Objekt
+	 * @throws IllegalArgumentException
+	 */
+	public User getOrganizerOfEvent(Event event) throws IllegalArgumentException;
+	
 	
 	/**
 	 * Ausgeben aller Belegungen in einem Raum

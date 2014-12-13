@@ -412,7 +412,7 @@ implements RoomReservationServiceAdministration{
 		for (int i = 0; i < allInvitations.size(); i++) {
 			// für jede Invitation wird die eventID ausgelesen und mit der
 			// eventID des übergebenen events verglichen
-			if (allInvitations.elementAt(i).getEventId() == event.getRoomId()) {
+			if (allInvitations.elementAt(i).getEventId() == event.getId()) {
 				// falls diese übereinstimmen, dann wird die Invitation dem
 				// Vector invitations hinzugefügt
 				invitations.addElement(allInvitations.elementAt(i));

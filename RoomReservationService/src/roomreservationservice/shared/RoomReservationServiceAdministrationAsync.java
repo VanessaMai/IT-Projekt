@@ -56,7 +56,7 @@ public interface RoomReservationServiceAdministrationAsync {
 	void getUsersByName(String name, AsyncCallback<Vector<User>> callback);
 
 	void getUsersByParticipationStatusForEvent(Event event,
-			boolean participationStatus, AsyncCallback<Vector<User>> callback);
+			int participationStatus, AsyncCallback<Vector<User>> callback);
 
 	void getEventsByRoom(Room room, AsyncCallback<Vector<Event>> callback);
 
@@ -77,5 +77,9 @@ public interface RoomReservationServiceAdministrationAsync {
 	void getEventsByInvitees(User user, AsyncCallback<Vector<Event>> callback);
 
 	void getEventsByOrganizer(User user, AsyncCallback<Vector<Event>> callback);
+
+	void getOrganizerOfEvent(Event event, AsyncCallback<User> callback);
+
+	void getInviteesOfEvent(Event event, AsyncCallback<Vector<User>> callback);
 
 }
