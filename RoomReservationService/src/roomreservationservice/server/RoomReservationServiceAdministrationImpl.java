@@ -159,11 +159,10 @@ implements RoomReservationServiceAdministration{
 	   * 
 	   * @see save(Room room)
 	   */
+	@Override
 	public Room createRoom(String roomName, int roomCapacity)
 			throws IllegalArgumentException {
-		Room room = new Room("neuer Raum", 1);
-		room.setRoomName(roomName);
-		room.setRoomCapacity(roomCapacity);;
+		Room room = new Room(roomName, roomCapacity);
 		/**
 		 * Abspeichern des Raum-Objektes in der Datenbank mithilfe von 
 		 * {@link #insert(Room room)}
@@ -180,15 +179,11 @@ implements RoomReservationServiceAdministration{
 	   * 
 	   * @see save(User user)
 	   */
+	@Override
 	public User createUser(String firstName, String lastName, String email,
 			String accessToken, String accessTokenSecret)
 			throws IllegalArgumentException {
-		User user = new User("Vorname","Nachname", "Email", "accessToken", "accessTokenSecret");
-		user.setFirstName(firstName);
-		user.setLastName(lastName);
-		user.setEmail(email);
-		user.setAccessToken(accessToken);
-		user.setAccessTokenSecret(accessTokenSecret);
+		User user = new User(firstName, lastName, email, accessToken, accessTokenSecret);
 		/**
 		 * Abspeichern des Nutzer-Objektes in der Datenbank mithilfe von 
 		 * {@link #insert(User user)}
@@ -205,20 +200,20 @@ implements RoomReservationServiceAdministration{
 	   * 
 	   * @see save(Event event)
 	   */
-	public Event createEvent(String topic, Timestamp startDate, Timestamp endDate, int organizerId, int roomId)
-			throws IllegalArgumentException {
-		//Probleme mit @Timestamp @author Anh Duc
-		Event event = new Event("topic", Timestamp.valueOf("2014-01-01"), Timestamp.valueOf("2014-12-31"), 1, 1);
-		event.setTopic(topic);
-		event.setStartDate(startDate);
-		event.setEndDate(endDate);
-		event.setOrganizerId(organizerId);
-		event.setRoomId(roomId);
 	
-		/**
-		 * Abspeichern des Belegungs-Objektes in der Datenbank mithilfe von 
-		 * {@link #insert(Event event)}
-		 */
+	
+	@Override
+	public Event createEvent(String topic, Timestamp startDate,
+			Timestamp endDate, Room room, User organizer, Vector<User> invitees)
+			throws IllegalArgumentException {
+		int organizerId = organizer.getId();
+		int roomId = room.getId();
+		Event event = new Event(topic, startDate, endDate, roomId, organizerId);
+		for(User i:invitees){
+			Invitation invitation = new Invitation(event.getId(), i.getId());
+			this.iMapper.insert(invitation);
+		}
+		
 		return this.eMapper.insert(event);
 	}
 
@@ -227,6 +222,7 @@ implements RoomReservationServiceAdministration{
 	 * @param room
 	 * @throws IllegalArgumentException
 	 */
+	@Override
 	public void save(Room room) throws IllegalArgumentException {
 		rMapper.update(room);	
 	}
@@ -236,6 +232,7 @@ implements RoomReservationServiceAdministration{
 	 * @param user
 	 * @throws IllegalArgumentException
 	 */
+	@Override
 	public void save(User user) throws IllegalArgumentException {
 		uMapper.update(user);	
 	}
@@ -245,6 +242,7 @@ implements RoomReservationServiceAdministration{
 	 * @param event
 	 * @throws IllegalArgumentException
 	 */
+	@Override
 	public void save(Event event) throws IllegalArgumentException {
 		eMapper.update(event);	
 	}
@@ -254,6 +252,7 @@ implements RoomReservationServiceAdministration{
 	 * @param invitation
 	 * @throws IllegalArgumentException
 	 */
+	@Override
 	public void save(Invitation invitation) throws IllegalArgumentException {
 		iMapper.update(invitation);
 	}
@@ -365,9 +364,7 @@ implements RoomReservationServiceAdministration{
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-	
-	
+		
 	
 	
 }
