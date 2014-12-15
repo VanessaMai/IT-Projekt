@@ -1,7 +1,6 @@
 package roomreservationservice.shared.bo;
 
-import java.util.Date;
-import java.util.Vector;
+import java.sql.Timestamp;
 
 /**
  * Klasse, die eine Belegung im Raumplanungssystem abbilden soll.
@@ -13,55 +12,113 @@ public class Event extends BusinessObject {
 	 */
 	private static final long serialVersionUID = -2587927450101616053L;
 
-	// Attribute 
-	
+	/*
+	 * Zero-Argument-Konstruktor. Wird von GWT benötigt. Zum Erstellen der Objekte bitte einen der beiden anderen
+	 * Konstuktoren verwenden.
+	 */
+	private Event() {
+	};
+
+	/**
+	 * Der Konstruktor der Klasse Invitation. Dieser soll verwendet werden, wenn ein komplett neues Objekt erstellt
+	 * werden soll, für das der Erstellungszeitpunkt der Aufruf dieses Konstruktors sein soll. Wenn das Objekt schon
+	 * existiert und nur aus wiederhergestellt werden soll (zum Beispiel aus der DB), dann bitte den Konstruktor
+	 * verwenden, der zusätzlich den originalen Erstellugnszeitpunkt entgegen nimmt.
+	 * 
+	 * @param topic
+	 *            Das Belegungsthema.
+	 * @param startDate
+	 *            Der Startzeitpunkt der Belegung.
+	 * @param endDate
+	 *            Der Endzeitpunkt der Belegung.
+	 * @param organizerId
+	 *            ID des Nutzers, der als Organisator der Belegung eingetragen werden soll.
+	 * @param roomId
+	 *            ID des Raums der belegt werden soll.
+	 */
+	public Event(String topic, Timestamp startDate, Timestamp endDate, int organizerId, int roomId) {
+		this.topic = topic;
+		this.startDate = startDate;
+		this.endDate = endDate;
+		this.organizerId = organizerId;
+		this.roomId = roomId;
+		setCreationDate();
+	}
+
+	/**
+	 * Ein zweiter Konstruktor für die Klasse Event. Dieser soll verwendet werden, wenn ein Objekt bereits ein
+	 * Erstellungsdatum und eine ID besitzt und diese nicht neu erstellt werden müssen. Dies der Fall, wenn ein Objekt
+	 * aus einem DB-Eintrag wiederhergestellt werden soll.
+	 * 
+	 * @param topic
+	 *            Das Belegungsthema.
+	 * @param startDate
+	 *            Der Startzeitpunkt der Belegung.
+	 * @param endDate
+	 *            Der Endzeitpunkt der Belegung.
+	 * @param organizerId
+	 *            ID des Nutzers, der als Organisator der Belegung eingetragen werden soll.
+	 * @param roomId
+	 *            ID des Raums der belegt werden soll.
+	 * @param creationDate
+	 *            Der originale Erstellnugszeitpunkt des Objekts.
+	 * @param eventID
+	 *            Die ID des Objekts aus der DB.
+	 */
+	public Event(String topic, Timestamp startDate, Timestamp endDate, int organizerId, int roomId,
+			Timestamp creationDate, int eventID) {
+		this.topic = topic;
+		this.startDate = startDate;
+		this.endDate = endDate;
+		this.organizerId = organizerId;
+		this.roomId = roomId;
+		setCreationDate(creationDate);
+		this.id = eventID;
+	}
+
+	// Attribute
+
 	/**
 	 * Thema der Belegung.
 	 */
-	private String topic = "";
-	
+	private String topic = "unknown";
+
 	/**
 	 * Startzeitpunkt der Belegung.
 	 */
-	private Date startDate = null;
-	
+	private Timestamp startDate;
+
 	/**
 	 * Endzeitpunkt der Belegung.
 	 */
-	private Date endDate = null;
-	
+	private Timestamp endDate;
+
 	/**
-	 * User, der als Organisator der Belegung auftritt.
+	 * ID des Users, der als Organisator der Belegung auftritt.
 	 */
-	private User organizer = null;
-	
+	private int organizerId = 0;
+
 	/**
-	 * Der Belegung zugeordneter Raum. 
+	 * ID des Raums, der der Belegung zugeordneter ist.
 	 */
-	private Room room = null;
-	
-	/**
-	 * Vector mit den der Belegung zugeordneten Nutzer, also der Eingeladenen.
-	 */
-	private Vector<User> invitees = null;
-	
-	
-	
-	
-	
+	private int roomId = 0;
+
 	// Methoden
-	
+
 	/**
-	 * Ausgeben des Beleungsthemas. 
-	 * @return topic
+	 * Ausgeben des Beleungsthemas.
+	 * 
+	 * @return topic Das Beleungsthema.
 	 */
 	public String getTopic() {
 		return topic;
 	}
 
 	/**
-	 * Setzten des Belegungsthemas. 
+	 * Setzten des Belegungsthemas.
+	 * 
 	 * @param topic
+	 *            Das Belegungsthema.
 	 */
 	public void setTopic(String topic) {
 		this.topic = topic;
@@ -69,116 +126,110 @@ public class Event extends BusinessObject {
 
 	/**
 	 * Ausgeben des Startzeitpunkts einer Belegung.
-	 * @return startDate
+	 * 
+	 * @return startDate Der Startzeitpunkt der Belegung.
 	 */
-	public Date getStartDate() {
+	public Timestamp getStartDate() {
 		return startDate;
 	}
 
 	/**
 	 * Setzen des Startzeitpunks einer Beleugung.
+	 * 
 	 * @param startDate
+	 *            Der Startzeitpunkt der Belegung.
 	 */
-	public void setStartDate(Date startDate) {
+	public void setStartDate(Timestamp startDate) {
 		this.startDate = startDate;
 	}
 
 	/**
 	 * Ausgeben des Endzeitpunkts einer Belegung.
-	 * @return endDate
+	 * 
+	 * @return endDate Der Endzeitpunkt der Belegung.
 	 */
-	public Date getEndDate() {
+	public Timestamp getEndDate() {
 		return endDate;
 	}
 
 	/**
 	 * Setzen des Endzeitpunkts einer Beleugung.
+	 * 
 	 * @param endDate
+	 *            Der Endzeitpunkt der Belegung.
 	 */
-	public void setEndDate(Date endDate) {
+	public void setEndDate(Timestamp endDate) {
 		this.endDate = endDate;
 	}
 
 	/**
-	 * Ausgeben des Organisators der Belegung. 
-	 * @return organizer
+	 * Ausgeben der ID des Organisators der Belegung.
+	 * 
+	 * @return ID des Nutzers, der als Oransator des Event eingetragen ist.
 	 */
-	public User getOrganizer() {
-		return organizer;
+	public int getOrganizerId() {
+		return organizerId;
 	}
 
 	/**
-	 * Setzen des Organisators der Belegung.
-	 * @param organizer	Nutzer, der als Organisator des Events auftritt.
+	 * Setzen der ID des Organisators der Belegung.
+	 * 
+	 * @param organizerId
+	 *            Die ID des Nutzers, der als Organisator des Events auftritt.
 	 */
-	public void setOrganizer(User organizer) {
-		this.organizer = organizer;
+	public void setOrganizer(int organizerId) {
+		this.organizerId = organizerId;
 	}
 
 	/**
-	 * Ausgeben des Raums einer Belegung.
+	 * Ausgeben der ID des zugeordneten Raums einer Belegung.
+	 * 
+	 * @return Die ID des zugeordneten Raums der Belegung.
 	 */
-	public Room getRoom() {
-		return room;
+	public int getRoomId() {
+		return roomId;
 	}
 
 	/**
-	 * Setzen des Raums einer Belegung
-	 * @param room	Neuer, der Belegung zugeordneter Raum.
+	 * Setzen der ID des Raums einer Belegung.
+	 * 
+	 * @param roomId
+	 *            ID des neuen, der Belegung zugeordneter Raums.
 	 */
-	public void setRoom(Room room) {
-		this.room = room;
+	public void setRoomId(int roomId) {
+		this.roomId = roomId;
 	}
 
 	/**
-	 * Auslesen der Eingeladenen einer Belegung.
+	 * Erzeugung der textuellen Darstellung der jeweiligen Instanz und Erweiterung des Textes, der durch die
+	 * <code>toString()</code>-Methode der Superklasse erzeugt wird und um das Belegungsthema, den Start- und
+	 * Endzeitpunkt, sowie die ID des Organisators der Belegung und die ID des belegten Raums erweitert wird.
 	 */
-	public Vector<User> getInvitees() {
-		return invitees;
-	}
-
-	/**
-	 * Setzer des Vectors mit den Eingeladenen einer Belegung.
-	 * @param invitees	Vector mit den Eingeladenen einer Belegung.
-	 */
-	public void setInvitees(Vector<User> invitees) {
-		this.invitees = invitees;
-	}
-	
-	
-	/**
-	 * Erzeugung der textuellen Darstellung der jeweiligen Instanz und Erweiterung des Textes, der durch die <code>toString()</code>-Methode
-	 * der Superklasse erzeugt wird und um  das Belegungsthema, den Start- und Endzeitpunkt, sowie den Organisator der Belegung und den belegten Raum erweitert wird.
-	 */
-	
 	@Override
 	public String toString() {
-	  return super.toString() + "Belegungsthema: " + this.getTopic() + "Startzeitpunkt: "+ this.getStartDate() + "Endzeitpunkt: " + getEndDate() + "Organisator: " + getOrganizer() + "Belegter Raum: " + getRoom() + "Oranisator: " + organizer.toString() +  "Eingeladene: " + invitees.toString();
+		return super.toString() + "Belegungsthema: " + getTopic() + lineBreak + "Startzeitpunkt: " + getStartDate()
+				+ lineBreak + "Endzeitpunkt: " + getEndDate() + lineBreak + "Organisator-ID: " + getOrganizerId()
+				+ lineBreak + "Belegter Raum-ID: " + getRoomId() + lineBreak;
 
-	  }
-	
-	
-	
-	  /**
-	   * Feststellen der inhaltlichen Gleichheit zweier
-	   * <code>Event</code>-Objekte.
-	   */
+	}
+
+	/**
+	 * Feststellen der inhaltlichen Gleichheit zweier <code>Event</code>-Objekte.
+	 */
 	@Override
 	public boolean equals(Object o) {
-	    /*
-	     * Abfragen, ob ein Objekt ungleich NULL ist und ob ein Objekt gecastet werden
-	     * kann.
-	     */
-	    if (o != null && o instanceof Event) {
-	    	Event c = (Event) o;
-	      try {
-	        return super.equals(c);
-	      }
-	      catch (IllegalArgumentException e) {
-	        return false;
-	      }
-	    }
-	    return false;
-	  }
+		/*
+		 * Abfragen, ob ein Objekt ungleich NULL ist und ob ein Objekt gecastet werden kann.
+		 */
+		if (o != null && o instanceof Event) {
+			Event c = (Event) o;
+			try {
+				return super.equals(c);
+			} catch (IllegalArgumentException e) {
+				return false;
+			}
+		}
+		return false;
+	}
 
 }
