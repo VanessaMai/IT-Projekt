@@ -121,14 +121,17 @@ public class UserMapper {
 			// Prüfen, ob Einträge gefunden wurden.
 			if (resultSet.next()) {
 				// Für jeden Eintrag im Suchergebnis wird nun ein User-Objekt erstellt.
-				while (resultSet.next()) {
+				do {
 
-					// Für jeden Eintrag wird die findByKey-Methode aufgerufen, die das User-Obejekt zurückliefert.
+					// Für jeden Eintrag wird die findByKey-Methode aufgerufen, die das User-Objekt zurückliefert.
 					User user = findByKey(resultSet.getInt("id"));
 
 					// Hinzufügen des neuen Objekts zum Ergebnisvektor
 					result.addElement(user);
-				}
+				} while (resultSet.next());
+
+				// Ergebnisvektor zurückgeben
+				return result;
 			}
 			// wenn das Resultset leer ist, wird <code>null</code> zurückgegeben.
 			else {
@@ -140,8 +143,6 @@ public class UserMapper {
 			return null;
 		}
 
-		// Ergebnisvektor zurückgeben
-		return result;
 	}
 
 	/**
@@ -186,19 +187,23 @@ public class UserMapper {
 						+ user.getAccessToken()
 						+ "', '"
 						+ user.getAccessTokenSecret() + "', '" + user.getCreationDate() + "')");
+
+				/*
+				 * Rückgabe, des nun veränderten Raum Objekts. Es hat von der DB eine ID zugewiesen bekommen, die sie
+				 * fortanverwendet, falls man den Datenastz zum Beispiel aus der DB löschen oder ihn updaten möchte.
+				 */
+
+				return user;
+			}
+			// wenn das Resultset leer ist, wird <code>null</code> zurückgegeben.
+			else {
+				return null;
 			}
 		} // SQL Exception abfangen, sollte etwas schiefgehen.
 		catch (SQLException e1) {
 			e1.printStackTrace();
 			return null;
 		}
-
-		/*
-		 * Rückgabe, des nun veränderten Raum Objekts. Es hat von der DB eine ID zugewiesen bekommen, die sie
-		 * fortanverwendet, falls man den Datenastz zum Beispiel aus der DB löschen oder ihn updaten möchte.
-		 */
-
-		return user;
 	}
 
 	/**
@@ -219,6 +224,8 @@ public class UserMapper {
 					+ user.getLastName() + "', email= '" + user.getEmail() + "', access_token= '"
 					+ user.getAccessToken() + "', access_token_secret= '" + user.getAccessTokenSecret()
 					+ "' WHERE id= " + user.getId());
+			// Um Analogie zu insert(User user) zu wahren, geben wir das User-Objekt wieder zurück.
+			return user;
 
 		} // SQL Exception abfangen, sollte etwas schiefgehen.
 		catch (SQLException e1) {
@@ -231,8 +238,6 @@ public class UserMapper {
 			return null;
 		}
 
-		// Um Analogie zu insert(User user) zu wahren, geben wir das User-Obejekt wieder zurück.
-		return user;
 	}
 
 	/**
@@ -281,9 +286,12 @@ public class UserMapper {
 			if (resultSet.next()) {
 				User user = userMapper.findByKey(resultSet.getInt("id"));
 				result.addElement(user);
+				return result;
 			}
-
-			return result;
+			// wenn das Resultset leer ist, wird <code>null</code> zurückgegeben.
+			else {
+				return null;
+			}
 
 		} // SQL Exception abfangen, sollte etwas schiefgehen.
 		catch (SQLException e1) {
@@ -297,7 +305,7 @@ public class UserMapper {
 		}
 
 	}
-	
+
 	public Vector<User> findAllUserByParticipationStatusForEvent(Event event, int participationStatus) {
 		// Vorbereiten des Ergebnisvectors.
 		Vector<User> result = new Vector<User>();
@@ -320,13 +328,20 @@ public class UserMapper {
 			ResultSet resultSet = stmt.executeQuery("SELECT invitation_invitee FROM invitations "
 					+ "WHERE invitation_event= " + event.getId() + " AND participation_status = "
 					+ participationStatusAsInt);
+			if (resultSet.next()) {
+				do {
+					User user = userMapper.findByKey(resultSet.getInt("invitation_invitee"));
+					result.addElement(user);
 
-			while (resultSet.next()) {
-				User user = userMapper.findByKey(resultSet.getInt("invitation_invitee"));
-				result.addElement(user);
+				} while (resultSet.next());
 
+				// Ergebnisvector zurückgeben.
+				return result;
 			}
-
+			// wenn das Resultset leer ist, wird <code>null</code> zurückgegeben.
+			else {
+				return null;
+			}
 		} // SQL Exception abfangen, sollte etwas schiefgehen.
 		catch (SQLException e1) {
 			e1.printStackTrace();
@@ -338,8 +353,6 @@ public class UserMapper {
 			return null;
 		}
 
-		// Ergebnisvector zurückgeben.
-		return result;
 	}
 
 }

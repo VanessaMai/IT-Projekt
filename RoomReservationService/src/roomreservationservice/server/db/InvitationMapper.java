@@ -118,7 +118,7 @@ public class InvitationMapper {
 			// Prüfen, ob Einträge gefunden wurden.
 			if (resultSet.next()) {
 				// Für jeden Eintrag im Suchergebnis wird nun ein Room-Objekt erstellt.
-				while (resultSet.next()) {
+				do {
 
 					// Für jeden Eintrag wird die findByKey-Methode aufgerufen, die das Invitation-Obejekt
 					// zurückliefert.
@@ -126,7 +126,10 @@ public class InvitationMapper {
 
 					// Hinzufügen des neuen Objekts zum Ergebnisvektor
 					result.addElement(invitation);
-				}
+				} while (resultSet.next());
+
+				// Ergebnisvektor zurückgeben
+				return result;
 			}
 			// wenn das Resultset leer ist, wird <code>null</code> zurückgegeben.
 			else {
@@ -138,8 +141,6 @@ public class InvitationMapper {
 			return null;
 		}
 
-		// Ergebnisvektor zurückgeben
-		return result;
 	}
 
 	/**
@@ -183,18 +184,19 @@ public class InvitationMapper {
 						+ ", '"
 						+ invitation.getCreationDate() + "')");
 			}
+
+			/*
+			 * Rückgabe, des nun veränderten Invitation-Objekts. Es hat von der DB eine ID zugewiesen bekommen, die sie
+			 * fortanverwendet, falls man den Datenastz zum Beispiel aus der DB löschen oder ihn updaten möchte.
+			 */
+
+			return invitation;
 		} // SQL Exception abfangen, sollte etwas schiefgehen.
 		catch (SQLException e1) {
 			e1.printStackTrace();
 			return null;
 		}
 
-		/*
-		 * Rückgabe, des nun veränderten Invitation-Objekts. Es hat von der DB eine ID zugewiesen bekommen, die sie
-		 * fortanverwendet, falls man den Datenastz zum Beispiel aus der DB löschen oder ihn updaten möchte.
-		 */
-
-		return invitation;
 	}
 
 	/**
@@ -214,6 +216,9 @@ public class InvitationMapper {
 					+ invitation.getParticipationStatus() + ", invitation_event= " + invitation.getEventId()
 					+ ", invitation_invitee= " + invitation.getInviteeId() + " WHERE id= " + invitation.getId());
 
+			// Um Analogie zu insert(Invitation invitation) zu wahren, geben wir das Invitation-Obejekt wieder zurück.
+			return invitation;
+			
 		} // SQL Exception abfangen, sollte etwas schiefgehen.
 		catch (SQLException e1) {
 			e1.printStackTrace();
@@ -224,8 +229,7 @@ public class InvitationMapper {
 			e2.printStackTrace();
 			return null;
 		}
-		// Um Analogie zu insert(Room room) zu wahren, geben wir das Room-Obejekt wieder zurück.
-		return invitation;
+
 	}
 
 	/**

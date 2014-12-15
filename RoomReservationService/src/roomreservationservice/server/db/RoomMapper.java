@@ -119,14 +119,17 @@ public class RoomMapper {
 			// Prüfen, ob Einträge gefunden wurden.
 			if (resultSet.next()) {
 				// Für jeden Eintrag im Suchergebnis wird nun ein Room-Objekt erstellt.
-				while (resultSet.next()) {
+				do {
 
-					// Für jeden Eintrag wird die findByKey-Methode aufgerufen, die das Room-Obejekt zurückliefert.
+					// Für jeden Eintrag wird die findByKey-Methode aufgerufen, die das Room-Objekt zurückliefert.
 					Room room = findByKey(resultSet.getInt("id"));
 
 					// Hinzufügen des neuen Objekts zum Ergebnisvektor
 					result.addElement(room);
-				}
+				} while (resultSet.next());
+
+				// Rückgabe Ergebnisvektor
+				return result;
 			}
 			// wenn das Resultset leer ist, wird <code>null</code> zurückgegeben.
 			else {
@@ -137,9 +140,6 @@ public class RoomMapper {
 			e1.printStackTrace();
 			return null;
 		}
-
-		// Ergebnisvektor zurückgeben
-		return result;
 	}
 
 	/**
@@ -174,17 +174,23 @@ public class RoomMapper {
 				stmt.executeUpdate("INSERT INTO rooms (id, name, capacity, creation_date) " + "VALUES (" + room.getId()
 						+ ",'" + room.getRoomName() + "'," + room.getRoomCapacity() + ", '" + room.getCreationDate()
 						+ "')");
+				/*
+				 * Rückgabe, des nun veränderten Raum Objekts. Es hat von der DB eine ID zugewiesen bekommen, die sie
+				 * fortanverwendet, falls man den Datenastz zum Beispiel aus der DB löschen oder ihn updaten möchte.
+				 */
+
+				return room;
 			}
+			// wenn das Resultset leer ist, wird <code>null</code> zurückgegeben.
+			else {
+				return null;
+			}
+
 		} catch (SQLException e) {
 			e.printStackTrace();
+			return null;
 		}
 
-		/*
-		 * Rückgabe, des nun veränderten Raum Objekts. Es hat von der DB eine ID zugewiesen bekommen, die sie
-		 * fortanverwendet, falls man den Datenastz zum Beispiel aus der DB löschen oder ihn updaten möchte.
-		 */
-
-		return room;
 	}
 
 	/**
@@ -203,6 +209,9 @@ public class RoomMapper {
 
 			stmt.executeUpdate("UPDATE rooms SET name= '" + room.getRoomName() + "', capacity= "
 					+ room.getRoomCapacity() + " WHERE id= " + room.getId());
+			
+			// Um Analogie zu insert(Room room) zu wahren, geben wir das Room-Objekt wieder zurück.
+			return room;
 
 		} // SQL Exception abfangen, sollte etwas schiefgehen.
 		catch (SQLException e1) {
@@ -214,9 +223,6 @@ public class RoomMapper {
 			e2.printStackTrace();
 			return null;
 		}
-
-		// Um Analogie zu insert(Room room) zu wahren, geben wir das Room-Obejekt wieder zurück.
-		return room;
 	}
 
 	/**
