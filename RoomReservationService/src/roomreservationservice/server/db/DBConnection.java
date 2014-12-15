@@ -1,67 +1,61 @@
 package roomreservationservice.server.db;
 
-import java.sql.*;
-import com.google.appengine.api.rdbms.AppEngineDriver;
-
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
+import com.google.appengine.api.utils.SystemProperty;
 
 public class DBConnection {
 	/**
 	 * 
-	 * Die Klasse DBConnection wird nur einmal instantiiert (<b>Singleton</b>).
-	 * Diese Variable ist durch den Bezeichner <code>static</code> nur einmal für
-	 * sämtliche eventuellen Instanzen dieser Klasse vorhanden und speichert die
+	 * Die Klasse DBConnection wird nur einmal instantiiert (<b>Singleton</b>). Diese Variable ist durch den Bezeichner
+	 * <code>static</code> nur einmal für sämtliche eventuellen Instanzen dieser Klasse vorhanden und speichert die
 	 * einzige Instanz dieser Klasse.
 	 * 
 	 */
 	private static Connection con = null;
-	
-	/**
-	 * URL der Datenbank.
-	 * TODO : Eigene Datenbank anlegen.
-	 * URL Schema: "jdbc:google:rdbms://prof-thies.de:thies-bankproject:thies-bankproject/bankproject?user=demo&password=demo"
-	 */
-	private static String url = "";
-	
-	/**
-	 * Diese statische Methode kann aufgrufen werden durch 
-	 * <code>DBConnection.connection()</code>. Sie stellt die 
-	 * Singleton-Eigenschaft sicher, indem Sie dafür sorgt, dass nur eine einzige
-	 * Instanz von <code>DBConnection</code> existiert.<p>
-	 * 
-	 * <b>Fazit:</b> DBConnection sollte nicht mittels <code>new</code> 
-	 * instantiiert werden, sondern stets durch Aufruf dieser statischen Methode.<p>
-	 * 
-	 * <b>Nachteil:</b> Bei Zusammenbruch der Verbindung zur Datenbank - dies kann
-	 * z.B. durch ein unbeabsichtigtes Herunterfahren der Datenbank ausgelöst 
-	 * werden - wird keine neue Verbindung aufgebaut, so dass die in einem solchen
-	 * Fall die gesamte Software neu zu starten ist. In einer robusten Lösung 
-	 * würde man hier die Klasse dahingehend modifizieren, dass bei einer nicht
-	 * mehr funktionsfähigen Verbindung stets versucht würde, eine neue Verbindung
-	 * aufzubauen. Dies würde allerdings ebenfalls den Rahmen dieses Projekts 
-	 * sprengen.
-	 * 
-	 * @return DAS <code>DBConncetion</code>-Objekt.
-	 * @see con
-	 */
-	public static Connection connection() {
-		// Prüfen, ob es bisher noch keine Verbindung zur DB gab.
-		if ( con == null ) {
-			try {
-				// Laden des DB-Treibers
-				DriverManager.registerDriver(new AppEngineDriver());
 
-				
-				 // Aufbau der Verbindung mit der DB und Speicherung in der Variabel <code>con</code>.
-				con = DriverManager.getConnection(url);
-			} 
-			// SQL-Exception abfangen, falls eine geworfen wird.
-			catch (SQLException e1) {
+	public static Connection connection() {
+
+		// Prüfen, ob es bisher noch kein Objekt gibt, in der die Verbindung zur DB gespeichert sit
+		if (con == null) {
+			try {
+				if (SystemProperty.environment.value() == SystemProperty.Environment.Value.Production) {
+					/*
+					 * Wenn die Applikation bereits auf App Engine deployt wurde, kann direkt darauf zugegriffen werden,
+					 * ohne angabe eines Passworts, denn die Zugriffsrechts wurden bereits in der Konsole eingeräumt
+					 */
+					Class.forName("com.mysql.jdbc.GoogleDriver");
+					con = DriverManager.getConnection("jdbc:google:mysql://it-project-hdm:roomreservationdb?user=root");
+				} else {
+					/*
+					 * Wenn von einem anderen Netzwerk aus darauf zugegriffen werden soll, passiert das mit diesen
+					 * Daten. Hinweis: Damit das klappt, muss die aktuelle IP-Adresse des Computers, von den man das
+					 * machen möchte, in der Konsole auf die Whitelist gesetzt werden. Dieser Eintrag ist dann jeweils
+					 * nur 24h gültig. Wenn das benötigt wird, bitte an Julius Renner wenden.
+					 */
+					Class.forName("com.mysql.jdbc.Driver");
+					con = DriverManager.getConnection("jdbc:mysql://173.194.250.147:3306", "root",
+							"mec-uch-jac-vaj-ne-ghoi-heir-om-");
+				}
+
+				// Leeres Statement vorbereiten
+				Statement stmt = con.createStatement();
+				// Hier wird schonmal ausgewählt, dass die Datenbank roomreservationservice benutzt werden soll.
+				stmt.executeQuery("use roomreservationservice;");
+
+				// Abfangen verschiedener Exceptions, falls etwas schiefgeht.
+			} catch (SQLException e1) {
 				con = null;
 				e1.printStackTrace();
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
 			}
+
 		}
-		
-		// Rückgabe der Verbindung
+
+		// Rückgabe der Verbindung in der Variable <code>con</code>.
 		return con;
 	}
 }
