@@ -21,9 +21,7 @@ public class Event extends BusinessObject {
 
 	/**
 	 * Der Konstruktor der Klasse Invitation. Dieser soll verwendet werden, wenn ein komplett neues Objekt erstellt
-	 * werden soll, für das der Erstellungszeitpunkt der Aufruf dieses Konstruktors sein soll. Wenn das Objekt schon
-	 * existiert und nur aus wiederhergestellt werden soll (zum Beispiel aus der DB), dann bitte den Konstruktor
-	 * verwenden, der zusätzlich den originalen Erstellugnszeitpunkt entgegen nimmt.
+	 * werden soll, für das der Erstellungszeitpunkt der Aufruf dieses Konstruktors sein soll. 
 	 * 
 	 * @param topic
 	 *            Das Belegungsthema.
@@ -45,36 +43,6 @@ public class Event extends BusinessObject {
 		setCreationDate();
 	}
 
-	/**
-	 * Ein zweiter Konstruktor für die Klasse Event. Dieser soll verwendet werden, wenn ein Objekt bereits ein
-	 * Erstellungsdatum und eine ID besitzt und diese nicht neu erstellt werden müssen. Dies der Fall, wenn ein Objekt
-	 * aus einem DB-Eintrag wiederhergestellt werden soll.
-	 * 
-	 * @param topic
-	 *            Das Belegungsthema.
-	 * @param startDate
-	 *            Der Startzeitpunkt der Belegung.
-	 * @param endDate
-	 *            Der Endzeitpunkt der Belegung.
-	 * @param organizerId
-	 *            ID des Nutzers, der als Organisator der Belegung eingetragen werden soll.
-	 * @param roomId
-	 *            ID des Raums der belegt werden soll.
-	 * @param creationDate
-	 *            Der originale Erstellnugszeitpunkt des Objekts.
-	 * @param eventID
-	 *            Die ID des Objekts aus der DB.
-	 */
-	public Event(String topic, Timestamp startDate, Timestamp endDate, int organizerId, int roomId,
-			Timestamp creationDate, int eventID) {
-		this.topic = topic;
-		this.startDate = startDate;
-		this.endDate = endDate;
-		this.organizerId = organizerId;
-		this.roomId = roomId;
-		setCreationDate(creationDate);
-		this.id = eventID;
-	}
 
 	// Attribute
 

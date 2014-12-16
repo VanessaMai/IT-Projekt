@@ -84,7 +84,13 @@ public class UserMapper {
 				 * Mapper ein Attribut vergisst und halbfertige Objekte erstellt. Daher gibt es hier diesen Konstruktor,
 				 * der alle Attribute fordert.
 				 */
-				User user = new User(firstName, lastName, email, accessToken, accessTokenSecret, creationDate, userID);
+				User user = new User(firstName, lastName, email, accessToken, accessTokenSecret);
+				
+				/**
+				 * Setzten der ID und des Erstellungszeitpunktes aus der DB.
+				 */
+				user.setCreationDate(creationDate);
+				user.setId(userID);
 
 				// Zuletzt wird das User-Objekt zurückgegebn.
 				return user;
