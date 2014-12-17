@@ -21,9 +21,7 @@ public class User extends BusinessObject {
 	
 	/**
 	 * Der Konstruktor der Klasse User. Dieser soll verwendet werden, wenn ein komplett neues Objekt erstellt werden
-	 * soll, für das der Erstellungszeitpunkt der Aufruf dieses Konstruktors sein soll. Wenn das Objekt schon existiert
-	 * und nur aus wiederhergestellt werden soll (zum Beispiel aus der DB), dann bitte den Konstruktor verwenden, der
-	 * zusätzlich den originalen Erstellugnszeitpunkt entgegen nimmt.
+	 * soll, für das der Erstellungszeitpunkt der Aufruf dieses Konstruktors sein soll.
 	 * 
 	 * @param firstName
 	 *            Der Vorname des Nutzers.
@@ -45,36 +43,7 @@ public class User extends BusinessObject {
 		setCreationDate();
 	}
 
-	/**
-	 * Ein zweiter Konstruktor für die Klasse User. Dieser soll verwendet werden, wenn ein Objekt bereits ein
-	 * Erstellungsdatum und eine ID besitzt und diese nicht neu erstellt werden müssen. Dies der Fall, wenn ein Objekt
-	 * aus einem DB-Eintrag wiederhergestellt werden soll.
-	 * 
-	 * @param firstName
-	 *            Der Vorname des Nutzers.
-	 * @param lastName
-	 *            Der Nachname des Nutzers.
-	 * @param email
-	 *            Die E-Mailadresse des Nutzers.
-	 * @param accessToken
-	 *            Das Accesstoken des Nutzers.
-	 * @param accessTokenSecret
-	 *            Das Accesstoken Secret des Nutzers.
-	 * @param creationDate
-	 *            Der originale Erstellnugszeitpunkt des Objekts.
-	 * @param userID
-	 *            Die ID des Objekts aus der DB.
-	 */
-	public User(String firstName, String lastName, String email, String accessToken, String accessTokenSecret,
-			Timestamp creationDate, int userID) {
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.email = email;
-		this.accessToken = accessToken;
-		this.accessTokenSecret = accessTokenSecret;
-		setCreationDate(creationDate);
-		this.id = userID;
-	}
+
 
 	// Attribute des Users
 

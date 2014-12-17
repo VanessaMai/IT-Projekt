@@ -76,13 +76,15 @@ public class RoomMapper {
 				int roomID = resultSet.getInt("id");
 
 				/**
-				 * ...und anschließend an den Konstruktor für ein neues Room-Objekt übergeben. Es wäre zwar auch möglich
-				 * mit einem entsprechendem Konstruktor einen leeres Room-Objekt zu erstellen und dann diekt alle
-				 * nötigen Attribute per Set-Methode zu setzen, allerdings läuft man dann Gefahr, dass man bei einem
-				 * Mapper ein Attribut vergisst und halbfertige Objekte erstellt. Daher gibt es hier diesen Konstruktor,
-				 * der alle Attribute fordert.
+				 * ...und anschließend an den Konstruktor für ein neues Room-Objekt übergeben.
 				 */
-				Room room = new Room(roomName, roomCapacity, creationDate, roomID);
+				Room room = new Room(roomName, roomCapacity);
+				
+				/*
+				 * Setzen der ID und des Erstellungszeitpunktes aus der DB.
+				 */
+				room.setId(roomID);
+				room.setCreationDate(creationDate);
 
 				// Zuletzt wird das Room-Objekt zurückgegebn.
 				return room;
@@ -110,7 +112,7 @@ public class RoomMapper {
 
 		// Ergebnisvektor vorbereiten.
 		Vector<Room> result = new Vector<Room>();
-
+		
 		try {
 			Statement stmt = con.createStatement();
 

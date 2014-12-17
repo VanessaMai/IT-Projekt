@@ -84,7 +84,13 @@ public class EventMapper {
 				 * bei einem Mapper ein Attribut vergisst und halbfertige Objekte erstellt. Daher gibt es hier diesen
 				 * Konstruktor, der alle Attribute fordert.
 				 */
-				Event event = new Event(topic, startDate, endDate, organizerId, roomId, creationDate, eventID);
+				Event event = new Event(topic, startDate, endDate, organizerId, roomId);
+
+				/*
+				 * Setzen der ID und des Erstellungszeitpunktes aus der DB.
+				 */
+				event.setId(eventID);
+				event.setCreationDate(creationDate);
 
 				// Zuletzt wird das Event-Objekt zurückgegebn.
 				return event;
@@ -197,8 +203,7 @@ public class EventMapper {
 				 */
 				return event;
 
-			}
-			else {
+			} else {
 				return null;
 			}
 

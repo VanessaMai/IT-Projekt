@@ -68,20 +68,22 @@ public class InvitationMapper {
 			if (resultSet.next()) {
 				// Zuerst werden die Attribute einzeln aus der DB abgefragt...
 				int eventId = resultSet.getInt("invitation_event");
-				int participationStatus = resultSet.getInt("participation_status");
+				boolean participationStatus = resultSet.getBoolean("participation_status");
 				int inviteeId = resultSet.getInt("invitation_invitee");
 				Timestamp creationDate = resultSet.getTimestamp("creation_date");
 				int invitationId = resultSet.getInt("id");
 
 				/**
-				 * ...und anschließend an den Konstruktor für ein neues Invitation-Objekt übergeben. Es wäre zwar auch
-				 * möglich mit einem entsprechendem Konstruktor einen leeres Invitation-Objekt zu erstellen und dann
-				 * diekt alle nötigen Attribute per Set-Methode zu setzen, allerdings läuft man dann Gefahr, dass man
-				 * bei einem Mapper ein Attribut vergisst und halbfertige Objekte erstellt. Daher gibt es hier diesen
-				 * Konstruktor, der alle Attribute fordert.
+				 * ...und anschließend an den Konstruktor für ein neues Invitation-Objekt übergeben.
 				 */
-				Invitation invitation = new Invitation(eventId, participationStatus, inviteeId, creationDate,
-						invitationId);
+				Invitation invitation = new Invitation(eventId, inviteeId);
+			
+				/*
+				 * Setzen des Erstellungszeitpunktes, der ID und des Teilnahmestatuses aus der DB.
+				 */
+				invitation.setCreationDate(creationDate);
+				invitation.setId(eventId);
+				invitation.setParticipationStatus(participationStatus);
 
 				// Zuletzt wird das Room-Objekt zurückgegebn.
 				return invitation;

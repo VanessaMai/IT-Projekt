@@ -22,9 +22,7 @@ public class Room extends BusinessObject {
 	
 	/**
 	 * Der Konstruktor der Klasse Room. Dieser soll verwendet werden, wenn ein komplett neues Objekt erstellt werden
-	 * soll, für das der Erstellungszeitpunkt der Aufruf dieses Konstruktors sein soll. Wenn das Objekt schon existiert
-	 * und nur aus wiederhergestellt werden soll (zum Beispiel aus der DB), dann bitte den Konstruktor verwenden, der
-	 * zusätzlich den originalen Erstellugnszeitpunkt entgegen nimmt.
+	 * soll, für das der Erstellungszeitpunkt der Aufruf dieses Konstruktors sein soll. 
 	 * 
 	 * @param roomName
 	 *            Der Name des Raums.
@@ -37,26 +35,6 @@ public class Room extends BusinessObject {
 		setCreationDate();
 	}
 
-	/**
-	 * Ein zweiter Konstruktor für die Klasse Room. Dieser soll verwendet werden, wenn ein Objekt bereits ein
-	 * Erstellungsdatum und eine ID besitzt und diese nicht neu erstellt werden müssen. Dies der Fall, wenn ein Objekt
-	 * aus einem DB-Eintrag wiederhergestellt werden soll.
-	 * 
-	 * @param roomName
-	 *            Der Name des Raums.
-	 * @param roomCapacity
-	 *            Die Kapazität des Raums
-	 * @param creationDate
-	 *            Der originale Erstellnugszeitpunkt des Objekts.
-	 * @param roomID
-	 *            Die ID des Objekts aus der DB.
-	 */
-	public Room(String roomName, int roomCapacity, Timestamp creationDate, int roomID) {
-		this.roomName = roomName;
-		this.roomCapacity = roomCapacity;
-		setCreationDate(creationDate);
-		this.id = roomID;
-	}
 
 	// Attribute
 
