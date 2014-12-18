@@ -8,6 +8,9 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 /**
  * Entry point classes define <code>onModuleLoad()</code>. 
  */
+
+// test fÃ¼r eli
+
 public class RoomReservationService implements EntryPoint {
 	
 	private VerticalPanel mainPanel = new VerticalPanel ();
@@ -16,7 +19,7 @@ public class RoomReservationService implements EntryPoint {
 	
 	 /**
 	   * "Da diese Klasse die Implementierung des Interface <code>EntryPoint</code>
-	   * zusichert, benötigen wir eine Methode
+	   * zusichert, benï¿½tigen wir eine Methode
 	   * <code>public void onModuleLoad()</code>. Diese ist das GWT-Pendant der
 	   * <code>main()</code>-Methode normaler Java-Applikationen." Bankprojekt
 	   */
