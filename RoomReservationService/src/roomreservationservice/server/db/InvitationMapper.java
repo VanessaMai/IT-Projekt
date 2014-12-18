@@ -1,13 +1,15 @@
 package roomreservationservice.server.db;
 
 import java.sql.Connection;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.Vector;
+
+import roomreservationservice.shared.bo.Event;
 import roomreservationservice.shared.bo.Invitation;
+import roomreservationservice.shared.bo.User;
 
 public class InvitationMapper {
 	/**
@@ -77,12 +79,12 @@ public class InvitationMapper {
 				 * ...und anschließend an den Konstruktor für ein neues Invitation-Objekt übergeben.
 				 */
 				Invitation invitation = new Invitation(eventId, inviteeId);
-			
+
 				/*
 				 * Setzen des Erstellungszeitpunktes, der ID und des Teilnahmestatuses aus der DB.
 				 */
 				invitation.setCreationDate(creationDate);
-				invitation.setId(eventId);
+				invitation.setId(invitationId);
 				invitation.setParticipationStatus(participationStatus);
 
 				// Zuletzt wird das Room-Objekt zurückgegebn.
@@ -220,7 +222,7 @@ public class InvitationMapper {
 
 			// Um Analogie zu insert(Invitation invitation) zu wahren, geben wir das Invitation-Obejekt wieder zurück.
 			return invitation;
-			
+
 		} // SQL Exception abfangen, sollte etwas schiefgehen.
 		catch (SQLException e1) {
 			e1.printStackTrace();
@@ -258,6 +260,58 @@ public class InvitationMapper {
 		catch (NullPointerException e2) {
 			e2.printStackTrace();
 		}
+	}
+
+	/**
+	 * Alle Einladungen finden, die zu einer bestimmten Belegeung gehören tragen.
+	 * 
+	 * @param event
+	 *            Das Event, zu dem alle Einladungen ausgeben werden sollen
+	 * @return Vector mit allen Invitations, die zum Event gehören
+	 */
+	public Vector<Invitation> findAllByEvent(Event event) {
+		// DB Connection vorbereiten
+		Connection con = DBConnection.connection();
+
+		// Ergebnisvektor vorbereiten.
+		Vector<Invitation> result = new Vector<Invitation>();
+
+		try {
+			// Statement vorbereiten.
+			Statement stmt = con.createStatement();
+
+			// Query durchführen und nach Einträgen suchen, bei denen der Namename dem Suchebgriff entspricht
+			ResultSet resultSet = stmt.executeQuery("SELECT id FROM invitations WHERE invitation_event = "
+					+ event.getId());
+
+			if (resultSet.next()) {
+
+				do {
+					Invitation invitation = invitationMapper.findByKey(resultSet.getInt("id"));
+
+					// Hinzufügen des neuen Objekts zum Ergebnisvektor
+					result.addElement(invitation);
+				} while (resultSet.next());
+
+				return result;
+
+			}
+			// wenn das Resultset leer ist, wird <code>null</code> zurückgegeben.
+			else {
+				return null;
+			}
+
+		} // SQL Exception abfangen, sollte etwas schiefgehen.
+		catch (SQLException e1) {
+			e1.printStackTrace();
+			return null;
+		}
+		// Wenn kein Eintrag vorhanden ist.
+		catch (NullPointerException e2) {
+			e2.printStackTrace();
+			return null;
+		}
+
 	}
 
 }
