@@ -85,7 +85,7 @@ public class UserMapper {
 				 * der alle Attribute fordert.
 				 */
 				User user = new User(firstName, lastName, email, accessToken, accessTokenSecret);
-				
+
 				/**
 				 * Setzten der ID und des Erstellungszeitpunktes aus der DB.
 				 */
@@ -290,8 +290,11 @@ public class UserMapper {
 			ResultSet resultSet = stmt.executeQuery("SELECT id FROM users WHERE last_name = '" + name + "'");
 
 			if (resultSet.next()) {
-				User user = userMapper.findByKey(resultSet.getInt("id"));
-				result.addElement(user);
+				do {
+					User user = userMapper.findByKey(resultSet.getInt("id"));
+					result.addElement(user);
+				} while (resultSet.next());
+
 				return result;
 			}
 			// wenn das Resultset leer ist, wird <code>null</code> zurückgegeben.
@@ -312,15 +315,12 @@ public class UserMapper {
 
 	}
 
-	public Vector<User> findAllUserByParticipationStatusForEvent(Event event, int participationStatus) {
+	public Vector<User> findAllUserByParticipationStatusForEvent(Event event, boolean participationStatus) {
 		// Vorbereiten des Ergebnisvectors.
 		Vector<User> result = new Vector<User>();
 
 		// User-Mapper vorbereiten
 		UserMapper userMapper = UserMapper.userMapper();
-
-		// Teilnahmestatus als Integer. 0 = false, 1 = true.
-		int participationStatusAsInt = participationStatus;
 
 		// DB-Connection holen.
 		Connection con = DBConnection.connection();
@@ -331,9 +331,9 @@ public class UserMapper {
 			Statement stmt = con.createStatement();
 
 			// Query ausführen.
-			ResultSet resultSet = stmt.executeQuery("SELECT invitation_invitee FROM invitations "
-					+ "WHERE invitation_event= " + event.getId() + " AND participation_status = "
-					+ participationStatusAsInt);
+			ResultSet resultSet = stmt
+					.executeQuery("SELECT invitation_invitee FROM invitations " + "WHERE invitation_event= "
+							+ event.getId() + " AND participation_status = " + participationStatus);
 			if (resultSet.next()) {
 				do {
 					User user = userMapper.findByKey(resultSet.getInt("invitation_invitee"));
@@ -348,6 +348,90 @@ public class UserMapper {
 			else {
 				return null;
 			}
+		} // SQL Exception abfangen, sollte etwas schiefgehen.
+		catch (SQLException e1) {
+			e1.printStackTrace();
+			return null;
+		}
+		// Wenn kein Eintrag vorhanden ist.
+		catch (NullPointerException e2) {
+			e2.printStackTrace();
+			return null;
+		}
+
+	}
+
+	public Vector<User> findAllInviteesOfEvent(Event event) {
+		// Vorbereiten des Ergebnisvectors.
+		Vector<User> result = new Vector<User>();
+
+		// User-Mapper vorbereiten
+		UserMapper userMapper = UserMapper.userMapper();
+
+		// DB-Connection holen.
+		Connection con = DBConnection.connection();
+
+		try {
+
+			// Leeres Statement vorbereiten.
+			Statement stmt = con.createStatement();
+
+			// Query ausführen.
+			ResultSet resultSet = stmt.executeQuery("SELECT invitation_invitee FROM invitations "
+					+ "WHERE invitation_event= " + event.getId());
+			if (resultSet.next()) {
+				do {
+					User user = userMapper.findByKey(resultSet.getInt("invitation_invitee"));
+					result.addElement(user);
+
+				} while (resultSet.next());
+
+				// Ergebnisvector zurückgeben.
+				return result;
+			}
+			// wenn das Resultset leer ist, wird <code>null</code> zurückgegeben.
+			else {
+				return null;
+			}
+		} // SQL Exception abfangen, sollte etwas schiefgehen.
+		catch (SQLException e1) {
+			e1.printStackTrace();
+			return null;
+		}
+		// Wenn kein Eintrag vorhanden ist.
+		catch (NullPointerException e2) {
+			e2.printStackTrace();
+			return null;
+		}
+	}
+
+	/**
+	 * Den User finden, der Organisator eines Events ist.
+	 * 
+	 * @param event
+	 *            Das Event, dessen Organisator gesucht werden soll.
+	 * @return User Objekt des Organisators
+	 */
+	public User findOrganizerOfEvent(Event event) {
+		// DB Connection vorbereiten
+		Connection con = DBConnection.connection();
+
+		try {
+			// Statement vorbereiten.
+			Statement stmt = con.createStatement();
+
+			// Query durchführen und nach Einträgen suchen, bei denen der Namename dem Suchebgriff entspricht
+			ResultSet resultSet = stmt.executeQuery("SELECT event_organizer FROM events WHERE  = " + event.getId());
+
+			if (resultSet.next()) {
+				User user = userMapper.findByKey(resultSet.getInt("id"));
+				return user;
+			}
+			// wenn das Resultset leer ist, wird <code>null</code> zurückgegeben.
+			else {
+				return null;
+			}
+
 		} // SQL Exception abfangen, sollte etwas schiefgehen.
 		catch (SQLException e1) {
 			e1.printStackTrace();
