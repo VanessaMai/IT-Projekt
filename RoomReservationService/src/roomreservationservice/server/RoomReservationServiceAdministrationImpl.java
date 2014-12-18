@@ -200,21 +200,26 @@ implements RoomReservationServiceAdministration{
 	   * 
 	   * @see save(Event event)
 	   */
-	
-	
 	@Override
 	public Event createEvent(String topic, Timestamp startDate,
 			Timestamp endDate, Room room, User organizer, Vector<User> invitees)
 			throws IllegalArgumentException {
+		//ID des Organisators erhalten.
 		int organizerId = organizer.getId();
+		//ID des Raumes erhalten.
 		int roomId = room.getId();
 		Event event = new Event(topic, startDate, endDate, roomId, organizerId);
+		//Übergabe der Belegung an die DB ohne eingeladene Nutzer.
+		eMapper.insert(event);
+		//zugehörige Einladung mit zugehörigen Belegung und eingeladenen Nutzer 
+		//an den iMapper weitergeben und in DB abspeichern mithilfe von
+		//{@link #insert(Invitation invitation)}
 		for(User i:invitees){
 			Invitation invitation = new Invitation(event.getId(), i.getId());
 			this.iMapper.insert(invitation);
 		}
-		
-		return this.eMapper.insert(event);
+		//Methode beenden.
+		return event;
 	}
 
 	/**
