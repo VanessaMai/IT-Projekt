@@ -421,10 +421,10 @@ public class UserMapper {
 			Statement stmt = con.createStatement();
 
 			// Query durchführen und nach Einträgen suchen, bei denen der Namename dem Suchebgriff entspricht
-			ResultSet resultSet = stmt.executeQuery("SELECT event_organizer FROM events WHERE id = " + event.getId());
+			ResultSet resultSet = stmt.executeQuery("SELECT event_organizer FROM events WHERE  = " + event.getId());
 
 			if (resultSet.next()) {
-				User user = userMapper.findByKey(resultSet.getInt("event_organizer"));
+				User user = userMapper.findByKey(resultSet.getInt("id"));
 				return user;
 			}
 			// wenn das Resultset leer ist, wird <code>null</code> zurückgegeben.

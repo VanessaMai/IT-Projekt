@@ -1,19 +1,67 @@
 /** Add css rules here for your application. */
 
 
-/** Example rules used by the template application (remove for your app) */
+/**Legt Style der Ueberschrift h1 fest */
 h1 {
-  font-size: 2em;
-  font-weight: bold;
-  color: #777777;
-  margin: 40px 0px 70px;
-  text-align: center;
+  font-size: 1em;
+  font-weight: normal;
+  color: #3F3F3F;
+  margin: 20px 0px 70px;
+  text-align: left;
 }
 
-.sendButton {
-  display: block;
-  font-size: 16pt;
+
+/**Positionierung des Bildes der Klasse logo*/
+ .logo {
+     float:right;
+     }
+
+/**Legt Style der Ueberschrift h2 fest */     
+h2 {
+  font-size: 3em;
+  font-weight: bold;
+  color: #777777;
+  /**margin: 10px 0px 70px;*/
+  text-align: center;
+	
 }
+
+.roomReservationService-headline {
+	font-size: 12pt;
+	font-weight: bold;
+	color: #777777;
+	margin: 0px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	text-align: left;
+}
+
+.roomReservationService-simpletext{
+	font-size: 100%;
+	font-weight: normal;
+	padding: 3px;
+}
+
+div#Trailer {
+	clear: both;
+	padding: 10px 0;
+	margin: 0 auto;      /* standardkonforme horizontale Zentrierung */
+	border-top: 1px dashed silver;
+	font-size: 80%;
+	font-weight: bold;
+	text-align: center;
+	color: white;
+	background: #990000;
+}
+
+.roomReservationService-button{
+	display: block;
+	font-size: 100%;
+	font-weight: bold;
+	width: 15em;
+	margin-bottom: 1em;
+}
+
 
 /** Most GWT widgets already have a style name defined */
 .gwt-DialogBox {
