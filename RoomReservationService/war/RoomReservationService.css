@@ -38,22 +38,6 @@ div#Trailer {
 	background: #990000;
 }
 
-.roomReservationService-headline {
-	font-size: 12pt;
-	font-weight: bold;
-	color: #777777;
-	margin: 0px;
-	margin-top: 10px;
-	margin-bottom: 10px;
-	text-align: left;
-}
-
-.roomReservationService-simpletext {
-	font-size: 100%;
-	font-weight: normal;
-	padding: 3px;
-}
-
 .sendButton {
   display: block;
   font-size: 16pt;
