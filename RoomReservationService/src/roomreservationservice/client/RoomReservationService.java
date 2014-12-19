@@ -27,8 +27,8 @@ public class RoomReservationService implements EntryPoint {
 		final VerticalPanel mainPanel = new VerticalPanel();
 		
 		//neue Widgets erzeugen. Jeweils ein Button fuer Registrieren und Authentifizieren.
-		final Button registrationButton = new Button ("Registrieren");
-		final Button authentificationButton = new Button ("Authentifizieren");
+		Button registrationButton = new Button ("Registrieren");
+		Button authentificationButton = new Button ("Authentifizieren");
 		
 		//Hinzufuegen der Buttons zum VerticalPanel "mainPanel"
 		mainPanel.add(registrationButton);
@@ -57,32 +57,48 @@ public class RoomReservationService implements EntryPoint {
 				//TODO Englische Bezeichnungen fuer Textboxen??
 				
 				//Neues Eingabefeld fuer Vorname, Nachname, Email.
-				TextBox forename = new TextBox();
-				TextBox surename = new TextBox();
-				TextBox email = new TextBox();				
+				final TextBox forename = new TextBox();
+				final TextBox surename = new TextBox();
+				final TextBox email = new TextBox();				
 				
 				//Neues Eingabefeld fuer Passwort.
 				PasswordTextBox password = new PasswordTextBox();
 				
 				//neue Buttons fuer weitere Handlungen
-				Button registration = new Button ("Registrieren");
-				Button cancel = new Button ("Abbrechen");
+				final Button registrationButton2 = new Button ("Registrieren");
+				final Button cancelButton = new Button ("Abbrechen");
 				
 				//Hinzufuegen der Widgets zum mainPanel
 				mainPanel.add(forename);
 				mainPanel.add(surename);
 				mainPanel.add(email);
 				mainPanel.add(password);
-				mainPanel.add(registration);
-				mainPanel.add(cancel);
+				mainPanel.add(registrationButton2);
+				mainPanel.add(cancelButton);
 				
-				
+				registrationButton2.addClickHandler(new ClickHandler() {
+				      
+					public void onClick(ClickEvent event) {
+						mainPanel.clear ();
+						//TODO als Klasse auslagern kann fuer Login auch verwendet werden!
+						/*TODO unterscheiden zwischen Registration und Anmeldung, 
+						 * da bei der Anmeldung Email und Passwort ueberprueft werden muessen!
+						 */
+						
+						//Neue Buttons fuer die Startseite nach der Registrierung oder Login
+						final Button roomAdministration= new Button ("Raumverwaltung");
+						final Button userAdministration= new Button ("Nutzerverwaltung");
+						final Button reportBuild= new Button ("Raumverwaltung");		
+						
+						//Hinzufuegen der Widgets zum mainPanel
+						mainPanel.add(roomAdministration);
+						mainPanel.add(userAdministration);
+						mainPanel.add(reportBuild);
 								
 			}
 		});
 		
 		// Main panel mit der HTML Hostpage "RoomReservationService.html" verlinken.
 		RootPanel.get("roomReservationService").add(mainPanel);
-	
-}
-}
+};
+		});}}
