@@ -26,6 +26,7 @@ h2 {
 	
 }
 
+/**Legt Style des Trailers fest */     
 div#Trailer {
 	clear: both;
 	padding: 10px 0;
@@ -38,10 +39,16 @@ div#Trailer {
 	background: #990000;
 }
 
-.sendButton {
+/** Legt Style des Standard-GWT-Buttons der GUI fest */
+.gwt-Button {
+	color: #000000;
+	width: 150px;
+}
+
+/** .sendButton {
   display: block;
   font-size: 16pt;
-}
+} */
 
 /** Most GWT widgets already have a style name defined */
 .gwt-DialogBox {
