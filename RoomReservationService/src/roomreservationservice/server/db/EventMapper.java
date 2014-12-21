@@ -84,7 +84,14 @@ public class EventMapper {
 				 * bei einem Mapper ein Attribut vergisst und halbfertige Objekte erstellt. Daher gibt es hier diesen
 				 * Konstruktor, der alle Attribute fordert.
 				 */
-				Event event = new Event(topic, startDate, endDate, organizerId, roomId, creationDate, eventID);
+				Event event = new Event(topic, startDate, endDate, organizerId, roomId);
+
+				/*
+				 * Setzen der ID und des Erstellungszeitpunktes aus der DB.
+				 */
+				event.setId(eventID);
+				event.setCreationDate(creationDate);
+
 				// Zuletzt wird das Event-Objekt zurückgegebn.
 				return event;
 			}
@@ -122,14 +129,17 @@ public class EventMapper {
 			if (resultSet.next()) {
 
 				// Für jeden Eintrag im Suchergebnis wird nun ein Room-Objekt erstellt.
-				while (resultSet.next()) {
+				do {
 
 					// Für jeden Eintrag wird die findByKey-Methode aufgerufen, die das Event-Obejekt zurückliefert.
 					Event event = findByKey(resultSet.getInt("id"));
 
 					// Hinzufügen des neuen Objekts zum Ergebnisvektor
 					result.addElement(event);
-				}
+				} while (resultSet.next());
+
+				// Ergebnisvektor zurückgeben
+				return result;
 			}
 			// wenn das Resultset leer ist, wird <code>null</code> zurückgegeben.
 			else {
@@ -141,8 +151,6 @@ public class EventMapper {
 			return null;
 		}
 
-		// Ergebnisvektor zurückgeben
-		return result;
 	}
 
 	/**
@@ -188,19 +196,23 @@ public class EventMapper {
 						+ event.getRoomId()
 						+ ", '"
 						+ event.getCreationDate() + "')");
+
+				/*
+				 * Rückgabe, des nun veränderten Raum Objekts. Es hat von der DB eine ID zugewiesen bekommen, die sie
+				 * fortanverwendet, falls man den Datenastz zum Beispiel aus der DB löschen oder ihn updaten möchte.
+				 */
+				return event;
+
+			} else {
+				return null;
 			}
+
 		} // SQL Exception abfangen, sollte etwas schiefgehen.
 		catch (SQLException e1) {
 			e1.printStackTrace();
 			return null;
 		}
 
-		/*
-		 * Rückgabe, des nun veränderten Raum Objekts. Es hat von der DB eine ID zugewiesen bekommen, die sie
-		 * fortanverwendet, falls man den Datenastz zum Beispiel aus der DB löschen oder ihn updaten möchte.
-		 */
-
-		return event;
 	}
 
 	/**
@@ -221,6 +233,9 @@ public class EventMapper {
 					+ event.getEndDate() + "', '" + event.getTopic() + "', " + event.getOrganizerId() + ", "
 					+ event.getRoomId() + " WHERE id= " + event.getId());
 
+			// Um Analogie zu insert(Event event) zu wahren, geben wir das Event-Objekt wieder zurück.
+			return event;
+
 		} // SQL Exception abfangen, sollte etwas schiefgehen.
 		catch (SQLException e1) {
 			e1.printStackTrace();
@@ -232,8 +247,6 @@ public class EventMapper {
 			return null;
 		}
 
-		// Um Analogie zu insert(Event event) zu wahren, geben wir das User-Obejekt wieder zurück.
-		return event;
 	}
 
 	/**
@@ -281,12 +294,16 @@ public class EventMapper {
 
 			// Prüfen, ob Einträge gefunden wurden.
 			if (resultSet.next()) {
+				do {
+					// wenn ja, wird die ID ausgelesen und das dazugehörige Objekt mit Hilfe der findByKey-Methode
+					// erstellt
+					Event event = findByKey(resultSet.getInt("id"));
 
-				// wenn ja, wird die ID ausgelesen und das dazugehörige Objekt mit Hilfe der findByKey-Methode erstellt
-				Event event = findByKey(resultSet.getInt("id"));
+					// Objekt zum Ergebnisvektor hinzufügen
+					result.addElement(event);
+				} while (resultSet.next());
 
-				// Objekt zum Ergebnisvektor hinzufügen
-				result.addElement(event);
+				// Um Analogie zu insert(Event event) zu wahren, geben wir das Event-Objekt wieder zurück.
 				return result;
 			}
 			// wenn das Resultset leer ist, wird <code>null</code> zurückgegeben.
@@ -333,12 +350,15 @@ public class EventMapper {
 
 			// Prüfen, ob Einträge gefunden wurden.
 			if (resultSet.next()) {
+				do {
+					// wenn ja, wird die ID ausgelesen und das dazugehörige Objekt mit Hilfe der findByKey-Methode
+					// erstellt
+					Event event = findByKey(resultSet.getInt("invitation_event"));
 
-				// wenn ja, wird die ID ausgelesen und das dazugehörige Objekt mit Hilfe der findByKey-Methode erstellt
-				Event event = findByKey(resultSet.getInt("invitation_event"));
-
-				// Objekt zum Ergebnisvektor hinzufügen
-				result.addElement(event);
+					// Objekt zum Ergebnisvektor hinzufügen
+					result.addElement(event);
+				} while (resultSet.next());
+				// Um Analogie zu insert(Event event) zu wahren, geben wir das Event-Objekt wieder zurück.
 				return result;
 			}
 			// wenn das Resultset leer ist, wird <code>null</code> zurückgegeben.
@@ -384,12 +404,16 @@ public class EventMapper {
 
 			// Prüfen, ob Einträge gefunden wurden.
 			if (resultSet.next()) {
+				do {
+					// wenn ja, wird die ID ausgelesen und das dazugehörige Objekt mit Hilfe der findByKey-Methode
+					// erstellt
+					Event event = findByKey(resultSet.getInt("id"));
 
-				// wenn ja, wird die ID ausgelesen und das dazugehörige Objekt mit Hilfe der findByKey-Methode erstellt
-				Event event = findByKey(resultSet.getInt("id"));
+					// Objekt zum Ergebnisvektor hinzufügen
+					result.addElement(event);
 
-				// Objekt zum Ergebnisvektor hinzufügen
-				result.addElement(event);
+				} while (resultSet.next());
+				// Rückgabe Ergebnisvektor
 				return result;
 			}
 			// wenn das Resultset leer ist, wird <code>null</code> zurückgegeben.
@@ -439,12 +463,15 @@ public class EventMapper {
 
 			// Prüfen, ob Einträge gefunden wurden.
 			if (resultSet.next()) {
+				do {
+					// wenn ja, wird die ID ausgelesen und das dazugehörige Objekt mit Hilfe der findByKey-Methode
+					// erstellt
+					Event event = findByKey(resultSet.getInt("id"));
 
-				// wenn ja, wird die ID ausgelesen und das dazugehörige Objekt mit Hilfe der findByKey-Methode erstellt
-				Event event = findByKey(resultSet.getInt("id"));
-
-				// Objekt zum Ergebnisvektor hinzufügen
-				result.addElement(event);
+					// Objekt zum Ergebnisvektor hinzufügen
+					result.addElement(event);
+				} while (resultSet.next());
+				// Rückgabe Ergebnisvektor
 				return result;
 			}
 			// wenn das Resultset leer ist, wird <code>null</code> zurückgegeben.
@@ -497,12 +524,16 @@ public class EventMapper {
 
 			// Prüfen, ob Einträge gefunden wurden.
 			if (resultSet.next()) {
+				do {
+					// wenn ja, wird die ID ausgelesen und das dazugehörige Objekt mit Hilfe der findByKey-Methode
+					// erstellt
+					Event event = findByKey(resultSet.getInt("id"));
 
-				// wenn ja, wird die ID ausgelesen und das dazugehörige Objekt mit Hilfe der findByKey-Methode erstellt
-				Event event = findByKey(resultSet.getInt("id"));
+					// Objekt zum Ergebnisvektor hinzufügen
+					result.addElement(event);
+				} while (resultSet.next());
 
-				// Objekt zum Ergebnisvektor hinzufügen
-				result.addElement(event);
+				// Rückgabe Ergebnisvektor
 				return result;
 			}
 			// wenn das Resultset leer ist, wird <code>null</code> zurückgegeben.
@@ -560,12 +591,16 @@ public class EventMapper {
 
 			// Prüfen, ob Einträge gefunden wurden.
 			if (resultSet.next()) {
+				do {
+					// wenn ja, wird die ID ausgelesen und das dazugehörige Objekt mit Hilfe der findByKey-Methode
+					// erstellt
+					Event event = findByKey(resultSet.getInt("invitation_event"));
 
-				// wenn ja, wird die ID ausgelesen und das dazugehörige Objekt mit Hilfe der findByKey-Methode erstellt
-				Event event = findByKey(resultSet.getInt("invitation_event"));
+					// Objekt zum Ergebnisvektor hinzufügen
+					result.addElement(event);
+				} while (resultSet.next());
 
-				// Objekt zum Ergebnisvektor hinzufügen
-				result.addElement(event);
+				// Rückgabe Ergebnisvektor
 				return result;
 			}
 			// wenn das Resultset leer ist, wird <code>null</code> zurückgegeben.
@@ -619,12 +654,16 @@ public class EventMapper {
 
 			// Prüfen, ob Einträge gefunden wurden.
 			if (resultSet.next()) {
+				do {
+					// wenn ja, wird die ID ausgelesen und das dazugehörige Objekt mit Hilfe der findByKey-Methode
+					// erstellt
+					Event event = findByKey(resultSet.getInt("id"));
 
-				// wenn ja, wird die ID ausgelesen und das dazugehörige Objekt mit Hilfe der findByKey-Methode erstellt
-				Event event = findByKey(resultSet.getInt("id"));
+					// Objekt zum Ergebnisvektor hinzufügen
+					result.addElement(event);
+				} while (resultSet.next());
 
-				// Objekt zum Ergebnisvektor hinzufügen
-				result.addElement(event);
+				// Rückgabe Ergebnisvektor
 				return result;
 			}
 			// wenn das Resultset leer ist, wird <code>null</code> zurückgegeben.
@@ -646,50 +685,5 @@ public class EventMapper {
 		}
 
 	}
-
-	// /**
-	// * Hilfsfunktion, um das in der Tabelle per Fremdschlüssel verwiesene User-Objekt abzufragen und dieses zu holen.
-	// * Hierfür wird abgefragt, welche Nutzer in der Einladung einer Beleung stehen und die zutreffenden werden
-	// * anschließend in den Ergebnisvector übernommen.
-	// *
-	// * @param eventID
-	// * Die ID der Belegung.
-	// * @return invitees Vector, aller User-Objekte, die eine Einladung für diese Belegung erhalten haben.
-	// */
-	// private Vector<User> getInviteesOfEvent(int eventID) {
-	// // User Mapper holen.
-	// UserMapper userMapper = UserMapper.userMapper();
-	//
-	// // Ergebnis Vector vorbereiten.
-	// Vector<User> result = new Vector<User>();
-	//
-	// // DB-Verbindung holen
-	// Connection con = DBConnection.connection();
-	// try {
-	// // Leeres SQL-Statement (JDBC) anlegen
-	// Statement stmt = con.createStatement();
-	//
-	// // Statement ausfüllen und als Query an die DB schicken
-	// ResultSet resultSet = stmt
-	// .executeQuery("SELECT invitation_invitee FROM invitations WHERE invitation_event= " + eventID);
-	//
-	// while (resultSet.next()) {
-	// User user = userMapper.findByKey(resultSet.getInt("invitation_invitee"));
-	// result.addElement(user);
-	// }
-	//
-	// return result;
-	// }
-	// // SQL Exception abfangen, sollte etwas schiefgehen.
-	// catch (SQLException e1) {
-	// e1.printStackTrace();
-	// return null;
-	// }
-	// // Wenn kein Eintrag vorhanden ist.
-	// catch (NullPointerException e2) {
-	// e2.printStackTrace();
-	// return null;
-	// }
-	// }
 
 }

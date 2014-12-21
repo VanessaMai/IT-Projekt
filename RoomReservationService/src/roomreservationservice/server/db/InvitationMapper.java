@@ -1,13 +1,15 @@
 package roomreservationservice.server.db;
 
 import java.sql.Connection;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.Vector;
+
+import roomreservationservice.shared.bo.Event;
 import roomreservationservice.shared.bo.Invitation;
+import roomreservationservice.shared.bo.User;
 
 public class InvitationMapper {
 	/**
@@ -68,20 +70,22 @@ public class InvitationMapper {
 			if (resultSet.next()) {
 				// Zuerst werden die Attribute einzeln aus der DB abgefragt...
 				int eventId = resultSet.getInt("invitation_event");
-				int participationStatus = resultSet.getInt("participation_status");
+				boolean participationStatus = resultSet.getBoolean("participation_status");
 				int inviteeId = resultSet.getInt("invitation_invitee");
 				Timestamp creationDate = resultSet.getTimestamp("creation_date");
 				int invitationId = resultSet.getInt("id");
 
 				/**
-				 * ...und anschließend an den Konstruktor für ein neues Invitation-Objekt übergeben. Es wäre zwar auch
-				 * möglich mit einem entsprechendem Konstruktor einen leeres Invitation-Objekt zu erstellen und dann
-				 * diekt alle nötigen Attribute per Set-Methode zu setzen, allerdings läuft man dann Gefahr, dass man
-				 * bei einem Mapper ein Attribut vergisst und halbfertige Objekte erstellt. Daher gibt es hier diesen
-				 * Konstruktor, der alle Attribute fordert.
+				 * ...und anschließend an den Konstruktor für ein neues Invitation-Objekt übergeben.
 				 */
-				Invitation invitation = new Invitation(eventId, participationStatus, inviteeId, creationDate,
-						invitationId);
+				Invitation invitation = new Invitation(eventId, inviteeId);
+
+				/*
+				 * Setzen des Erstellungszeitpunktes, der ID und des Teilnahmestatuses aus der DB.
+				 */
+				invitation.setCreationDate(creationDate);
+				invitation.setId(invitationId);
+				invitation.setParticipationStatus(participationStatus);
 
 				// Zuletzt wird das Room-Objekt zurückgegebn.
 				return invitation;
@@ -118,7 +122,7 @@ public class InvitationMapper {
 			// Prüfen, ob Einträge gefunden wurden.
 			if (resultSet.next()) {
 				// Für jeden Eintrag im Suchergebnis wird nun ein Room-Objekt erstellt.
-				while (resultSet.next()) {
+				do {
 
 					// Für jeden Eintrag wird die findByKey-Methode aufgerufen, die das Invitation-Obejekt
 					// zurückliefert.
@@ -126,7 +130,10 @@ public class InvitationMapper {
 
 					// Hinzufügen des neuen Objekts zum Ergebnisvektor
 					result.addElement(invitation);
-				}
+				} while (resultSet.next());
+
+				// Ergebnisvektor zurückgeben
+				return result;
 			}
 			// wenn das Resultset leer ist, wird <code>null</code> zurückgegeben.
 			else {
@@ -138,8 +145,6 @@ public class InvitationMapper {
 			return null;
 		}
 
-		// Ergebnisvektor zurückgeben
-		return result;
 	}
 
 	/**
@@ -183,18 +188,19 @@ public class InvitationMapper {
 						+ ", '"
 						+ invitation.getCreationDate() + "')");
 			}
+
+			/*
+			 * Rückgabe, des nun veränderten Invitation-Objekts. Es hat von der DB eine ID zugewiesen bekommen, die sie
+			 * fortanverwendet, falls man den Datenastz zum Beispiel aus der DB löschen oder ihn updaten möchte.
+			 */
+
+			return invitation;
 		} // SQL Exception abfangen, sollte etwas schiefgehen.
 		catch (SQLException e1) {
 			e1.printStackTrace();
 			return null;
 		}
 
-		/*
-		 * Rückgabe, des nun veränderten Invitation-Objekts. Es hat von der DB eine ID zugewiesen bekommen, die sie
-		 * fortanverwendet, falls man den Datenastz zum Beispiel aus der DB löschen oder ihn updaten möchte.
-		 */
-
-		return invitation;
 	}
 
 	/**
@@ -214,6 +220,9 @@ public class InvitationMapper {
 					+ invitation.getParticipationStatus() + ", invitation_event= " + invitation.getEventId()
 					+ ", invitation_invitee= " + invitation.getInviteeId() + " WHERE id= " + invitation.getId());
 
+			// Um Analogie zu insert(Invitation invitation) zu wahren, geben wir das Invitation-Obejekt wieder zurück.
+			return invitation;
+
 		} // SQL Exception abfangen, sollte etwas schiefgehen.
 		catch (SQLException e1) {
 			e1.printStackTrace();
@@ -224,8 +233,7 @@ public class InvitationMapper {
 			e2.printStackTrace();
 			return null;
 		}
-		// Um Analogie zu insert(Room room) zu wahren, geben wir das Room-Obejekt wieder zurück.
-		return invitation;
+
 	}
 
 	/**
@@ -252,6 +260,58 @@ public class InvitationMapper {
 		catch (NullPointerException e2) {
 			e2.printStackTrace();
 		}
+	}
+
+	/**
+	 * Alle Einladungen finden, die zu einer bestimmten Belegeung gehören tragen.
+	 * 
+	 * @param event
+	 *            Das Event, zu dem alle Einladungen ausgeben werden sollen
+	 * @return Vector mit allen Invitations, die zum Event gehören
+	 */
+	public Vector<Invitation> findAllByEvent(Event event) {
+		// DB Connection vorbereiten
+		Connection con = DBConnection.connection();
+
+		// Ergebnisvektor vorbereiten.
+		Vector<Invitation> result = new Vector<Invitation>();
+
+		try {
+			// Statement vorbereiten.
+			Statement stmt = con.createStatement();
+
+			// Query durchführen und nach Einträgen suchen, bei denen der Namename dem Suchebgriff entspricht
+			ResultSet resultSet = stmt.executeQuery("SELECT id FROM invitations WHERE invitation_event = "
+					+ event.getId());
+
+			if (resultSet.next()) {
+
+				do {
+					Invitation invitation = invitationMapper.findByKey(resultSet.getInt("id"));
+
+					// Hinzufügen des neuen Objekts zum Ergebnisvektor
+					result.addElement(invitation);
+				} while (resultSet.next());
+
+				return result;
+
+			}
+			// wenn das Resultset leer ist, wird <code>null</code> zurückgegeben.
+			else {
+				return null;
+			}
+
+		} // SQL Exception abfangen, sollte etwas schiefgehen.
+		catch (SQLException e1) {
+			e1.printStackTrace();
+			return null;
+		}
+		// Wenn kein Eintrag vorhanden ist.
+		catch (NullPointerException e2) {
+			e2.printStackTrace();
+			return null;
+		}
+
 	}
 
 }

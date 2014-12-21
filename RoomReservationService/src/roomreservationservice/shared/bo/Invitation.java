@@ -21,9 +21,7 @@ public class Invitation extends BusinessObject {
 	
 	/**
 	 * Der Konstruktor der Klasse Invitation. Dieser soll verwendet werden, wenn ein komplett neues Objekt erstellt
-	 * werden soll, für das der Erstellungszeitpunkt der Aufruf dieses Konstruktors sein soll. Wenn das Objekt schon
-	 * existiert und nur aus wiederhergestellt werden soll (zum Beispiel aus der DB), dann bitte den Konstruktor
-	 * verwenden, der zusätzlich den originalen Erstellugnszeitpunkt entgegen nimmt.
+	 * werden soll, für das der Erstellungszeitpunkt der Aufruf dieses Konstruktors sein soll.
 	 * 
 	 * Standardmäßig ist der Teilnahmestatus auf <code>false</code> gesetzt, daher muss er hier nicht übergeben werden.
 	 * 
@@ -39,39 +37,14 @@ public class Invitation extends BusinessObject {
 
 	}
 
-	/**
-	 * Ein zweiter Konstruktor für die Klasse Invitation. Dieser soll verwendet werden, wenn ein Objekt bereits ein
-	 * Erstellungsdatum und eine ID besitzt und diese nicht neu erstellt werden müssen. Dies der Fall, wenn ein Objekt
-	 * aus einem DB-Eintrag wiederhergestellt werden soll.
-	 * 
-	 * @param eventId
-	 *            Die ID der zugehörigen Belegung.
-	 * @param invitee
-	 *            Die ID des zugehörigen eingeladenen Nutzers.
-	 * @param creationDate
-	 *            Der originale Erstellnugszeitpunkt des Objekts.
-	 * @param invitationId
-	 *            Die ID des Objekts aus der DB.
-	 */
-	public Invitation(int eventId, int participationStatus, int inviteeId, Timestamp creationDate, int invitationId) {
-		this.eventId = eventId;
-		this.participationStatus = participationStatus;
-		this.inviteeId = inviteeId;
-		setCreationDate(creationDate);
-		this.id = invitationId;
-	}
+
 
 	// Attribute
 
 	/**
-	 * <p>
-	 * <b>0 = flase, 1 = true </b>
-	 * </p>
-	 * Der Teilnahmestatus einer Einladung. Standardmäßig ist dieser auf <code>0</code> gesetzt. Um in Verbindung mit
-	 * der DB nicht immer zwischen boolean und int umwandeln zu müssen, sollen hier direkt nur Integers verwendet
-	 * werden.
+	 * Der Teilnahmestatus einer Einladung. Standardmäßig ist dieser auf <code>false</code> gesetzt.
 	 */
-	private int participationStatus = 0;
+	private boolean participationStatus = false;
 
 	/**
 	 * Jede Einladung bezieht auf eine Belegung. Der Verweis auf die entsprechende Belegung wird in dieser Variabe
@@ -91,7 +64,7 @@ public class Invitation extends BusinessObject {
 	 * 
 	 * @return Der Teilnahmestatus für eine Einladung (wahr oder falsch).
 	 */
-	public int getParticipationStatus() {
+	public boolean getParticipationStatus() {
 		return participationStatus;
 	}
 
@@ -101,7 +74,7 @@ public class Invitation extends BusinessObject {
 	 * @param participationStatus
 	 *            Der neue Teilnahmestatus für diese Einladung (wahr oder falsch).
 	 */
-	public void setParticipationStatus(int participationStatus) {
+	public void setParticipationStatus(boolean participationStatus) {
 		this.participationStatus = participationStatus;
 	}
 
