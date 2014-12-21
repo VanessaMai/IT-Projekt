@@ -16,7 +16,16 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 
 
 public class RoomReservationService implements EntryPoint {
+	
+	// benoetigte Panels fÃ¼r die Darstellung
 	private VerticalPanel mainPanel = new VerticalPanel();
+	
+	/*
+     * Der Navigator ist als einspaltige Aneinanderreihung von Buttons
+     * realisiert. Daher bietet sich ein HorizontalPanel als Container an.
+     */
+	private HorizontalPanel navPanel = new HorizontalPanel();	
+	
 	 /**
 	   * "Da diese Klasse die Implementierung des Interface <code>EntryPoint</code>
 	   * zusichert, benï¿½tigen wir eine Methode
@@ -27,31 +36,44 @@ public class RoomReservationService implements EntryPoint {
 		// Main panel mit der HTML Hostpage "RoomReservationService.html" verlinken.
 		RootPanel.get("roomReservationService").add(mainPanel);
 		
+		// Nav panel mit der HTML Hostpage "RoomReservationService.html" verlinken.
+		RootPanel.get("navigator").add(navPanel);
+		
 		/*Erste Seite. Hauptseite. User hat wahlt zwischen Registrieren und 
 		 * Authentifizieren.
-		 * @author:Mazurkiewicz
+		 * @author:Mazurkiewicz, Elisabeth und Gertz, Steven
 		 */
 		
 		//neue Widgets erzeugen. Jeweils ein Button fuer Registrieren und Authentifizieren.
 		Button registrationButton = new Button ("Registrieren");
 		Button authentificationButton = new Button ("Authentifizieren");
-		
+			
 		//Hinzufuegen der Buttons zum VerticalPanel "mainPanel"
 		mainPanel.add(registrationButton);
 		mainPanel.add(authentificationButton);
 		
+		//neue Widgets erzeugen. Buttons zum Testen
+		Button homepageButton = new Button ("Startseite");
+		Button backButton = new Button ("ZurÃ¼ck");
+		Button testButton = new Button ("Test");
+		
+		//Hinzufuegen der Buttons zum HorizontalPanel "navPanel"
+		navPanel.add(homepageButton);
+		navPanel.add(backButton);
+		navPanel.add(testButton);
+		
 		/*
-	     * Unter welchem Namen können wir den Button durch die CSS-Datei des
+	     * Unter welchem Namen kï¿½nnen wir den Button durch die CSS-Datei des
 	     * Projekts formatieren?
 	     * @author:thies
 	     */
 		//registrationButton.setStylePrimaryName("")
 		//authentificationButton.setStylePrimaryName("")
-		
+		// hier fehlt noch was oder?
 		
 		/* Verhalten, wenn auf Button geklickt wird.
 		 * Hierzu registrieren wir einen ClickHandler, dessen
-	     * onClick()-Methode beim Mausklick auf den zugehörigen Button aufgerufen
+	     * onClick()-Methode beim Mausklick auf den zugehï¿½rigen Button aufgerufen
 	     * wird.
 	     */
 		
