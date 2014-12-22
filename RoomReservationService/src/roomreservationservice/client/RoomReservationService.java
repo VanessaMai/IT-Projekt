@@ -16,6 +16,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 
 
 public class RoomReservationService implements EntryPoint {
+	
 	/* Um die Containerkomponentenstruktur unseres Interfaces darzustellen,
 	 * benoetigen wir Container in welchen die Inhalte jeder Seiten dargestellt werden.
 	 * 
@@ -24,21 +25,19 @@ public class RoomReservationService implements EntryPoint {
 	 * ist.
 	 * 
 	 * danach haben wir einen VerticalPanel eingefuegt, der den jeweiligen Content,
-	 * der Seite anzeigt.
+	 * der Seite anzeigt und somit als Container dient.
 	 * @author:Mazurkiewicz, Elisabeth und Gertz, Steven
 	 */
 	
-	/*
-     * Der Navigator ist als einspaltige Aneinanderreihung von Buttons
-     * realisiert. Daher bietet sich ein HorizontalPanel als Container an.
+	/* Der Navigator ist als einspaltige Aneinanderreihung von Buttons
+     * realisiert. Daher bietet sich ein HorizontalPanel an.
      */
-	private HorizontalPanel navPanel = new HorizontalPanel();	
+	private HorizontalPanel navPanel = new HorizontalPanel();
 	
-	
-	/*Benoetigtes Panel fuer die Darstellung. 
-	 * VerticalPanel als Container fuer alle anderen Panels.
+	/* Benoetigtes Panel fuer die weitere Darstellung:
+	 * VerticalPanel als Container fuer alle weiteren Panels und Inhalte.
 	 */
-	private VerticalPanel mainPanel = new VerticalPanel();
+	private VerticalPanel mainPanel = new VerticalPanel();	
 	
 		 /**
 	   * "Da diese Klasse die Implementierung des Interface <code>EntryPoint</code>
@@ -48,21 +47,19 @@ public class RoomReservationService implements EntryPoint {
 	   */
 	public void onModuleLoad() {
 		
-		/* navPanel mit der HTML Hostpage "RoomReservationService.html" verlinken 
+		/* navPanel mit der HTML Hostpage "RoomReservationService.html" verlinken
 		*/
 		RootPanel.get("navigator").add(navPanel);
-		
+
 		/* mainPanel  mit der HTML Hostpage "RoomReservationService.html" verlinken 
 		*/
 		RootPanel.get("roomReservationService").add(mainPanel);
-		
-	
 				
-		/* TODO: falls wir uns dafuer entscheiden doch Vertical: Horizontal+vertical
-		mainPanel.add(navPanel);
-		*/
+		/* TODO: Panel(s), welche in das VerticalPanel "mainPanel" eingefuegt werden.
+		 * Weitere Panels??
+		 */
 		
-		//neue Widgets erzeugen. Buttons fuer das NavPanel
+		//neue Widgets erzeugen. Buttons fuer das HorizontalPanel "navPanel"
 		Button homepageButton = new Button ("Startseite");
 		Button backButton = new Button ("Zurück");
 		
@@ -70,10 +67,8 @@ public class RoomReservationService implements EntryPoint {
 		navPanel.add(backButton);
 		navPanel.add(homepageButton);
 		
-		
 		/*Erste Seite. Hauptseite. User hat wahlt zwischen Registrieren und 
 		 * Authentifizieren.
-		 * 
 		 */
 		
 		//neue Widgets erzeugen. Jeweils ein Button fuer Registrieren und Authentifizieren.
@@ -83,17 +78,15 @@ public class RoomReservationService implements EntryPoint {
 		//Hinzufuegen der Buttons zum VerticalPanel "mainPanel"
 		mainPanel.add(registrationButton);
 		mainPanel.add(authentificationButton);
-		
-	
-		
+			
 		/*
-	     * Unter welchem Namen k�nnen wir den Button durch die CSS-Datei des
+	     * Unter welchem Namen koennen wir den Button durch die CSS-Datei des
 	     * Projekts formatieren?
 	     * @author:thies
 	     */
 		//registrationButton.setStylePrimaryName("")
 		//authentificationButton.setStylePrimaryName("")
-		// hier fehlt noch was oder?
+		// brauchen wir  nicht, da wir standard gwt Button nehmen oder?
 		
 		/* Verhalten, wenn auf Button geklickt wird.
 		 * Hierzu registrieren wir einen ClickHandler, dessen
