@@ -6,6 +6,26 @@
          xmlns="http://java.sun.com/xml/ns/javaee">
 
   <!-- Servlets -->
+  <servlet>
+    <servlet-name>roomReservationServiceServlet</servlet-name>
+    <servlet-class>roomreservationservice.server.RoomReservationServiceAdministrationImpl</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>roomReservationServiceServlet</servlet-name>
+    <url-pattern>/RoomReservationService/roomreservationservice</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>reportGeneratorServlet</servlet-name>
+    <servlet-class>roomreservationservice.server.report.ReportGeneratorImpl</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>reportGeneratorServlet</servlet-name>
+    <url-pattern>/RoomReservationService/reportgenerator</url-pattern>
+  </servlet-mapping>
+  
   
   <!-- Default page to serve -->
   <welcome-file-list>
