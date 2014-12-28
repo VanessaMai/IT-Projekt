@@ -11,7 +11,14 @@ import roomreservationservice.shared.bo.Event;
 import roomreservationservice.shared.bo.User;
 
 public class UserMapper {
-
+	/**
+	 * Klasse, die Methoden bereitstellt um die Daten eines Nutzer-Objekts auf eine relationiale Datenbank abzubilden.
+	 * Datensäte können erstellt, geändert und gelöscht werden. Aus einem Datensatz kann zudem wieder ein Java-Objekt
+	 * gemacht werden.
+	 * 
+	 * @author Julius Renner
+	 *
+	 */
 	/**
 	 * Die Klasse UserMapper wird nur einmal instantiiert (Singleton). Diese Variable ist durch den Bezeichner
 	 * <code>static</code> nur einmal für sämtliche eventuellen Instanzen dieser Klasse vorhanden. Sie speichert die

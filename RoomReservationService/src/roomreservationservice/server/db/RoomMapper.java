@@ -6,9 +6,12 @@ import java.util.Vector;
 import roomreservationservice.shared.bo.Room;
 
 /**
- * Mapper-Klasse, die <code>Room</code>-Objekte auf eine relationale Datenbank abbildet. Hierfür gibt es veschiedene
- * Methoden zum Auslesen, Ändern und Löschen aus der Datenbank.
+ * Klasse, die Methoden bereitstellt um die Daten eines Raum-Objekts auf eine relationiale Datenbank abzubilden.
+ * Datensäte können erstellt, geändert und gelöscht werden. Aus einem Datensatz kann zudem wieder ein Java-Objekt
+ * gemacht werden.
  * 
+ * @author Julius Renner
+ *
  */
 
 public class RoomMapper {

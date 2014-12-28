@@ -10,7 +10,14 @@ import java.util.Vector;
 import roomreservationservice.shared.bo.Event;
 import roomreservationservice.shared.bo.Invitation;
 import roomreservationservice.shared.bo.User;
-
+/**
+ * Klasse, die Methoden bereitstellt um die Daten eines Einladungs-Objekts auf eine relationiale Datenbank abzubilden.
+ * Datensäte können erstellt, geändert und gelöscht werden. Aus einem Datensatz kann zudem wieder ein Java-Objekt
+ * gemacht werden.
+ * 
+ * @author Julius Renner
+ *
+ */
 public class InvitationMapper {
 	/**
 	 * Die Klasse InvitationMapper wird nur einmal instantiiert (Singleton). Diese Variable ist durch den Bezeichner
