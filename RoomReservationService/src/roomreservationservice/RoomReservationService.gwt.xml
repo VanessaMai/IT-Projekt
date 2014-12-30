@@ -18,10 +18,14 @@
   <!-- <inherits name='com.google.gwt.user.theme.dark.Dark'/>     -->
 
   <!-- Other module inherits                                      -->
+  
+  <!-- Die folgende Zeile wird benötigt, da wir auch Client-seitig Logging
+		unterstützen wollen. PT, 24.05.2012 -->
+	<inherits name="com.google.gwt.logging.Logging" />
 
-  <!-- Specify the app entry point class.                         -->
-  <entry-point class='roomreservationservice.client.RoomReservationService'/>
-
+  <!-- Specify the app entry point class.                          -->
+ <entry-point class='roomreservationservice.client.gui.RoomReservationService'/>
+ 
   <!-- Specify the paths for translatable code                    -->
   <source path='client'/>
   <source path='shared'/>
