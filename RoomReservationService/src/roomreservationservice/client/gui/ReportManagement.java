@@ -7,5 +7,14 @@ package roomreservationservice.client.gui;
  */
 
 public class ReportManagement {
+	/*TODO Report erstellen
+	 * Ueberschrift setzen
+	 * DatePicker: Datum
+	 * ListBox: Raum
+	 * ODER
+	 * CellList: Nutzer
+	 * Button + ClickHandler: Report erstellen
+	 * 
+	 */
 
 }
