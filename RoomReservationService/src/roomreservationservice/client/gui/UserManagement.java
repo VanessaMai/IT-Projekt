@@ -7,5 +7,18 @@ package roomreservationservice.client.gui;
  */
 
 public class UserManagement {
+	/*TODO Nutzerverwaltung Hauptseite:
+	 * CellList: Nutzer auswaehlen
+	 * 1.Button + ClickHandler: Nutzer modifizieren
+	 * 2.Button + ClickHandler: Nutzer loeschen
+	 */
+	/*TODO Nutzer modifizieren und loeschen:
+	 * 1.TextBox: Vorname
+	 * 2.TextBox: Nachname
+	 * 3.TextBox: Email
+	 * 1.PasswordTextBox: Passwort neu setzen
+	 * 1.Button+ClickHandler: Nutzer modifizieren
+	 * 2.Button+ClickHandler: Nutzer loeschen
+	 */
 
 }
