@@ -7,5 +7,22 @@ package roomreservationservice.client.gui;
  */
 
 public class RoomManagement {
+	/*TODO RaumVerwaltun Hauptseite:
+	 * CellList: Raum waehlen
+	 * 1. Button + ClickHandler: Raum modifizieren
+	 * 2. Button + ClickHandler: Raum erstellen
+	 */
+	
+	/*TODO Raum modifizieren und loeschen:
+	 * 1. TextBox: Namen aendern
+	 * 2. TextBox: Kapazitaet aendern
+	 * 1. Button + ClickHandler: Raum modifizieren
+	 * 2. Button + ClickHandler: Raum loeschen
+	 */
+	/*TODO Raum erstellen:
+	 * 1. TextBox: Namen eingeben
+	 * 2. TextBox: Kapazitaet aendern
+	 * 1. Button + ClickHandler: Raum erstellen
+	 */
 
 }
