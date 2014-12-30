@@ -20,8 +20,8 @@
   <!-- Other module inherits                                      -->
   
   <!-- Die folgende Zeile wird benötigt, da wir auch Client-seitig Logging
-		unterstützen wollen. PT, 24.05.2012 -->
-	<inherits name="com.google.gwt.logging.Logging" />
+		unterstützen wollen. PT, 24.05.2012 
+	<inherits name="com.google.gwt.logging.Logging" />-->
 
   <!-- Specify the app entry point class.                          -->
  <entry-point class='roomreservationservice.client.gui.RoomReservationService'/>

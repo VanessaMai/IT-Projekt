@@ -1,5 +1,7 @@
 package roomreservationservice.client.gui;
 
+import Showcase;
+
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
@@ -14,6 +16,7 @@ import com.google.gwt.user.client.ui.TextBox;
  */
 
 public class General extends RoomReservationService {
+
 	/*Erste Seite.User hat Wahl zwischen Registrieren und 
 	 * Authentifizieren.
 	 */
@@ -23,16 +26,16 @@ public class General extends RoomReservationService {
 	Button registrationButton = new Button ("Registrieren");
 	Button authentificationButton = new Button ("Authentifizieren");
 		
-	//Hinzufuegen der Buttons zum VerticalPanel "mainPanel"
-	mainPanel.add(registrationButton);
-	mainPanel.add(authentificationButton);
+	//Hinzufuegen der Buttons zum VerticalPanel "contentPanel"
+	contentPanel.add(registrationButton);
+	contentPanel.add(authentificationButton);
 		
 	registrationButton.addClickHandler(new ClickHandler() {
 	      
 		public void onClick(ClickEvent event) {
 			
-			//Loescht vorherige Anzeige auf mainPanel.
-			mainPanel.clear ();
+			//Loescht vorherige Anzeige auf contentPanel.
+			contentPanel.clear ();
 			//TODO Ueberschrift einfuegen
 			
 			//Neues Eingabefeld fuer Vorname, Nachname, Email.
@@ -47,12 +50,12 @@ public class General extends RoomReservationService {
 			final Button registrationButton2 = new Button ("Registrieren");
 			final Button cancelButton = new Button ("Abbrechen");
 			
-			//Hinzufuegen der Widgets zum mainPanel
-			mainPanel.add(forename);
-			mainPanel.add(email);
-			mainPanel.add(password);
-			mainPanel.add(registrationButton2);
-			mainPanel.add(cancelButton);	
+			//Hinzufuegen der Widgets zum contentPanel
+			contentPanel.add(forename);
+			contentPanel.add(email);
+			contentPanel.add(password);
+			contentPanel.add(registrationButton2);
+			contentPanel.add(cancelButton);	
 		}
 		});
 		
@@ -60,7 +63,7 @@ public class General extends RoomReservationService {
 			registrationButton2.addClickHandler(new ClickHandler() {
 			      
 				public void onClick(ClickEvent event) {
-					mainPanel.clear ();
+					contentPanel.clear ();
 					//TODO als Klasse auslagern kann fuer Authentifizierung auch verwendet werden!
 					/*TODO unterscheiden zwischen Registration und Anmeldung, 
 					 * da bei der Anmeldung Email und Passwort ueberprueft werden muessen!
@@ -88,7 +91,7 @@ public class General extends RoomReservationService {
 	authentificationButton.addClickHandler(new ClickHandler() {
 	      
 		public void onClick(ClickEvent event) {
-			mainPanel.clear ();
+			contentPanel.clear ();
 			//Neues Eingabefeld fuer Email.
 			final TextBox email = new TextBox();
 					
@@ -99,11 +102,11 @@ public class General extends RoomReservationService {
 			final Button subsriptionButton = new Button ("Anmelden");
 			final Button cancelButton = new Button ("Abbrechen");
 			
-			//Hinzufuegen der Widgets zum mainPanel
-			mainPanel.add(email);
-			mainPanel.add(password);
-			mainPanel.add(subsriptionButton);
-			mainPanel.add(cancelButton);
+			//Hinzufuegen der Widgets zum contentPanel
+			contentPanel.add(email);
+			contentPanel.add(password);
+			contentPanel.add(subsriptionButton);
+			contentPanel.add(cancelButton);
 			/*TODO Verwenden des Clickhandlers von registrationButton2 (z.85), 
 			 * aber noch keine Ahnung wie.
 			 */

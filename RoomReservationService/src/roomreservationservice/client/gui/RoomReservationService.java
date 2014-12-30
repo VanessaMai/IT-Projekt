@@ -76,13 +76,13 @@ public class RoomReservationService implements EntryPoint {
 		 * diese erstellen ein neues Objekt der jeweiligen SubKlasse von Reaktion
 		 * die und rufen dieses auf. Analog zum BankProjekt
 		 * Bsp.
-		 * homepageButton.addClickHandler(new ClickHandler() {
-		 *   public void onClick(ClickEvent event) {
-		    	Reaktion reaktion = new General();
-		        RootPanel.get("Details").clear();
-		        RootPanel.get("Details").add(aufbau);
-		      }
-		    });
+			 * userManagement.addClickHandler(new ClickHandler() {
+			 *   public void onClick(ClickEvent event) {
+			 *   	Reaktion reaktion = new userManagement ();
+			 *   RootPanel.get("Content").clear();
+			 *   RootPanel.get("Content").add(reaktion);
+			 *   }
+			 *   });
 		 */
 		    
 				
