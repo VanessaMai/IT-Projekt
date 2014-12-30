@@ -1,8 +1,16 @@
 package roomreservationservice.client.gui;
 
 import com.google.gwt.user.client.ui.*;
+/**
+ * Diese Klasse ist die Basisklasse aller Reatkionen. Jede Reaktion ist ein
+ * VerticalPanel und laesst sich somit unter GWT entsprechend anordnen.
+ * 
+ * @author thies, mazurkiewicz
+ * @version 1.1
+ * 
+ */
 
-public abstract class Aufbau extends VerticalPanel {
+public abstract class Reaktion extends VerticalPanel {
 
 	  /**
 	   * Jedes GWT Widget muss diese Methode implementieren. Sie gibt an, was
