@@ -1,5 +1,10 @@
 package roomreservationservice.client.gui;
 
+import ClickEvent;
+import ClickHandler;
+import CreateAccountDemo;
+import Showcase;
+
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -25,15 +30,6 @@ public class RoomReservationService implements EntryPoint {
 	 * @author:Mazurkiewicz, Elisabeth und Gertz, Steven
 	 */
 	
-	/* Der Navigator ist als einspaltige Aneinanderreihung von Buttons
-     * realisiert. Daher bietet sich ein HorizontalPanel an.
-     */
-	private HorizontalPanel navPanel = new HorizontalPanel();
-	
-	/* Benoetigtes Panel fuer die weitere Darstellung:
-	 * VerticalPanel als Container fuer alle weiteren Panels und Inhalte.
-	 */
-	private VerticalPanel mainPanel = new VerticalPanel();	
 	
 		 /**
 	   * "Da diese Klasse die Implementierung des Interface <code>EntryPoint</code>
@@ -41,13 +37,27 @@ public class RoomReservationService implements EntryPoint {
 	   * <code>public void onModuleLoad()</code>. Diese ist das GWT-Pendant der
 	   * <code>main()</code>-Methode normaler Java-Applikationen." Bankprojekt
 	   */
-	@Override
-	public void onModuleLoad() {
-		
-		/* navPanel mit der HTML Hostpage "RoomReservationService.html" verlinken
-		*/
-		RootPanel.get("navigator").add(navPanel);
 
+	public void onModuleLoad() {
+		/* Der Navigator ist als einspaltige Aneinanderreihung von Buttons
+	     * realisiert. Daher bietet sich ein HorizontalPanel an.
+	     */
+		HorizontalPanel navPanel = new HorizontalPanel();
+		
+		/* Benoetigtes Panel fuer die weitere Darstellung:
+		 * VerticalPanel als Container fuer alle weiteren Panels und Inhalte.
+		 */
+		 VerticalPanel contentPanel = new VerticalPanel();	
+		
+		/* mainPanel  mit der HTML Hostpage "RoomReservationService.html" verlinken 
+		*/
+		RootPanel.get("Content").add(contentPanel);
+		
+		/*navPanel mit der HTML Hostpage "RoomReservationService.html" verlinken 
+		 */
+		RootPanel.get("Navigator").add(navPanel);
+		
+	
 		//neue Widgets erzeugen. Buttons fuer das HorizontalPanel "navPanel"
 		Button homepageButton = new Button ("Startseite");
 		Button userManagement = new Button ("Nutzerverwaltung");
@@ -62,12 +72,21 @@ public class RoomReservationService implements EntryPoint {
 		navPanel.add(reportMangement);
 		navPanel.add(invitationManagement);
 		
-		/* mainPanel  mit der HTML Hostpage "RoomReservationService.html" verlinken 
-		*/
-		RootPanel.get("roomReservationService").add(mainPanel);
-		//TODO: Ueberschrift als Platzhalter anlegen
-		//TODO: Zwei feste Buttons mit wechselnden Inhalten und ClickHandlern anlegen
-		//@Mazurkiewicz
+		/*TODO Clickhandler fuer die Buttons des navPanels erzeugen
+		 * diese erstellen ein neues Objekt der jeweiligen SubKlasse von Reaktion
+		 * die und rufen dieses auf. Analog zum BankProjekt
+		 * Bsp.
+		 * homepageButton.addClickHandler(new ClickHandler() {
+		 *   public void onClick(ClickEvent event) {
+		    	Reaktion reaktion = new General();
+		        RootPanel.get("Details").clear();
+		        RootPanel.get("Details").add(aufbau);
+		      }
+		    });
+		 */
+		    
+				
+		
 		
 		
 		}}
