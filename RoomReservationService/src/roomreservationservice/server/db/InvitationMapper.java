@@ -320,5 +320,49 @@ public class InvitationMapper {
 		}
 
 	}
+	/**
+	 * Alle Invitation zu einem User finden
+	 * @param user, zu dem alle Invitationobjekte ausgegeben werden sollen
+	 * @return Vector mit allen Invitation des übergegebenen Users 
+	 */
+	public Vector<Invitation> findAllByUser(User user){
+		//DB Connection vorbereiten
+		Connection con = DBConnection.connection();
+		
+		//Ergebnisvektor vorbereiten
+		Vector<Invitation> result = new Vector<Invitation>();
+		
+		try {
+			//Statement vorbereiten
+			Statement stmt = con.createStatement();
+			
+			// Query durchführen und nach Einträgen suchen, bei denen der User Name dem Suchbegriff entspricht
+			ResultSet resultSet = stmt.executeQuery("SELECT id FROM invitations WHERE invitation_invitee = " + user.getId());
+			
+			if(resultSet.next()) {
+				do{
+					Invitation invitation = invitationMapper.findByKey(resultSet.getInt("id"));
+					
+					//Hinzufügen des neuen Objekts zum Ergebnisvektor
+					result.addElement(invitation);
+				} while (resultSet.next());
+				return result;
+			}
+			//wenn das Resultat leer ist, wird <code>null</code> zurückgegeben.
+			else {
+				return null;
+			}
+		} //SQL Exception abfangen, sollte etwas schiefgehen.
+		catch (SQLException e1){
+			e1.printStackTrace();
+			return null;
+		}
+		//wenn kein Eintrag vorhanden ist.
+		catch(NullPointerException e2){
+			return null;
+		}
+		
+		
+	}
 
 }

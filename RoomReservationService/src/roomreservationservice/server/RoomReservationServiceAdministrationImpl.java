@@ -2,6 +2,9 @@ package roomreservationservice.server;
 
 import java.sql.Timestamp;
 import java.util.Vector;
+import java.util.logging.Logger;
+
+import org.eclipse.jetty.util.log.Log;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
@@ -71,6 +74,11 @@ implements RoomReservationServiceAdministration{
 	private static final long serialVersionUID = 7149271468218880267L;
 	
 	/**
+	 * Variable für den Logger erstellen
+	 */
+	Logger logger;
+	
+	/**
 	 * Referenz auf den DatenbankMapper, der Room-Objekte mit der Datenbank
 	 * abgleicht.
 	 */
@@ -131,6 +139,15 @@ implements RoomReservationServiceAdministration{
 		this.uMapper = UserMapper.userMapper();
 		this.eMapper = EventMapper.eventMapper();
 		this.iMapper = InvitationMapper.invitationMapper();
+		
+		// Logger initialisieren
+		try{
+			this.logger = ServersideSettings.getLogger();
+			logger.info("Logger erfolgreich instanziiert");
+		} catch(Exception e) {
+			logger.warning("Fehler bei der Instanziierung des Loggers" + e.getMessage());
+			
+		}
 	}
 	
 	@Override
@@ -186,6 +203,7 @@ implements RoomReservationServiceAdministration{
 	 */
 	@Override
 	public void delete(Room room) throws IllegalArgumentException {
+
 		// Zuerst werden die Events gesucht, die in diesem Raum sind
 		Vector<Event> eventsOfRoom = this.getEventsByRoom(room);
 		
@@ -209,7 +227,7 @@ implements RoomReservationServiceAdministration{
 	 */
 	@Override
 	public void delete(User user) throws IllegalArgumentException {
-		// Zunächst müssen die Events gelöscht werden
+		// Zunächst müssen die Events gelöscht werden in denen er Organizer ist
 		Vector<Event> organizedEvents = this.getEventsByOrganizer(user);
 		
 		//prüfen ob die Liste leer ist
@@ -218,7 +236,11 @@ implements RoomReservationServiceAdministration{
 				this.delete(e);
 			}
 		}
-		this.uMapper.delete(user);
+		
+		// dann müssen noch die Invitations von diesem User zu Events gelöscht werden
+		//Ergebnisvektor hierfür vorbereiten
+		Vector<Invitation> invitations = this.
+	
 		
 	}
 	
@@ -388,6 +410,12 @@ implements RoomReservationServiceAdministration{
 	public Vector<Invitation> getInvitationsByEvent(Event event)
 			throws IllegalArgumentException {
 		return this.iMapper.findAllByEvent(event);
+	}
+
+	@Override
+	public Vector<Invitation> getInvitationByUser(User user)
+			throws IllegalArgumentException {
+		return this.iMapper.findAllByUser(user);
 	}
 
 

@@ -82,4 +82,7 @@ public interface RoomReservationServiceAdministrationAsync {
 
 	void getInviteesOfEvent(Event event, AsyncCallback<Vector<User>> callback);
 
+	void getInvitationByUser(User user,
+			AsyncCallback<Vector<Invitation>> callback);
+
 }

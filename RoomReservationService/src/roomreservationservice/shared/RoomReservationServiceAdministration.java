@@ -272,7 +272,15 @@ public interface RoomReservationServiceAdministration extends RemoteService {
 	public Vector<Invitation> getInvitationsByEvent(Event event)
 			throws IllegalArgumentException;
 	
-	
+
+	/** 
+	 * Ausgeben aller Invitation-Objekte zu einem User
+	 * wird z.B. bei der Delete-Methode von Usern benötigt
+	 * @param user User-Objekt
+	 * @return Vector Objekt mit Invitations, welche die Suchkriterien erfüllen 
+	 * @throws IllegalException
+	 */
+	public Vector<Invitation> getInvitationByUser(User user) throws IllegalArgumentException;
 }
 	
 	
