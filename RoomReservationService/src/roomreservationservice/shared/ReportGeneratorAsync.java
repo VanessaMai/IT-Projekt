@@ -9,6 +9,11 @@ import roomreservationservice.shared.report.AllEventsForUserInPeriodOfTimeReport
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
+/**
+ * Report Generator Async Schnittstelle, die RPCs ermöglicht. 
+ * @author Julius Renner
+ *
+ */
 public interface ReportGeneratorAsync {
 	  void createAllEventsForRoomInPeriodOfTimeReport(Room room,Timestamp startDate, Timestamp endDate,
 		      AsyncCallback<AllEventsForRoomInPeriodOfTimeReport> callback);

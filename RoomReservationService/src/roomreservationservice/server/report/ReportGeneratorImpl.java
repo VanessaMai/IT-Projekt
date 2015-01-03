@@ -3,26 +3,41 @@ package roomreservationservice.server.report;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Vector;
+import java.util.logging.Logger;
 
-import roomreservationservice.client.RoomReservationService;
+import org.omg.CORBA.PRIVATE_MEMBER;
+
 import roomreservationservice.server.RoomReservationServiceAdministrationImpl;
+import roomreservationservice.server.ServersideSettings;
 import roomreservationservice.shared.ReportGenerator;
-import roomreservationservice.shared.RoomReservationServiceAdministration;
 import roomreservationservice.shared.bo.Room;
 import roomreservationservice.shared.bo.Event;
 import roomreservationservice.shared.bo.User;
 import roomreservationservice.shared.report.*;
 
+import com.google.api.server.spi.response.ForbiddenException;
+import com.google.gwt.logging.client.FirebugLogHandler;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
+/**
+ * Implementierung des Report Generators.
+ *
+ * @author Julius Renner
+ *
+ */
 @SuppressWarnings("serial")
 public class ReportGeneratorImpl extends RemoteServiceServlet implements ReportGenerator {
+	/**
+	 * Logger vorbereiten.
+	 */
+	Logger logger;
 
 	/**
-	 * Ein ReportGenerator benötigt Zugriff auf den RoomReservationService, da diese die essentiellen Methoden für die
-	 * Koexistenz von Datenobjekten (vgl. bo-Package) bietet.
+	 * Ein ReportGenerator benötigt Zugriff auf den RoomReservationService, da dort die Methoden zum Auslesen der in der
+	 * DB gespeicherten Objekte liegen. Die Instanz wird hier vorbereitet und beim Aufruf der init()-Methoden
+	 * instanziiert.
 	 */
-	private RoomReservationServiceAdministration roomReservationServiceAdministration = null;
+	private RoomReservationServiceAdministrationImpl roomReservationServiceAdministration = null;
 
 	/**
 	 * <p>
@@ -46,12 +61,28 @@ public class ReportGeneratorImpl extends RemoteServiceServlet implements ReportG
 	 */
 	@Override
 	public void init() throws IllegalArgumentException {
-		/*
-		 * Ein ReportGeneratorImpl-Objekt instantiiert für seinen Eigenbedarf eine BankVerwaltungImpl-Instanz.
+		/**
+		 * Instanz des serverseitigen Loggers holen.
 		 */
-		RoomReservationServiceAdministrationImpl rrsAdminImpl = new RoomReservationServiceAdministrationImpl();
-		rrsAdminImpl.init();
-		this.roomReservationServiceAdministration = rrsAdminImpl;
+		try {
+			this.logger = ServersideSettings.getLogger();
+			logger.info("Logger erfolgreich instanziiert");
+		} catch (Exception e) {
+			logger.warning("Fehler bei der Instanziierung des Loggers: " + e.getMessage());
+
+		}
+
+		/*
+		 * Ein ReportGeneratorImpl-Objekt instantiiert für seinen Eigenbedarf eine RoomReservationService-Instanz.
+		 */
+		try {
+			RoomReservationServiceAdministrationImpl roomReservationServiceAdministration = new RoomReservationServiceAdministrationImpl();
+			roomReservationServiceAdministration.init();
+			this.roomReservationServiceAdministration = roomReservationServiceAdministration;
+		} catch (Exception e) {
+			logger.warning("Fehler bei der Instanziierung der RoomReservationServiceAdministration: " + e.getMessage());
+
+		}
 	}
 
 	/**
@@ -69,8 +100,8 @@ public class ReportGeneratorImpl extends RemoteServiceServlet implements ReportG
 		 */
 		CompositeParagraph imprint = new CompositeParagraph();
 
-		imprint.addSubParagraph(new SimpleParagraph("RoomReservation Service"));
-		imprint.addSubParagraph(new SimpleParagraph("Gruppe 8"));
+		imprint.addSubParagraph(new SimpleParagraph("Raumbelegungssystem"));
+		imprint.addSubParagraph(new SimpleParagraph("HdM Stuttgart WI7, Gruppe 8, IT-Projekt, WS2014/15"));
 
 		// Das eigentliche Hinzufügen des Impressums zum Report.
 		r.setImprint(imprint);
@@ -78,10 +109,15 @@ public class ReportGeneratorImpl extends RemoteServiceServlet implements ReportG
 	}
 
 	/**
-	 * Erstellen von <code>AllAccountsOfCustomerReport</code>-Objekten.
+	 * Erstellen von <code>AllEventsForRoomInPeriodOfTimeReport</code>-Objekten.
 	 * 
-	 * @param c
-	 *            das Kundenobjekt bzgl. dessen der Report erstellt werden soll.
+	 * @param room
+	 *            Der Raum, für den der Report erstellt werden soll
+	 * @param startDate
+	 *            Der Startzeitpunkt des Zeitraums für den die Belegungen angezeigt werden sollen
+	 * @param endDate
+	 *            Der Startzeitpunkt des Zeitraums für den die Belegungen angezeigt werden sollen
+	 * 
 	 * @return der fertige Report
 	 */
 	@Override
@@ -89,11 +125,11 @@ public class ReportGeneratorImpl extends RemoteServiceServlet implements ReportG
 			Timestamp startDate, Timestamp endDate) throws IllegalArgumentException {
 
 		/*
-		 * Zunächst legen wir uns einen leeren Report an.
+		 * Leeren Report vorbereiten.
 		 */
 		AllEventsForRoomInPeriodOfTimeReport result = new AllEventsForRoomInPeriodOfTimeReport();
 
-		// Jeder Report hat einen Titel (Bezeichnung / Überschrift).
+		// Überschrift des Reports setzten.
 		result.setTitle("Alle Belegungen in einem Raum für einen bestimmten Zeitraum");
 
 		// Imressum hinzufügen
@@ -112,43 +148,48 @@ public class ReportGeneratorImpl extends RemoteServiceServlet implements ReportG
 		CompositeParagraph header = new CompositeParagraph();
 
 		// Name und Vorname des Kunden aufnehmen
-		header.addSubParagraph(new SimpleParagraph("Raum: " + room.getRoomName()));
+		header.addSubParagraph(new SimpleParagraph("<b>Raum:</b> " + room.getRoomName()));
 
 		// Kundennummer aufnehmen
-		header.addSubParagraph(new SimpleParagraph("Zeitraum: " + startDate.toString() + " bis " + endDate.toString()));
+		header.addSubParagraph(new SimpleParagraph("<b>Zeitraum:</b> " + startDate.toString().substring(0, 16)
+				+ " bis " + endDate.toString().substring(0, 16)));
+
+		header.addSubParagraph(new SimpleParagraph(
+				"Der Teilnahmestatus der Eingeladenen wird farblich dargestellt. Grün bedeutet, dass eine Zusage vorliegt, Rot, dass keine vorliegt, oder abgesagt wurde"));
 
 		// Hinzufügen der zusammengestellten Kopfdaten zu dem Report
 		result.setHeaderData(header);
 
 		/*
-		 * Ab hier erfolgt ein zeilenweises Hinzufügen von Konto-Informationen.
+		 * Ab hier erfolgt ein zeilenweises Hinzufügen von Belegungs-Informationen.
 		 */
 
 		/*
-		 * Zunächst legen wir eine Kopfzeile für die Konto-Tabelle an.
+		 * Zunächst legen wir eine Kopfzeile für die Tabelle an.
 		 */
 		Row headline = new Row();
 
 		/*
-		 * Wir wollen Zeilen mit 2 Spalten in der Tabelle erzeugen. In die erste Spalte schreiben wir die jeweilige
-		 * Kontonummer und in die zweite den aktuellen Kontostand. In der Kopfzeile legen wir also entsprechende
-		 * Überschriften ab.
+		 * Es wird eine Tabelle mit 6 Spalten erzeugt. In der ersten Spalte stehen die Überschriften der Spalten
 		 */
-		headline.addColumn(new Column("Belegungsthema"));
+		headline.addColumn(new Column("Belegungstitel"));
 		headline.addColumn(new Column("Beginn"));
 		headline.addColumn(new Column("Ende"));
 		headline.addColumn(new Column("Organisator"));
 		headline.addColumn(new Column("Erstellsdatum"));
+		headline.addColumn(new Column("Teilnehmer"));
 
 		// Hinzufügen der Kopfzeile
 		result.addRow(headline);
 
 		/*
-		 * Nun werden sämtliche Konten des Kunden ausgelesen und deren Kto.-Nr. und Kontostand sukzessive in die Tabelle
-		 * eingetragen.
+		 * Alle Belegungen des angebenen Zeitraums holen.
 		 */
 		Vector<Event> events = this.roomReservationServiceAdministration.getEventsByRoomForPeriodOfTime(room,
 				startDate, endDate);
+		/*
+		 * Hier werden nun die Belegungen nacheinander in die Tabelle eingefügt.
+		 */
 
 		for (Event event : events) {
 			// Eine leere Zeile anlegen.
@@ -156,13 +197,13 @@ public class ReportGeneratorImpl extends RemoteServiceServlet implements ReportG
 
 			// Erste Spalte: Kontonummer hinzufügen
 			eventRow.addColumn(new Column(event.getTopic()));
-			eventRow.addColumn(new Column(String.valueOf(event.getStartDate().toString())));
-			eventRow.addColumn(new Column(String.valueOf(event.getEndDate().toString())));
+			eventRow.addColumn(new Column(event.getStartDate().toString().substring(0, 16)));
+			eventRow.addColumn(new Column(event.getEndDate().toString().substring(0, 16)));
 
-			eventRow.addColumn(new Column(String.valueOf(event.getOrganizerId())));
-			// TODO: Organisator Namen statt ID, dafür getUserByKey-Methode in RRS-Impl Klasse definieren
-
+			eventRow.addColumn(new Column(roomReservationServiceAdministration.getUserByID(event.getOrganizerId())
+					.getLastName()));
 			eventRow.addColumn(new Column(event.getCreationDate().toString()));
+			eventRow.addColumn(new Column(roomReservationServiceAdministration.getInviteesOfEvent(event).toString()));
 
 			// und schließlich die Zeile dem Report hinzufügen.
 			result.addRow(eventRow);
@@ -171,97 +212,36 @@ public class ReportGeneratorImpl extends RemoteServiceServlet implements ReportG
 		/*
 		 * Zum Schluss müssen wir noch den fertigen Report zurückgeben.
 		 */
+		logger.severe("Report erstellt: \n" + result.toString());
+
 		return result;
 	}
 
 	@Override
 	public AllEventsForUserInPeriodOfTimeReport createAllEventsForUserInPeriodOfTimeReport(User user,
 			Timestamp startDate, Timestamp endDate) throws IllegalArgumentException {
-		/*
-		 * Zunächst legen wir uns einen leeren Report an.
-		 */
-		AllEventsForUserInPeriodOfTimeReport result = new AllEventsForUserInPeriodOfTimeReport();
-
-		// Jeder Report hat einen Titel (Bezeichnung / Überschrift).
-		result.setTitle("Alle Belegungen in einem Nutzer für einen bestimmten Zeitraum");
-
-		// Imressum hinzufügen
-		this.addImprint(result);
-
-		/*
-		 * Datum der Erstellung hinzufügen. new Date() erzeugt autom. einen "Timestamp" des Zeitpunkts der
-		 * Instantiierung des Date-Objekts.
-		 */
-		result.setCreated(new Date());
-
-		/*
-		 * Ab hier erfolgt die Zusammenstellung der Kopfdaten (die Dinge, die oben auf dem Report stehen) des Reports.
-		 * Die Kopfdaten sind mehrzeilig, daher die Verwendung von CompositeParagraph.
-		 */
-		CompositeParagraph header = new CompositeParagraph();
-
-		// Name und Vorname des Kunden aufnehmen
-		header.addSubParagraph(new SimpleParagraph("Nutzer: " + user.getLastName() + " " +user.getFirstName()));
-
-		// Kundennummer aufnehmen
-		header.addSubParagraph(new SimpleParagraph("Zeitraum: " + startDate.toString() + " bis " + endDate.toString()));
-
-		// Hinzufügen der zusammengestellten Kopfdaten zu dem Report
-		result.setHeaderData(header);
-
-		/*
-		 * Ab hier erfolgt ein zeilenweises Hinzufügen von Konto-Informationen.
-		 */
-
-		/*
-		 * Zunächst legen wir eine Kopfzeile für die Konto-Tabelle an.
-		 */
-		Row headline = new Row();
-
-		/*
-		 * Wir wollen Zeilen mit 2 Spalten in der Tabelle erzeugen. In die erste Spalte schreiben wir die jeweilige
-		 * Kontonummer und in die zweite den aktuellen Kontostand. In der Kopfzeile legen wir also entsprechende
-		 * Überschriften ab.
-		 */
-		headline.addColumn(new Column("Belegungsthema"));
-		headline.addColumn(new Column("Beginn"));
-		headline.addColumn(new Column("Ende"));
-		headline.addColumn(new Column("Organisator"));
-		headline.addColumn(new Column("Erstellsdatum"));
-		
-
-		// Hinzufügen der Kopfzeile
-		result.addRow(headline);
-
-		/*
-		 * Nun werden sämtliche Konten des Kunden ausgelesen und deren Kto.-Nr. und Kontostand sukzessive in die Tabelle
-		 * eingetragen.
-		 */
-		Vector<Event> events = this.roomReservationServiceAdministration.getEventsByUserForPeriodOfTime(user, startDate, endDate);
-
-		for (Event event : events) {
-			// Eine leere Zeile anlegen.
-			Row eventRow = new Row();
-
-			// Erste Spalte: Kontonummer hinzufügen
-			eventRow.addColumn(new Column(event.getTopic()));
-			eventRow.addColumn(new Column(String.valueOf(event.getStartDate().toString())));
-			eventRow.addColumn(new Column(String.valueOf(event.getEndDate().toString())));
-
-			eventRow.addColumn(new Column(String.valueOf(event.getOrganizerId())));
-			// TODO: Organisator Namen statt ID, dafür getUserByKey-Methode in RRS-Impl Klasse definieren
-
-			eventRow.addColumn(new Column(event.getCreationDate().toString()));
-
-			// und schließlich die Zeile dem Report hinzufügen.
-			result.addRow(eventRow);
-		}
-
-		/*
-		 * Zum Schluss müssen wir noch den fertigen Report zurückgeben.
-		 */
-		return result;
+		return null;
 	}
-	
+
+	// private String getInviteeStringRepresentation(Vector events) {
+	// StringBuffer inviteesString = new StringBuffer();
+	//
+	// for (Event event : events) {
+	//
+	// Vector<User> attendees = roomReservationServiceAdministration.getUsersByParticipationStatusForEvent(event, true);
+	// for (User user : attendees) {
+	// inviteesString.append("<span style=\"color = green;\">" + user.getFirstName() + " " + user.getLastName() +
+	// "</span><br>");
+	// }
+	//
+	// Vector<User> invitees = roomReservationServiceAdministration.getUsersByParticipationStatusForEvent(event, false);
+	// for (User user : invitees) {
+	// inviteesString.append("<span style=\"color = red;\">" + user.getFirstName() + " " + user.getLastName() +
+	// "</span><br>");
+	// }
+	// }
+	//
+	// return inviteesString;
+	// }
 
 }

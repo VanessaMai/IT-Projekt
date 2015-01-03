@@ -1,8 +1,10 @@
 package roomreservationservice.server.db;
 
 import java.sql.*;
-
 import java.util.Vector;
+import java.util.logging.Logger;
+
+import roomreservationservice.server.ServersideSettings;
 import roomreservationservice.shared.bo.Room;
 
 /**
@@ -22,6 +24,9 @@ public class RoomMapper {
 	 * einzige Instanz dieser Klasse.
 	 * 
 	 */
+	
+	Logger logger = ServersideSettings.getLogger();
+	
 	private static RoomMapper roomMapper = null;
 
 	/**
@@ -113,14 +118,30 @@ public class RoomMapper {
 	public Vector<Room> findAll() {
 		Connection con = DBConnection.connection();
 
+		if (con != null){
+			logger.info("DB Verbindung vorhanden");
+		}
+		else {
+			logger.severe("Keine DB-Con");
+		} 
+		
+		
 		// Ergebnisvektor vorbereiten.
 		Vector<Room> result = new Vector<Room>();
 		
 		try {
 			Statement stmt = con.createStatement();
 
-			ResultSet resultSet = stmt.executeQuery("SELECT * FROM rooms " + " ORDER BY id");
+			ResultSet resultSet = stmt.executeQuery("SELECT * FROM rooms " + "ORDER BY id");
 
+			if (resultSet != null){
+				logger.info("DB Query mit Ergebnis vorhanden");
+			}
+			else {
+				logger.severe("Kein Ergebnis der DB-Query");
+			} 
+			
+			
 			// Prüfen, ob Einträge gefunden wurden.
 			if (resultSet.next()) {
 				// Für jeden Eintrag im Suchergebnis wird nun ein Room-Objekt erstellt.

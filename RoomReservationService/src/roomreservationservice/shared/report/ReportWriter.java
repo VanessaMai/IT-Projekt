@@ -13,7 +13,8 @@ package roomreservationservice.shared.report;
  * Prozessierung der Quellinformation zuständig sind.
  * </p>
  * 
- * @author Thies
+ * Basierend auf den Klassen von Herrn Thies. Diese wurden nur für diesen Anwengungsfall leicht angepasst.
+
  */
 public abstract class ReportWriter {
 
