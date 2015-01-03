@@ -64,6 +64,7 @@ public class RoomReservationService implements EntryPoint {
 		Button roomManagement = new Button("Raumverwaltung");
 		Button reportMangement = new Button ("Reporterstellung");
 		Button invitationManagement = new Button ("Einladungsverwaltung");
+		Button logout = new Button ("Abmelden");
 		
 		//Hinzufuegen der Buttons zum HorizontalPanel "navPanel"
 		navPanel.add(homepageButton);
@@ -72,21 +73,65 @@ public class RoomReservationService implements EntryPoint {
 		navPanel.add(reportMangement);
 		navPanel.add(invitationManagement);
 		
-		/*TODO Clickhandler fuer die Buttons des navPanels erzeugen
-		 * diese erstellen ein neues Objekt der jeweiligen SubKlasse von Reaktion
-		 * die und rufen dieses auf. Analog zum BankProjekt
-		 * Bsp.
-			 * userManagement.addClickHandler(new ClickHandler() {
-			 *   public void onClick(ClickEvent event) {
-			 *   	Reaktion reaktion = new userManagement ();
-			 *   RootPanel.get("Content").clear();
-			 *   RootPanel.get("Content").add(reaktion);
-			 *   }
-			 *   });
+		/*Clickhandler fuer die Buttons des navPanels erzeugen
+		 * diese erstellen ein neues Objekt der jeweiligen SubKlasse von Reaction
+		 * und rufen dieses auf. Analogie zum BankProjekt.java.
 		 */
 		    
+		
+		homepageButton.addClickHandler(new ClickHandler(){
+			public void onClick(ClickEvent event){
+				Reaction reaction = new homepageButton ();
 				
+				RootPanel.get("Content").clear();
+				RootPanel.get("Content").add(reaction);
+			}
+		});
+		
+		userManagement.addClickHandler(new ClickHandler(){
+			public void onClick(ClickEvent event){
+				Reaction reaction = new userManagement ();
+				
+				RootPanel.get("Content").clear();
+				RootPanel.get("Content").add(reaction);
+			}
+		});
+		
+		roomManagement.addClickHandler(new ClickHandler(){
+			public void onClick(ClickEvent event){
+				Reaction reaction = new roomManagement ();
+				
+				RootPanel.get("Content").clear();
+				RootPanel.get("Content").add(reaction);
+			}
+		});
+		
+		reportMangement.addClickHandler(new ClickHandler(){
+			public void onClick(ClickEvent event){
+				Reaction reaction = new reportMangement ();
+				
+				RootPanel.get("Content").clear();
+				RootPanel.get("Content").add(reaction);
+			}
+		});
 		
 		
+		invitationManagement.addClickHandler(new ClickHandler(){
+			public void onClick(ClickEvent event){
+				Reaction reaction = new invitationManagement ();
+				
+				RootPanel.get("Content").clear();
+				RootPanel.get("Content").add(reaction);
+			}
+		});
 		
+		logout.addClickHandler(new ClickHandler(){
+			public void onClick(ClickEvent event){
+				Reaction reaction = new logout ();
+				
+				RootPanel.get("Content").clear();
+				RootPanel.get("Content").add(reaction);
+			}
+		});
+				
 		}}
