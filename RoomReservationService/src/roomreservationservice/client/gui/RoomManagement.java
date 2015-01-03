@@ -6,7 +6,19 @@ package roomreservationservice.client.gui;
  *  @author: Gertz, Steven
  */
 
-public class RoomManagement {
+public class RoomManagement extends Reaction{
+
+	@Override
+	protected String getHeadlineText() {
+		// TODO Auto-generated method stub
+		return "Raumverwaltung";
+	}
+
+	@Override
+	protected void run() {
+		// TODO Auto-generated method stub
+		
+	}
 	/*TODO RaumVerwaltun Hauptseite:
 	 * CellList: Raum waehlen
 	 * 1. Button + ClickHandler: Raum modifizieren

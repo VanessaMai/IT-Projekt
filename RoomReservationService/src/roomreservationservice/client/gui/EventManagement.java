@@ -6,7 +6,18 @@ package roomreservationservice.client.gui;
  *  @author: Gertz, Steven
  */
 
-public class EventManagement {
+public class EventManagement extends Reaction{
+
+	@Override
+	protected String getHeadlineText() {
+		return "EventManagement";
+	}
+
+	@Override
+	protected void run() {
+		// TODO Auto-generated method stub
+		
+	}
 	/*TODO Belegung erstellen : 
 	 * Ueberschrift festlegen
 	 * DatePicker: Datum, 

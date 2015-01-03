@@ -6,7 +6,18 @@ package roomreservationservice.client.gui;
  **  @author: Steven Gertz, Nicholas Gertz, Elisabeth Mazurkiewicz
  */
 
-public class InvitationManagement {
+public class InvitationManagement extends Reaction{
+
+	@Override
+	protected String getHeadlineText() {
+		return "Einladungsmanagement";
+	}
+
+	@Override
+	protected void run() {
+		// TODO Auto-generated method stub
+		
+	}
 	//TODO ClickHandler fuer invitationManagement anlegen 
 	//TODO Buttons und ClickHanlder in Einladungsverwaltung anlegen: Zusagen, Absagen
 

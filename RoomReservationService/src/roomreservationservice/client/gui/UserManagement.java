@@ -6,7 +6,19 @@ package roomreservationservice.client.gui;
  *  @author: Gertz, Steven
  */
 
-public class UserManagement {
+public class UserManagement extends Reaction{
+
+	@Override
+	protected String getHeadlineText() {
+		// TODO Auto-generated method stub
+		return "Nutzerverwaltung";
+	}
+
+	@Override
+	protected void run() {
+		// TODO Auto-generated method stub
+		
+	}
 	/*TODO Nutzerverwaltung Hauptseite:
 	 * CellList: Nutzer auswaehlen
 	 * 1.Button + ClickHandler: Nutzer modifizieren

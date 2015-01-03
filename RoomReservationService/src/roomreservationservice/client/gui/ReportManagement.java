@@ -6,7 +6,18 @@ package roomreservationservice.client.gui;
  *  @author: Gertz, Steven
  */
 
-public class ReportManagement {
+public class ReportManagement extends Reaction{
+
+	@Override
+	protected String getHeadlineText() {
+			return "Report erstellen";
+	}
+
+	@Override
+	protected void run() {
+		// TODO Auto-generated method stub
+		
+	}
 	/*TODO Report erstellen
 	 * Ueberschrift setzen
 	 * DatePicker: Datum
