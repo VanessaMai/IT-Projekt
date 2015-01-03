@@ -17,7 +17,7 @@
   
   <servlet-mapping>
     <servlet-name>roomReservationServiceServlet</servlet-name>
-    <url-pattern>/roomreservationservice/main</url-pattern>
+    <url-pattern>/roomreservationservice/raumbelegungssystem</url-pattern>
   </servlet-mapping>
   
   <servlet>
