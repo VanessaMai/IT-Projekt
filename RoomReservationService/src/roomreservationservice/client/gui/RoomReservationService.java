@@ -135,7 +135,7 @@ public class RoomReservationService implements EntryPoint {
 		reportMangement.addClickHandler(new ClickHandler(){
 			public void onClick(ClickEvent event){
 				
-				Reaction reaction = new ReportMangement ();
+				Reaction reaction = new ReportManagement ();
 				
 				RootPanel.get("Content").clear();
 				RootPanel.get("Content").add(reaction);
