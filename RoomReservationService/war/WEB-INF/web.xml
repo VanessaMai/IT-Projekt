@@ -5,11 +5,35 @@
          version="2.5"
          xmlns="http://java.sun.com/xml/ns/javaee">
 
+
+
   <!-- Servlets -->
+
+
+  <servlet>
+    <servlet-name>roomReservationServiceServlet</servlet-name>
+    <servlet-class>roomreservationservice.server.RoomReservationServiceAdministrationImpl</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>roomReservationServiceServlet</servlet-name>
+    <url-pattern>/roomreservationservice/raumbelegungssystem</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>reportGeneratorServlet</servlet-name>
+    <servlet-class>roomreservationservice.server.report.ReportGeneratorImpl</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>reportGeneratorServlet</servlet-name>
+    <url-pattern>/roomreservationservice/reportgenerator</url-pattern>
+  </servlet-mapping>
+  
   
   <!-- Default page to serve -->
   <welcome-file-list>
-    <welcome-file>RoomReservationService.html</welcome-file>
+    <welcome-file>roomreservationservice.html</welcome-file>
   </welcome-file-list>
 
 </web-app>

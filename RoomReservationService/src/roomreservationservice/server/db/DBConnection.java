@@ -6,13 +6,18 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import com.google.appengine.api.utils.SystemProperty;
 
+
+/**
+ * Klasse, mit der die Verbindung zur Datenbank hergestellt wird.
+ * @author Julius Renner
+ */
+
 public class DBConnection {
 	/**
 	 * 
 	 * Die Klasse DBConnection wird nur einmal instantiiert (<b>Singleton</b>). Diese Variable ist durch den Bezeichner
 	 * <code>static</code> nur einmal für sämtliche eventuellen Instanzen dieser Klasse vorhanden und speichert die
 	 * einzige Instanz dieser Klasse.
-	 * 
 	 */
 	private static Connection con = null;
 

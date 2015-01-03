@@ -7,9 +7,19 @@ import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.Vector;
 
+import roomreservationservice.server.ServersideSettings;
 import roomreservationservice.shared.bo.Event;
 import roomreservationservice.shared.bo.Room;
 import roomreservationservice.shared.bo.User;
+
+/**
+ * Klasse, die Methoden bereitstellt um die Daten eines Belegungs-Objekts auf eine relationiale Datenbank abzubilden.
+ * Datensäte können erstellt, geändert und gelöscht werden. Aus einem Datensatz kann zudem wieder ein Java-Objekt
+ * gemacht werden.
+ * 
+ * @author Julius Renner
+ *
+ */
 
 public class EventMapper {
 
@@ -642,6 +652,9 @@ public class EventMapper {
 		// Ergebnisvektor vorbereiten.
 		Vector<Event> result = new Vector<Event>();
 
+		ServersideSettings.getLogger().severe("Room, beim Mapper: " + room.toString() + " " +startDate +" " + endDate);
+
+		
 		try {
 			// Leeres SQL-Statement (JDBC) anlegen
 			Statement stmt = con.createStatement();
@@ -652,6 +665,8 @@ public class EventMapper {
 			ResultSet resultSet = stmt.executeQuery("SELECT id FROM events WHERE events.start_date >= '" + startDate
 					+ "' AND events.end_date <= '" + endDate + "' AND event_room = " + room.getId());
 
+			
+			ServersideSettings.getLogger().severe("Angekommen Mapper, ResultSet: " + resultSet.toString());
 			// Prüfen, ob Einträge gefunden wurden.
 			if (resultSet.next()) {
 				do {
@@ -664,6 +679,9 @@ public class EventMapper {
 				} while (resultSet.next());
 
 				// Rückgabe Ergebnisvektor
+				
+				ServersideSettings.getLogger().severe("Rückgabe Mapper: " + result.toString());
+
 				return result;
 			}
 			// wenn das Resultset leer ist, wird <code>null</code> zurückgegeben.

@@ -11,7 +11,14 @@ import roomreservationservice.shared.bo.Event;
 import roomreservationservice.shared.bo.User;
 
 public class UserMapper {
-
+	/**
+	 * Klasse, die Methoden bereitstellt um die Daten eines Nutzer-Objekts auf eine relationiale Datenbank abzubilden.
+	 * Datensäte können erstellt, geändert und gelöscht werden. Aus einem Datensatz kann zudem wieder ein Java-Objekt
+	 * gemacht werden.
+	 * 
+	 * @author Julius Renner
+	 *
+	 */
 	/**
 	 * Die Klasse UserMapper wird nur einmal instantiiert (Singleton). Diese Variable ist durch den Bezeichner
 	 * <code>static</code> nur einmal für sämtliche eventuellen Instanzen dieser Klasse vorhanden. Sie speichert die
@@ -421,10 +428,10 @@ public class UserMapper {
 			Statement stmt = con.createStatement();
 
 			// Query durchführen und nach Einträgen suchen, bei denen der Namename dem Suchebgriff entspricht
-			ResultSet resultSet = stmt.executeQuery("SELECT event_organizer FROM events WHERE  = " + event.getId());
+			ResultSet resultSet = stmt.executeQuery("SELECT event_organizer FROM events WHERE id = " + event.getId());
 
 			if (resultSet.next()) {
-				User user = userMapper.findByKey(resultSet.getInt("id"));
+				User user = userMapper.findByKey(resultSet.getInt("event_organizer"));
 				return user;
 			}
 			// wenn das Resultset leer ist, wird <code>null</code> zurückgegeben.
