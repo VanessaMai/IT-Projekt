@@ -9,11 +9,13 @@ import roomreservationservice.shared.bo.Room;
 import roomreservationservice.shared.bo.User;
 
 import com.google.gwt.user.client.rpc.RemoteService;
+import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
 
 /** 
  * Synchrone Schnittstelle für eine RPC-fähige Klasse zur Verwaltung von Raumbelegungen.
  */
+@RemoteServiceRelativePath("raumbelegungssystem")
 public interface RoomReservationServiceAdministration extends RemoteService {
 	
 	/**
@@ -169,7 +171,7 @@ public interface RoomReservationServiceAdministration extends RemoteService {
 	 * @return Vector Objekten mit den User-Objekten, welche die Suchkriterien erfüllen
 	 * @throws IllegalArgumentException
 	 */
-	public Vector<User> getUsersByParticipationStatusForEvent(Event event, int participationStatus)
+	public Vector<User> getUsersByParticipationStatusForEvent(Event event, boolean participationStatus)
 			throws IllegalArgumentException;
 	
 	

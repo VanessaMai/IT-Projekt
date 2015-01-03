@@ -312,26 +312,13 @@ implements RoomReservationServiceAdministration{
 	@Override
 	public Vector<User> getInviteesOfEvent(Event event)
 			throws IllegalArgumentException {
-		// Variable in der die Liste der Eingeladenen gespeichert wird
-		Vector<User> inviteesOfEvent = new Vector<User>();
-		// alle Invitation-Objekte dieser Belegung in Variable speichern
-		Vector<Invitation> invitationsOfEvent= this.getInvitationsByEvent(event);
-		
-		// für jede einzelne Einladung in dieser Belegung
-		for (Invitation i : invitationsOfEvent){
-			// es wird die Invitee-Id der Invitation ausgelesen und mit findByKey-Methode von Usermapper
-			// wird dann der betroffene User ausgewählt 
-			// dieser User wird mit add-methode der Variable inviteesOfEvent hinzugefügt
-			inviteesOfEvent.add(this.uMapper.findByKey(i.getInviteeId()));			
-		}
-		// letztendlich wird die Liste der eingeladenen User ausgegeben
-		return inviteesOfEvent;
+		return this.uMapper.findAllInviteesOfEvent(event);
 	}
 
 	
 	@Override
 	public Vector<User> getUsersByParticipationStatusForEvent(Event event,
-			int participationStatus) throws IllegalArgumentException {
+			boolean participationStatus) throws IllegalArgumentException {
 		// Variable in der die Liste der User mit bestimmten Annahmestatus gespeichert werden
 		Vector<User> inviteesStatus = new Vector<User>();
 		// alle Einladungen dieses events
@@ -400,26 +387,7 @@ implements RoomReservationServiceAdministration{
 	@Override
 	public Vector<Invitation> getInvitationsByEvent(Event event)
 			throws IllegalArgumentException {
-		// Variable um die entsprechenden Invitations zu speichern
-		Vector<Invitation> invitations = new Vector<Invitation>();
-		// Variable um alle Invitations festzuhalten, diese werden im nächsten
-		// Schritt
-		// durchsucht nach passenden Events
-		Vector<Invitation> allInvitations = this.getAllInvitations();
-
-		// Es wird durch alle Invitations iteriert,
-
-		for (int i = 0; i < allInvitations.size(); i++) {
-			// für jede Invitation wird die eventID ausgelesen und mit der
-			// eventID des übergebenen events verglichen
-			if (allInvitations.elementAt(i).getEventId() == event.getId()) {
-				// falls diese übereinstimmen, dann wird die Invitation dem
-				// Vector invitations hinzugefügt
-				invitations.addElement(allInvitations.elementAt(i));
-			}
-			
-		}
-		return invitations;
+		return this.iMapper.findAllByEvent(event);
 	}
 
 
