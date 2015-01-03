@@ -1,9 +1,9 @@
 package roomreservationservice.client.gui;
 
-import ClickEvent;
-import ClickHandler;
-import CreateAccountDemo;
-import Showcase;
+import com.google.gwt.core.client.*;
+import com.google.gwt.event.dom.client.*;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.*;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.ui.Button;
@@ -11,8 +11,7 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-/**
- * Entry point classes define <code>onModuleLoad()</code>. 
+ /* Entry point classes define <code>onModuleLoad()</code>. 
  */
 
 
@@ -60,6 +59,7 @@ public class RoomReservationService implements EntryPoint {
 	
 		//neue Widgets erzeugen. Buttons fuer das HorizontalPanel "navPanel"
 		Button homepageButton = new Button ("Startseite");
+		Button eventManagement = new Button ("Belegungsverwaltung");
 		Button userManagement = new Button ("Nutzerverwaltung");
 		Button roomManagement = new Button("Raumverwaltung");
 		Button reportMangement = new Button ("Reporterstellung");
@@ -68,6 +68,7 @@ public class RoomReservationService implements EntryPoint {
 		
 		//Hinzufuegen der Buttons zum HorizontalPanel "navPanel"
 		navPanel.add(homepageButton);
+		navPanel.add(eventManagement);
 		navPanel.add(userManagement);
 		navPanel.add(roomManagement);
 		navPanel.add(reportMangement);
@@ -76,12 +77,35 @@ public class RoomReservationService implements EntryPoint {
 		/*Clickhandler fuer die Buttons des navPanels erzeugen
 		 * diese erstellen ein neues Objekt der jeweiligen SubKlasse von Reaction
 		 * und rufen dieses auf. Analogie zum BankProjekt.java.
+		 * 
+		 * Somit haben wir das Verhalten, wenn mit der Maus auf den jeweiligen Button geklickt
+		 * hat festgelegt. Durch die onClick()-Methode des ClickHandlers wird beim Mausklick 
+		 * auf den zugehoerigen Button festgelegt was dabei passiert.
 		 */
 		    
-		
 		homepageButton.addClickHandler(new ClickHandler(){
 			public void onClick(ClickEvent event){
-				Reaction reaction = new homepageButton ();
+				
+		/*
+		  * Reaction instantiieren.
+		  */
+				Reaction reaction = new Hompage ();
+				
+		/*
+		 * Fuer die Ausgaben haben wir ein separates DIV-Element namens "Content"
+		 * in die zugehoerige HTML-Datei eingefuegt. Bevor wir die neue Reaction
+		 * dort einbetten, loeschen wir vorsichtshalber saemtliche bisherigen
+		 * Elemente dieses DIVs.
+		 */
+				RootPanel.get("Content").clear();
+				RootPanel.get("Content").add(reaction);
+			}
+		});
+		
+		eventManagement.addClickHandler(new ClickHandler(){
+			public void onClick(ClickEvent event){
+				
+				Reaction reaction = new EventManagement ();
 				
 				RootPanel.get("Content").clear();
 				RootPanel.get("Content").add(reaction);
@@ -90,7 +114,8 @@ public class RoomReservationService implements EntryPoint {
 		
 		userManagement.addClickHandler(new ClickHandler(){
 			public void onClick(ClickEvent event){
-				Reaction reaction = new userManagement ();
+				
+				Reaction reaction = new UserManagement ();
 				
 				RootPanel.get("Content").clear();
 				RootPanel.get("Content").add(reaction);
@@ -99,7 +124,8 @@ public class RoomReservationService implements EntryPoint {
 		
 		roomManagement.addClickHandler(new ClickHandler(){
 			public void onClick(ClickEvent event){
-				Reaction reaction = new roomManagement ();
+				
+				Reaction reaction = new RoomManagement ();
 				
 				RootPanel.get("Content").clear();
 				RootPanel.get("Content").add(reaction);
@@ -108,7 +134,8 @@ public class RoomReservationService implements EntryPoint {
 		
 		reportMangement.addClickHandler(new ClickHandler(){
 			public void onClick(ClickEvent event){
-				Reaction reaction = new reportMangement ();
+				
+				Reaction reaction = new ReportMangement ();
 				
 				RootPanel.get("Content").clear();
 				RootPanel.get("Content").add(reaction);
@@ -118,7 +145,8 @@ public class RoomReservationService implements EntryPoint {
 		
 		invitationManagement.addClickHandler(new ClickHandler(){
 			public void onClick(ClickEvent event){
-				Reaction reaction = new invitationManagement ();
+				
+				Reaction reaction = new InvitationManagement ();
 				
 				RootPanel.get("Content").clear();
 				RootPanel.get("Content").add(reaction);
@@ -127,7 +155,8 @@ public class RoomReservationService implements EntryPoint {
 		
 		logout.addClickHandler(new ClickHandler(){
 			public void onClick(ClickEvent event){
-				Reaction reaction = new logout ();
+				
+				Reaction reaction = new Logout ();
 				
 				RootPanel.get("Content").clear();
 				RootPanel.get("Content").add(reaction);

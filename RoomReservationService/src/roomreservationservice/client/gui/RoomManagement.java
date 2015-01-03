@@ -10,7 +10,6 @@ public class RoomManagement extends Reaction{
 
 	@Override
 	protected String getHeadlineText() {
-		// TODO Auto-generated method stub
 		return "Raumverwaltung";
 	}
 

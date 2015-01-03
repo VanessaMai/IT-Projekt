@@ -10,7 +10,6 @@ public class UserManagement extends Reaction{
 
 	@Override
 	protected String getHeadlineText() {
-		// TODO Auto-generated method stub
 		return "Nutzerverwaltung";
 	}
 
