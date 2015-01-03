@@ -1,7 +1,5 @@
 package roomreservationservice.client.gui;
 
-import Showcase;
-
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
@@ -15,7 +13,7 @@ import com.google.gwt.user.client.ui.TextBox;
  *  @author: Steven Gertz, Nicholas Gertz, Elisabeth Mazurkiewicz
  */
 
-public class General extends RoomReservationService {
+public class General {
 
 	/*Erste Seite.User hat Wahl zwischen Registrieren und 
 	 * Authentifizieren.
