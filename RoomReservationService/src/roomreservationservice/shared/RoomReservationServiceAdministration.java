@@ -9,11 +9,13 @@ import roomreservationservice.shared.bo.Room;
 import roomreservationservice.shared.bo.User;
 
 import com.google.gwt.user.client.rpc.RemoteService;
+import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
 
 /** 
  * Synchrone Schnittstelle für eine RPC-fähige Klasse zur Verwaltung von Raumbelegungen.
  */
+@RemoteServiceRelativePath("raumbelegungssystem")
 public interface RoomReservationServiceAdministration extends RemoteService {
 	
 	/**
@@ -172,6 +174,26 @@ public interface RoomReservationServiceAdministration extends RemoteService {
 	public Vector<User> getUsersByParticipationStatusForEvent(Event event, boolean participationStatus)
 			throws IllegalArgumentException;
 	
+	
+	/**
+	 * Ausgeben von UserObjekten die zu einem Event eingeladen sind
+	 * 
+	 * @param event
+	 * @return Vector mit User Objekten
+	 * @throws IllegalArgumentException
+	 */
+	public Vector<User> getInviteesOfEvent(Event event)
+			throws IllegalArgumentException;
+	
+	/**
+	 * Ausgeben eines UserObjekts, der Veranstalter einer Belegung ist
+	 * @param event
+	 * @return User-Objekt
+	 * @throws IllegalArgumentException
+	 */
+	public User getOrganizerOfEvent(Event event) throws IllegalArgumentException;
+	
+	
 	/**
 	 * Ausgeben aller Belegungen in einem Raum
 	 * @param room Raum-Objekt in dem die Belegungen sind
@@ -187,7 +209,16 @@ public interface RoomReservationServiceAdministration extends RemoteService {
 	 * @return Vector-Objekt mit den Event-Objekten, welche die User enthalten
 	 * @throws IllegalArgumentException
 	 */
-	public Vector<Event> getEventsByUser(User user) throws IllegalArgumentException;
+	public Vector<Event> getEventsByInvitees(User user) throws IllegalArgumentException;
+	
+	/**
+	 * Ausgeben aller Event-Objekte von dem übergebenen User in einer Liste
+	 * User können Teilnehmer, als auch Organisator sein. 
+	 * @param user Teilnehmer oder Organisator eines Events
+	 * @return Vector-Objekt mit den Event-Objekten, welche die User enthalten
+	 * @throws IllegalArgumentException
+	 */
+	public Vector<Event> getEventsByOrganizer(User user) throws IllegalArgumentException;
 	
 	/**
 	 * Ausgeben aller Event-Objekte zum übergebenen Zeitraum in einer Liste
@@ -226,7 +257,30 @@ public interface RoomReservationServiceAdministration extends RemoteService {
 	 * @return Vector-Objekt mit Events, welche die Suchkriterien erfüllen
 	 * @throws IllegalArgumentException
 	 */
-	public Vector<Event> getEventsByUserForPeriodOfTime(User user, Timestamp startDate, Timestamp endDate) 
+	public Vector<Event> getEventsByInviteeForPeriodOfTime(User user, Timestamp startDate, Timestamp endDate) 
 			throws IllegalArgumentException;
 	
-	}
+
+	
+	/** 
+	 * Ausgeben aller Invitation-Objekte zu einem Event
+	 * wird z.B. bei der Delete-Methode von Events benötigt
+	 * @param event Event-Objekt
+	 * @return Vector Objekt mit Invitations, welche die Suchkriterien erfüllen 
+	 * @throws IllegalException
+	 */
+	public Vector<Invitation> getInvitationsByEvent(Event event)
+			throws IllegalArgumentException;
+	
+
+	/** 
+	 * Ausgeben aller Invitation-Objekte zu einem User
+	 * wird z.B. bei der Delete-Methode von Usern benötigt
+	 * @param user User-Objekt
+	 * @return Vector Objekt mit Invitations, welche die Suchkriterien erfüllen 
+	 * @throws IllegalException
+	 */
+	public Vector<Invitation> getInvitationsByUser(User user) throws IllegalArgumentException;
+}
+	
+	

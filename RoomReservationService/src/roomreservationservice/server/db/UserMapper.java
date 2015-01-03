@@ -11,7 +11,14 @@ import roomreservationservice.shared.bo.Event;
 import roomreservationservice.shared.bo.User;
 
 public class UserMapper {
-
+	/**
+	 * Klasse, die Methoden bereitstellt um die Daten eines Nutzer-Objekts auf eine relationiale Datenbank abzubilden.
+	 * Datensäte können erstellt, geändert und gelöscht werden. Aus einem Datensatz kann zudem wieder ein Java-Objekt
+	 * gemacht werden.
+	 * 
+	 * @author Julius Renner
+	 *
+	 */
 	/**
 	 * Die Klasse UserMapper wird nur einmal instantiiert (Singleton). Diese Variable ist durch den Bezeichner
 	 * <code>static</code> nur einmal für sämtliche eventuellen Instanzen dieser Klasse vorhanden. Sie speichert die
@@ -84,7 +91,13 @@ public class UserMapper {
 				 * Mapper ein Attribut vergisst und halbfertige Objekte erstellt. Daher gibt es hier diesen Konstruktor,
 				 * der alle Attribute fordert.
 				 */
-				User user = new User(firstName, lastName, email, accessToken, accessTokenSecret, creationDate, userID);
+				User user = new User(firstName, lastName, email, accessToken, accessTokenSecret);
+
+				/**
+				 * Setzten der ID und des Erstellungszeitpunktes aus der DB.
+				 */
+				user.setCreationDate(creationDate);
+				user.setId(userID);
 
 				// Zuletzt wird das User-Objekt zurückgegebn.
 				return user;
@@ -121,14 +134,17 @@ public class UserMapper {
 			// Prüfen, ob Einträge gefunden wurden.
 			if (resultSet.next()) {
 				// Für jeden Eintrag im Suchergebnis wird nun ein User-Objekt erstellt.
-				while (resultSet.next()) {
+				do {
 
-					// Für jeden Eintrag wird die findByKey-Methode aufgerufen, die das User-Obejekt zurückliefert.
+					// Für jeden Eintrag wird die findByKey-Methode aufgerufen, die das User-Objekt zurückliefert.
 					User user = findByKey(resultSet.getInt("id"));
 
 					// Hinzufügen des neuen Objekts zum Ergebnisvektor
 					result.addElement(user);
-				}
+				} while (resultSet.next());
+
+				// Ergebnisvektor zurückgeben
+				return result;
 			}
 			// wenn das Resultset leer ist, wird <code>null</code> zurückgegeben.
 			else {
@@ -140,8 +156,6 @@ public class UserMapper {
 			return null;
 		}
 
-		// Ergebnisvektor zurückgeben
-		return result;
 	}
 
 	/**
@@ -186,19 +200,23 @@ public class UserMapper {
 						+ user.getAccessToken()
 						+ "', '"
 						+ user.getAccessTokenSecret() + "', '" + user.getCreationDate() + "')");
+
+				/*
+				 * Rückgabe, des nun veränderten Raum Objekts. Es hat von der DB eine ID zugewiesen bekommen, die sie
+				 * fortanverwendet, falls man den Datenastz zum Beispiel aus der DB löschen oder ihn updaten möchte.
+				 */
+
+				return user;
+			}
+			// wenn das Resultset leer ist, wird <code>null</code> zurückgegeben.
+			else {
+				return null;
 			}
 		} // SQL Exception abfangen, sollte etwas schiefgehen.
 		catch (SQLException e1) {
 			e1.printStackTrace();
 			return null;
 		}
-
-		/*
-		 * Rückgabe, des nun veränderten Raum Objekts. Es hat von der DB eine ID zugewiesen bekommen, die sie
-		 * fortanverwendet, falls man den Datenastz zum Beispiel aus der DB löschen oder ihn updaten möchte.
-		 */
-
-		return user;
 	}
 
 	/**
@@ -219,6 +237,8 @@ public class UserMapper {
 					+ user.getLastName() + "', email= '" + user.getEmail() + "', access_token= '"
 					+ user.getAccessToken() + "', access_token_secret= '" + user.getAccessTokenSecret()
 					+ "' WHERE id= " + user.getId());
+			// Um Analogie zu insert(User user) zu wahren, geben wir das User-Objekt wieder zurück.
+			return user;
 
 		} // SQL Exception abfangen, sollte etwas schiefgehen.
 		catch (SQLException e1) {
@@ -231,8 +251,6 @@ public class UserMapper {
 			return null;
 		}
 
-		// Um Analogie zu insert(User user) zu wahren, geben wir das User-Obejekt wieder zurück.
-		return user;
 	}
 
 	/**
@@ -279,11 +297,17 @@ public class UserMapper {
 			ResultSet resultSet = stmt.executeQuery("SELECT id FROM users WHERE last_name = '" + name + "'");
 
 			if (resultSet.next()) {
-				User user = userMapper.findByKey(resultSet.getInt("id"));
-				result.addElement(user);
-			}
+				do {
+					User user = userMapper.findByKey(resultSet.getInt("id"));
+					result.addElement(user);
+				} while (resultSet.next());
 
-			return result;
+				return result;
+			}
+			// wenn das Resultset leer ist, wird <code>null</code> zurückgegeben.
+			else {
+				return null;
+			}
 
 		} // SQL Exception abfangen, sollte etwas schiefgehen.
 		catch (SQLException e1) {
@@ -297,16 +321,59 @@ public class UserMapper {
 		}
 
 	}
-	
-	public Vector<User> findAllUserByParticipationStatusForEvent(Event event, int participationStatus) {
+
+	public Vector<User> findAllUserByParticipationStatusForEvent(Event event, boolean participationStatus) {
 		// Vorbereiten des Ergebnisvectors.
 		Vector<User> result = new Vector<User>();
 
 		// User-Mapper vorbereiten
 		UserMapper userMapper = UserMapper.userMapper();
 
-		// Teilnahmestatus als Integer. 0 = false, 1 = true.
-		int participationStatusAsInt = participationStatus;
+		// DB-Connection holen.
+		Connection con = DBConnection.connection();
+
+		try {
+
+			// Leeres Statement vorbereiten.
+			Statement stmt = con.createStatement();
+
+			// Query ausführen.
+			ResultSet resultSet = stmt
+					.executeQuery("SELECT invitation_invitee FROM invitations " + "WHERE invitation_event= "
+							+ event.getId() + " AND participation_status = " + participationStatus);
+			if (resultSet.next()) {
+				do {
+					User user = userMapper.findByKey(resultSet.getInt("invitation_invitee"));
+					result.addElement(user);
+
+				} while (resultSet.next());
+
+				// Ergebnisvector zurückgeben.
+				return result;
+			}
+			// wenn das Resultset leer ist, wird <code>null</code> zurückgegeben.
+			else {
+				return null;
+			}
+		} // SQL Exception abfangen, sollte etwas schiefgehen.
+		catch (SQLException e1) {
+			e1.printStackTrace();
+			return null;
+		}
+		// Wenn kein Eintrag vorhanden ist.
+		catch (NullPointerException e2) {
+			e2.printStackTrace();
+			return null;
+		}
+
+	}
+
+	public Vector<User> findAllInviteesOfEvent(Event event) {
+		// Vorbereiten des Ergebnisvectors.
+		Vector<User> result = new Vector<User>();
+
+		// User-Mapper vorbereiten
+		UserMapper userMapper = UserMapper.userMapper();
 
 		// DB-Connection holen.
 		Connection con = DBConnection.connection();
@@ -318,13 +385,58 @@ public class UserMapper {
 
 			// Query ausführen.
 			ResultSet resultSet = stmt.executeQuery("SELECT invitation_invitee FROM invitations "
-					+ "WHERE invitation_event= " + event.getId() + " AND participation_status = "
-					+ participationStatusAsInt);
+					+ "WHERE invitation_event= " + event.getId());
+			if (resultSet.next()) {
+				do {
+					User user = userMapper.findByKey(resultSet.getInt("invitation_invitee"));
+					result.addElement(user);
 
-			while (resultSet.next()) {
-				User user = userMapper.findByKey(resultSet.getInt("invitation_invitee"));
-				result.addElement(user);
+				} while (resultSet.next());
 
+				// Ergebnisvector zurückgeben.
+				return result;
+			}
+			// wenn das Resultset leer ist, wird <code>null</code> zurückgegeben.
+			else {
+				return null;
+			}
+		} // SQL Exception abfangen, sollte etwas schiefgehen.
+		catch (SQLException e1) {
+			e1.printStackTrace();
+			return null;
+		}
+		// Wenn kein Eintrag vorhanden ist.
+		catch (NullPointerException e2) {
+			e2.printStackTrace();
+			return null;
+		}
+	}
+
+	/**
+	 * Den User finden, der Organisator eines Events ist.
+	 * 
+	 * @param event
+	 *            Das Event, dessen Organisator gesucht werden soll.
+	 * @return User Objekt des Organisators
+	 */
+	public User findOrganizerOfEvent(Event event) {
+		// DB Connection vorbereiten
+		Connection con = DBConnection.connection();
+
+		try {
+			// Statement vorbereiten.
+			Statement stmt = con.createStatement();
+
+			// Query durchführen und nach Einträgen suchen, bei denen der Namename dem Suchebgriff entspricht
+			ResultSet resultSet = stmt.executeQuery("SELECT event_organizer FROM events WHERE id = " + event.getId());
+
+			if (resultSet.next()) {
+				User user = userMapper.findByKey(resultSet.getInt("event_organizer"));
+				return user;
+			}
+			// wenn das Resultset leer ist, wird <code>null</code> zurückgegeben.
+			else {
+				return null;
 			}
 
 		} // SQL Exception abfangen, sollte etwas schiefgehen.
@@ -338,8 +450,6 @@ public class UserMapper {
 			return null;
 		}
 
-		// Ergebnisvector zurückgeben.
-		return result;
 	}
 
 }

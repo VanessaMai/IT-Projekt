@@ -1,14 +1,19 @@
 package roomreservationservice.server.db;
 
 import java.sql.*;
-
 import java.util.Vector;
+import java.util.logging.Logger;
+
+import roomreservationservice.server.ServersideSettings;
 import roomreservationservice.shared.bo.Room;
 
 /**
- * Mapper-Klasse, die <code>Room</code>-Objekte auf eine relationale Datenbank abbildet. Hierfür gibt es veschiedene
- * Methoden zum Auslesen, Ändern und Löschen aus der Datenbank.
+ * Klasse, die Methoden bereitstellt um die Daten eines Raum-Objekts auf eine relationiale Datenbank abzubilden.
+ * Datensäte können erstellt, geändert und gelöscht werden. Aus einem Datensatz kann zudem wieder ein Java-Objekt
+ * gemacht werden.
  * 
+ * @author Julius Renner
+ *
  */
 
 public class RoomMapper {
@@ -19,6 +24,9 @@ public class RoomMapper {
 	 * einzige Instanz dieser Klasse.
 	 * 
 	 */
+	
+	Logger logger = ServersideSettings.getLogger();
+	
 	private static RoomMapper roomMapper = null;
 
 	/**
@@ -76,13 +84,15 @@ public class RoomMapper {
 				int roomID = resultSet.getInt("id");
 
 				/**
-				 * ...und anschließend an den Konstruktor für ein neues Room-Objekt übergeben. Es wäre zwar auch möglich
-				 * mit einem entsprechendem Konstruktor einen leeres Room-Objekt zu erstellen und dann diekt alle
-				 * nötigen Attribute per Set-Methode zu setzen, allerdings läuft man dann Gefahr, dass man bei einem
-				 * Mapper ein Attribut vergisst und halbfertige Objekte erstellt. Daher gibt es hier diesen Konstruktor,
-				 * der alle Attribute fordert.
+				 * ...und anschließend an den Konstruktor für ein neues Room-Objekt übergeben.
 				 */
-				Room room = new Room(roomName, roomCapacity, creationDate, roomID);
+				Room room = new Room(roomName, roomCapacity);
+				
+				/*
+				 * Setzen der ID und des Erstellungszeitpunktes aus der DB.
+				 */
+				room.setId(roomID);
+				room.setCreationDate(creationDate);
 
 				// Zuletzt wird das Room-Objekt zurückgegebn.
 				return room;
@@ -108,25 +118,44 @@ public class RoomMapper {
 	public Vector<Room> findAll() {
 		Connection con = DBConnection.connection();
 
+		if (con != null){
+			logger.info("DB Verbindung vorhanden");
+		}
+		else {
+			logger.severe("Keine DB-Con");
+		} 
+		
+		
 		// Ergebnisvektor vorbereiten.
 		Vector<Room> result = new Vector<Room>();
-
+		
 		try {
 			Statement stmt = con.createStatement();
 
-			ResultSet resultSet = stmt.executeQuery("SELECT * FROM rooms " + " ORDER BY id");
+			ResultSet resultSet = stmt.executeQuery("SELECT * FROM rooms " + "ORDER BY id");
 
+			if (resultSet != null){
+				logger.info("DB Query mit Ergebnis vorhanden");
+			}
+			else {
+				logger.severe("Kein Ergebnis der DB-Query");
+			} 
+			
+			
 			// Prüfen, ob Einträge gefunden wurden.
 			if (resultSet.next()) {
 				// Für jeden Eintrag im Suchergebnis wird nun ein Room-Objekt erstellt.
-				while (resultSet.next()) {
+				do {
 
-					// Für jeden Eintrag wird die findByKey-Methode aufgerufen, die das Room-Obejekt zurückliefert.
+					// Für jeden Eintrag wird die findByKey-Methode aufgerufen, die das Room-Objekt zurückliefert.
 					Room room = findByKey(resultSet.getInt("id"));
 
 					// Hinzufügen des neuen Objekts zum Ergebnisvektor
 					result.addElement(room);
-				}
+				} while (resultSet.next());
+
+				// Rückgabe Ergebnisvektor
+				return result;
 			}
 			// wenn das Resultset leer ist, wird <code>null</code> zurückgegeben.
 			else {
@@ -137,9 +166,6 @@ public class RoomMapper {
 			e1.printStackTrace();
 			return null;
 		}
-
-		// Ergebnisvektor zurückgeben
-		return result;
 	}
 
 	/**
@@ -174,17 +200,23 @@ public class RoomMapper {
 				stmt.executeUpdate("INSERT INTO rooms (id, name, capacity, creation_date) " + "VALUES (" + room.getId()
 						+ ",'" + room.getRoomName() + "'," + room.getRoomCapacity() + ", '" + room.getCreationDate()
 						+ "')");
+				/*
+				 * Rückgabe, des nun veränderten Raum Objekts. Es hat von der DB eine ID zugewiesen bekommen, die sie
+				 * fortanverwendet, falls man den Datenastz zum Beispiel aus der DB löschen oder ihn updaten möchte.
+				 */
+
+				return room;
 			}
+			// wenn das Resultset leer ist, wird <code>null</code> zurückgegeben.
+			else {
+				return null;
+			}
+
 		} catch (SQLException e) {
 			e.printStackTrace();
+			return null;
 		}
 
-		/*
-		 * Rückgabe, des nun veränderten Raum Objekts. Es hat von der DB eine ID zugewiesen bekommen, die sie
-		 * fortanverwendet, falls man den Datenastz zum Beispiel aus der DB löschen oder ihn updaten möchte.
-		 */
-
-		return room;
 	}
 
 	/**
@@ -203,6 +235,9 @@ public class RoomMapper {
 
 			stmt.executeUpdate("UPDATE rooms SET name= '" + room.getRoomName() + "', capacity= "
 					+ room.getRoomCapacity() + " WHERE id= " + room.getId());
+			
+			// Um Analogie zu insert(Room room) zu wahren, geben wir das Room-Objekt wieder zurück.
+			return room;
 
 		} // SQL Exception abfangen, sollte etwas schiefgehen.
 		catch (SQLException e1) {
@@ -214,9 +249,6 @@ public class RoomMapper {
 			e2.printStackTrace();
 			return null;
 		}
-
-		// Um Analogie zu insert(Room room) zu wahren, geben wir das Room-Obejekt wieder zurück.
-		return room;
 	}
 
 	/**

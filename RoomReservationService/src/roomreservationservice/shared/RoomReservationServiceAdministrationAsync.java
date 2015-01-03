@@ -60,8 +60,6 @@ public interface RoomReservationServiceAdministrationAsync {
 
 	void getEventsByRoom(Room room, AsyncCallback<Vector<Event>> callback);
 
-	void getEventsByUser(User user, AsyncCallback<Vector<Event>> callback);
-
 	void getEventsByPeriodOfTime(Timestamp startDate, Timestamp endDate,
 			AsyncCallback<Vector<Event>> callback);
 
@@ -70,7 +68,21 @@ public interface RoomReservationServiceAdministrationAsync {
 	void getEventsByRoomForPeriodOfTime(Room room, Timestamp startDate,
 			Timestamp endDate, AsyncCallback<Vector<Event>> callback);
 
-	void getEventsByUserForPeriodOfTime(User user, Timestamp startDate,
+	void getEventsByInviteeForPeriodOfTime(User user, Timestamp startDate,
 			Timestamp endDate, AsyncCallback<Vector<Event>> callback);
+
+	void getInvitationsByEvent(Event event,
+			AsyncCallback<Vector<Invitation>> callback);
+
+	void getEventsByInvitees(User user, AsyncCallback<Vector<Event>> callback);
+
+	void getEventsByOrganizer(User user, AsyncCallback<Vector<Event>> callback);
+
+	void getOrganizerOfEvent(Event event, AsyncCallback<User> callback);
+
+	void getInviteesOfEvent(Event event, AsyncCallback<Vector<User>> callback);
+
+	void getInvitationsByUser(User user,
+			AsyncCallback<Vector<Invitation>> callback);
 
 }

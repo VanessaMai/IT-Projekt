@@ -2,6 +2,9 @@ package roomreservationservice.server;
 
 import java.sql.Timestamp;
 import java.util.Vector;
+import java.util.logging.Logger;
+
+import org.eclipse.jetty.util.log.Log;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
@@ -69,6 +72,11 @@ implements RoomReservationServiceAdministration{
 	 * Auto-Generated UID
 	 */
 	private static final long serialVersionUID = 7149271468218880267L;
+	
+	/**
+	 * Variable für den Logger erstellen
+	 */
+	Logger logger;
 	
 	/**
 	 * Referenz auf den DatenbankMapper, der Room-Objekte mit der Datenbank
@@ -148,6 +156,15 @@ implements RoomReservationServiceAdministration{
 		 * Mapper für die Einladung.
 		 */
 		this.iMapper = InvitationMapper.invitationMapper();
+		
+		// Logger initialisieren
+		try{
+			this.logger = ServersideSettings.getLogger();
+			logger.info("Logger erfolgreich instanziiert");
+		} catch(Exception e) {
+			logger.warning("Fehler bei der Instanziierung des Loggers" + e.getMessage());
+			
+		}
 	}
 	
 	/**
@@ -268,108 +285,230 @@ implements RoomReservationServiceAdministration{
 	 */
 	@Override
 	public void delete(Room room) throws IllegalArgumentException {
-		// TODO Auto-generated method stub
+
+		// Zuerst werden die Events gesucht, die in diesem Raum sind
+		Vector<Event> eventsOfRoom = this.getEventsByRoom(room);
+		
+		//prüfen ob die Liste leer ist
+		if(eventsOfRoom != null){
+			//einzelne Events in diesem Raum werden gelöscht
+			for(Event e : eventsOfRoom){
+				this.delete(e);
+			}
+		}
+		this.rMapper.delete(room);
 		
 	}
 
+	/**
+	 * Löschen eines Users 
+	 * wenn der User gelöscht wird, dann werden auch die Events gelöscht
+	 * bei denen dieser User als Organizer auftritt
+	 * @param User
+	 * @throws IllegalArgumentException
+	 */
 	@Override
 	public void delete(User user) throws IllegalArgumentException {
-		// TODO Auto-generated method stub
+		// Zunächst müssen die Events gelöscht werden in denen er Organizer ist
+		Vector<Event> organizedEvents = this.getEventsByOrganizer(user);
+		
+		//prüfen ob die Liste leer ist
+		if (organizedEvents != null){
+			for(Event e : organizedEvents){
+				this.delete(e);
+			}
+		}
+		
+		// dann müssen noch die Invitations von diesem User zu Events gelöscht werden
+		//Ergebnisvektor hierfür vorbereiten
+		Vector<Invitation> invitations = this.getInvitationsByUser(user);
+		
+		//prüfen ob die Liste leer ist
+		if (invitations != null){
+			for(Invitation i : invitations){
+				this.delete(i);
+			}
+		}
+	
 		
 	}
-
+	
+	/**
+	 * Löschen des übergegebenen Event-Objekts
+	 * dazu müssen auch alle dazugehörigen Invitation-Objekte gelöscht werden
+	 * @param event zu löschendes Event
+	 * @throws IllegalArgumentException
+	 */
 	@Override
 	public void delete(Event event) throws IllegalArgumentException {
-		// TODO Auto-generated method stub
+		// alle Invitations dieses Events in einer Variablen festhalten
+		Vector<Invitation> invitationsOfEvent = this.getInvitationsByEvent(event);
 		
+		// wenn diese Liste nicht leer ist
+		if (invitationsOfEvent != null){
+			// dann, für jede invitation in dieser Liste
+			for(Invitation i : invitationsOfEvent ){
+				// invitation löschen
+				this.delete(i);		
+			}
+		}
+		// löschen des Events
+		this.eMapper.delete(event);
 	}
+		
+	
 
 	@Override
 	public void delete(Invitation invitation) throws IllegalArgumentException {
-		// TODO Auto-generated method stub
+		this.iMapper.delete(invitation);
 		
 	}
-
+	
+	/**
+	 * Gibt alle Room-Objekte in einem Vector aus
+	 * Greift auf die findAll() Methode in der Mapperklasse
+	 * @return Vector 
+	 * @throws IllegalArgumentException
+	 */
 	@Override
 	public Vector<Room> getAllRooms() throws IllegalArgumentException {
-		//return this.rMapper.findAll();
+		return this.rMapper.findAll();
 	}
-
+	
+	/**
+	 * Gibt alle User-Objekte in einem Vector aus
+	 * Greift auf die findAll() Methode in der Mapperklasse zu
+	 * @return Vector
+	 * @throws IllegalArgumentException
+	 */
 	@Override
 	public Vector<User> getAllUsers() throws IllegalArgumentException {
-		// TODO Auto-generated method stub
-		return null;
+		return this.uMapper.findAll();
 	}
 
+	/**
+	 * Gibt alle Event-Objekte in einem Vector aus
+	 * Greift auf die findAll() Methode in der Mapperklasse zu
+	 * @return Vector
+	 * @throws IllegalArgumentException
+	 */
 	@Override
 	public Vector<Event> getAllEvents() throws IllegalArgumentException {
-		// TODO Auto-generated method stub
-		return null;
+		return this.eMapper.findAll();
 	}
 
 	@Override
 	public Vector<Invitation> getAllInvitations()
 			throws IllegalArgumentException {
-		// TODO Auto-generated method stub
-		return null;
+		return this.iMapper.findAll();
 	}
 
 	@Override
 	public Vector<User> getUsersByName(String name)
 			throws IllegalArgumentException {
-		// TODO Auto-generated method stub
-		return null;
+
+		return this.uMapper.findAllByName(name);
 	}
 
 	@Override
+	public User getOrganizerOfEvent(Event event)
+			throws IllegalArgumentException {
+		// zuerst die OrganizerId dieses events auslesen
+		int id = event.getOrganizerId();
+		// mit dieser kann man den entsprechenden User finden
+		return this.uMapper.findByKey(id);
+		
+	}
+
+	@Override
+	public Vector<User> getInviteesOfEvent(Event event)
+			throws IllegalArgumentException {
+		return this.uMapper.findAllInviteesOfEvent(event);
+	}
+
+	
+	@Override
 	public Vector<User> getUsersByParticipationStatusForEvent(Event event,
 			boolean participationStatus) throws IllegalArgumentException {
-		// TODO Auto-generated method stub
-		return null;
+		// Variable in der die Liste der User mit bestimmten Annahmestatus gespeichert werden
+		Vector<User> inviteesStatus = new Vector<User>();
+		// alle Einladungen dieses events
+		Vector<Invitation> invitationsOfEvent = this.getInvitationsByEvent(event);
+		
+		// für jede einladung in dieser Liste wird der Annahmestatus ausgelesen und
+		// mit dem übergebenen verglichen, falls diese übereinstimmen, wird der User 
+		// dieser Einladung ausgelesen und InviteesStatus hinzugefügt
+		for (Invitation i : invitationsOfEvent){
+			if (i.getParticipationStatus() == participationStatus){
+				inviteesStatus.add(this.uMapper.findByKey(i.getInviteeId()));
+			}
+		}
+		return inviteesStatus;
 	}
 
 	@Override
 	public Vector<Event> getEventsByRoom(Room room)
 			throws IllegalArgumentException {
-		// TODO Auto-generated method stub
-		return null;
+		return this.eMapper.findAllByRoom(room);
 	}
 
 	@Override
-	public Vector<Event> getEventsByUser(User user)
+	public Vector<Event> getEventsByOrganizer(User user)
 			throws IllegalArgumentException {
-		// TODO Auto-generated method stub
-		return null;
+		return this.eMapper.findAllByOrganizer(user);
+		
 	}
+	
+	@Override
+	public Vector<Event> getEventsByInvitees(User user)
+			throws IllegalArgumentException {
+		return this.eMapper.findAllByInvitee(user);
+	}
+
 
 	@Override
 	public Vector<Event> getEventsByPeriodOfTime(Timestamp startDate, Timestamp endDate)
 			throws IllegalArgumentException {
-		// TODO Auto-generated method stub
-		return null;
+		return this.eMapper.findAllForPeriodOfTime(startDate, endDate);
 	}
 
 	@Override
 	public Vector<Event> getEventsByTopic(String topic)
-			throws IllegalArgumentException {
-		// TODO Auto-generated method stub
-		return null;
+			throws IllegalArgumentException {	
+		return this.eMapper.findAllByTopic(topic);
 	}
 
 	@Override
 	public Vector<Event> getEventsByRoomForPeriodOfTime(Room room,
 			Timestamp startDate, Timestamp endDate) throws IllegalArgumentException {
-		// TODO Auto-generated method stub
-		return null;
+			return this.eMapper.findAllByRoomForPeriodOfTime(room, startDate, endDate);
 	}
 
 	@Override
-	public Vector<Event> getEventsByUserForPeriodOfTime(User user,
+	public Vector<Event> getEventsByInviteeForPeriodOfTime(User user,
 			Timestamp startDate, Timestamp endDate) throws IllegalArgumentException {
-		// TODO Auto-generated method stub
-		return null;
-	}
 		
+		return this.eMapper.findAllByInviteeForPeriodOfTime(user, startDate, endDate);
+	}
+	
+
+	@Override
+	public Vector<Invitation> getInvitationsByEvent(Event event)
+			throws IllegalArgumentException {
+		return this.iMapper.findAllByEvent(event);
+	}
+<<<<<<< HEAD
+		
+=======
+
+	@Override
+	public Vector<Invitation> getInvitationsByUser(User user)
+			throws IllegalArgumentException {
+		return this.iMapper.findAllByUser(user);
+	}
+
+
+>>>>>>> refs/heads/vanessa
 	
 	
 }
