@@ -497,7 +497,7 @@ implements RoomReservationServiceAdministration{
 			throws IllegalArgumentException {
 		return this.iMapper.findAllByEvent(event);
 	}
-<<<<<<< HEAD
+<<<<<< HEAD
 		
 =======
 
