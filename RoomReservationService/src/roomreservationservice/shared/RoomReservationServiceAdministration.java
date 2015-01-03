@@ -257,7 +257,7 @@ public interface RoomReservationServiceAdministration extends RemoteService {
 	 * @return Vector-Objekt mit Events, welche die Suchkriterien erfüllen
 	 * @throws IllegalArgumentException
 	 */
-	public Vector<Event> getEventsByUserForPeriodOfTime(User user, Timestamp startDate, Timestamp endDate) 
+	public Vector<Event> getEventsByInviteeForPeriodOfTime(User user, Timestamp startDate, Timestamp endDate) 
 			throws IllegalArgumentException;
 	
 
@@ -280,7 +280,7 @@ public interface RoomReservationServiceAdministration extends RemoteService {
 	 * @return Vector Objekt mit Invitations, welche die Suchkriterien erfüllen 
 	 * @throws IllegalException
 	 */
-	public Vector<Invitation> getInvitationByUser(User user) throws IllegalArgumentException;
+	public Vector<Invitation> getInvitationsByUser(User user) throws IllegalArgumentException;
 }
 	
 	

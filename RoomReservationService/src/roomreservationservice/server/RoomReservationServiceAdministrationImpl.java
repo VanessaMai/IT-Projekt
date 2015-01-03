@@ -239,7 +239,14 @@ implements RoomReservationServiceAdministration{
 		
 		// dann müssen noch die Invitations von diesem User zu Events gelöscht werden
 		//Ergebnisvektor hierfür vorbereiten
-		Vector<Invitation> invitations = this.
+		Vector<Invitation> invitations = this.getInvitationsByUser(user);
+		
+		//prüfen ob die Liste leer ist
+		if (invitations != null){
+			for(Invitation i : invitations){
+				this.delete(i);
+			}
+		}
 	
 		
 	}
@@ -396,13 +403,10 @@ implements RoomReservationServiceAdministration{
 	}
 
 	@Override
-	public Vector<Event> getEventsByUserForPeriodOfTime(User user,
+	public Vector<Event> getEventsByInviteeForPeriodOfTime(User user,
 			Timestamp startDate, Timestamp endDate) throws IllegalArgumentException {
 		
-		
-		return null;
-		
-		//		TODO Auto-generated method stub
+		return this.eMapper.findAllByInviteeForPeriodOfTime(user, startDate, endDate);
 	}
 	
 
@@ -413,7 +417,7 @@ implements RoomReservationServiceAdministration{
 	}
 
 	@Override
-	public Vector<Invitation> getInvitationByUser(User user)
+	public Vector<Invitation> getInvitationsByUser(User user)
 			throws IllegalArgumentException {
 		return this.iMapper.findAllByUser(user);
 	}
