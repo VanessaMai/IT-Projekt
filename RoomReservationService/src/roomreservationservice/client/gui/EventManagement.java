@@ -240,7 +240,6 @@ public class EventManagement extends Reaction{
 		RootPanel.get("Content").add(createEventButton);
 		RootPanel.get("Content").add(eventOverviewButton);
 		RootPanel.get("Content").add(editEventButton);
-	
 	}
 	
 	/*TODO Belegungsuebersicht
