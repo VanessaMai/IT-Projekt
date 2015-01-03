@@ -4,6 +4,8 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.datepicker.client.DatePicker;
@@ -43,7 +45,7 @@ public class EventManagement extends Reaction{
 				
 				/*
 				 TODO funktioniert nur mit DB-Connect oder?
-				 * Wert im Kalender setzen wenn der Nutzer ein Dateum waehlt
+				 * Wert im Kalender setzen wenn der Nutzer ein Datum waehlt
 
 			    datePicker.addValueChangeHandler(new ValueChangeHandler<Date>() {
 			      public void onValueChange(ValueChangeEvent<Date> event) {
@@ -87,16 +89,35 @@ public class EventManagement extends Reaction{
 					public void onClick(ClickEvent event) {
 						//Loescht vorherige Anzeige auf contentPanel.
 						RootPanel.get("Content").clear ();
-						//TODO DB-Connect mit Erfolgsmeldung	
+						//TODO DB-Connect mit Erfolgsmeldung
 					}
 				});
 					
-				//Hinzufuegen der Widgets zum contentPanel
-				RootPanel.get("Content").add(datePicker);
-				RootPanel.get("Content").add(roomNumber);
-				RootPanel.get("Content").add(timeSlot);
-				RootPanel.get("Content").add(userInvitation);
-				RootPanel.get("Content").add(confirmButton);
+				/*Anlegen einer 5x2 Matrix (Grid). Diese wird Mit Namen der Widgets und den Widgets mit ihren
+				 * Inhalten gefuellt.
+				 */
+				Grid createEventGrid = new Grid(5, 2);
+				RootPanel.get("Content").add(createEventGrid);
+					
+				Label datePickerLabel = new Label("Datum wählen");
+				createEventGrid.setWidget(0, 0, datePickerLabel);
+				createEventGrid.setWidget(0, 1, datePicker);
+					
+				Label roomNumberLabel = new Label("Raum wählen");
+				createEventGrid.setWidget(1, 0, roomNumberLabel);
+				createEventGrid.setWidget(1, 1, roomNumber);
+					
+				Label timeSlotLabel = new Label("Zeitslot wählen");
+				createEventGrid.setWidget(2, 0, timeSlotLabel);
+				createEventGrid.setWidget(2, 1, timeSlot);	
+				
+				Label userInvitationLabel = new Label("Nutzer einladen");
+				createEventGrid.setWidget(3, 0, userInvitationLabel);
+				createEventGrid.setWidget(3, 1, userInvitation);	
+
+				Label confirmButtonLabel = new Label("");
+				createEventGrid.setWidget(4, 0, confirmButtonLabel);
+				createEventGrid.setWidget(4, 1, confirmButton);
 			}
 		});
 		
@@ -139,10 +160,23 @@ public class EventManagement extends Reaction{
 					}
 				});
 				
-				//Hinzufuegen der Widgets zum contentPanel
-				RootPanel.get("Content").add(roomNumber);
-				RootPanel.get("Content").add(calendarWeek);
-				RootPanel.get("Content").add(confirmButton);
+				/*Anlegen einer 3x2 Matrix (Grid). Diese wird Mit Namen der Widgets und den Widgets mit ihren
+				 * Inhalten gefuellt.
+				 */
+				Grid eventOverviewGrid = new Grid(3, 2);
+				RootPanel.get("Content").add(eventOverviewGrid);
+					
+				Label calendarWeekLabel = new Label("Kalenderwoche wählen");
+				eventOverviewGrid.setWidget(0, 0, calendarWeekLabel);
+				eventOverviewGrid.setWidget(0, 1, calendarWeek);
+					
+				Label roomNumberLabel = new Label("Raum wählen");
+				eventOverviewGrid.setWidget(1, 0, roomNumberLabel);
+				eventOverviewGrid.setWidget(1, 1, roomNumber);
+				
+				Label confirmButtonLabel = new Label("");
+				eventOverviewGrid.setWidget(2, 0, confirmButtonLabel);
+				eventOverviewGrid.setWidget(2, 1, confirmButton);
 			}
 		});
 		
@@ -224,22 +258,60 @@ public class EventManagement extends Reaction{
 						//TODO DB-Connect mit Erfolgsmeldung	
 					}
 				});
+				
+				/*Anlegen einer 6x2 Matrix (Grid). Diese wird Mit Namen der Widgets und den Widgets mit ihren
+				 * Inhalten gefuellt.
+				 */
+				Grid editEventButtonGrid = new Grid(7, 2);
+				RootPanel.get("Content").add(editEventButtonGrid);
 					
-				//Hinzufuegen der Widgets zum contentPanel
-				RootPanel.get("Content").add(datePicker);
-				RootPanel.get("Content").add(roomNumber);
-				RootPanel.get("Content").add(timeSlot);
-				RootPanel.get("Content").add(userInvitation);
-				RootPanel.get("Content").add(userAcceptance);
-				RootPanel.get("Content").add(confirmButton);
-				RootPanel.get("Content").add(deleteButton);
+				Label datePickerLabel = new Label("Datum wählen");
+				editEventButtonGrid.setWidget(0, 0, datePickerLabel);
+				editEventButtonGrid.setWidget(0, 1, datePicker);
+					
+				Label roomNumberLabel = new Label("Raum wählen");
+				editEventButtonGrid.setWidget(1, 0, roomNumberLabel);
+				editEventButtonGrid.setWidget(1, 1, roomNumber);
+					
+				Label timeSlotLabel = new Label("Zeitslot wählen");
+				editEventButtonGrid.setWidget(2, 0, timeSlotLabel);
+				editEventButtonGrid.setWidget(2, 1, timeSlot);	
+				
+				Label userInvitationLabel = new Label("Nutzer einladen");
+				editEventButtonGrid.setWidget(3, 0, userInvitationLabel);
+				editEventButtonGrid.setWidget(3, 1, userInvitation);
+				
+				Label userAcceptanceLabel = new Label("Zusagen");
+				editEventButtonGrid.setWidget(4, 0, userAcceptanceLabel);
+				editEventButtonGrid.setWidget(4, 1, userAcceptance);
+
+				Label confirmButtonLabel = new Label("");
+				editEventButtonGrid.setWidget(5, 0, confirmButtonLabel);
+				editEventButtonGrid.setWidget(5, 1, confirmButton);
+				
+				Label deleteButtonLabel = new Label("");
+				editEventButtonGrid.setWidget(6, 0, deleteButtonLabel);
+				editEventButtonGrid.setWidget(6, 1, deleteButton);
 			}
 		});
 		
-		//Hinzufuegen der Buttons zum contentPanel
-		RootPanel.get("Content").add(createEventButton);
-		RootPanel.get("Content").add(eventOverviewButton);
-		RootPanel.get("Content").add(editEventButton);
+		/*Anlegen einer 2x3 Matrix (Grid). Diese wird Mit Namen der Widgets und den Widgets mit ihren
+		 * Inhalten gefuellt.
+		 */
+		Grid EventManagementGrid = new Grid(3, 2);
+		this.add(EventManagementGrid);
+			
+		Label createEventLabel = new Label("Erstellen Sie Ihre eigene Belegung");
+		EventManagementGrid.setWidget(0, 0, createEventLabel);
+		EventManagementGrid.setWidget(0, 1, createEventButton);
+			
+		Label eventOverviewLabel = new Label("Erstellen Sie eine Übersicht über Belegungen");
+		EventManagementGrid.setWidget(1, 0, eventOverviewLabel);
+		EventManagementGrid.setWidget(1, 1, eventOverviewButton);
+			
+		Label editEventLabel = new Label("Bearbeiten oder Löschen Sie eine Belegung");
+		EventManagementGrid.setWidget(2, 0, editEventLabel);
+		EventManagementGrid.setWidget(2, 1, editEventButton);					
 	}
 	
 	/*TODO Belegungsuebersicht
