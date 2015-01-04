@@ -62,6 +62,15 @@ public interface RoomReservationServiceAdministration extends RemoteService {
 	public Event createEvent(String topic, Timestamp startDate, Timestamp endDate, Room room, User organizer, Vector <User> invitees)
 			throws IllegalArgumentException;
 	
+	/**
+	 * Invitation anlegen
+	 * @param eventId
+	 * @param userId
+	 * @return ein fertiges Invitationobjekt
+	 * @throws IllegalArgumentException
+	 */
+	public Invitation createInvitation(int eventId, int userId)
+			throws IllegalArgumentException;
 	
 	//Save-Methoden für Änderungen der Room, User, Event, Invitation-Objekte
 	

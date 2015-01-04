@@ -29,6 +29,9 @@ public interface RoomReservationServiceAdministrationAsync {
 	void createEvent(String topic, Timestamp startDate, Timestamp endDate, Room room,
 			User organizer, Vector<User> invitees, AsyncCallback<Event> callback);
 
+	void createInvitation(int eventId, int userId,
+			AsyncCallback<Invitation> callback);
+	
 	void save(Room room, AsyncCallback<Void> callback);
 
 	void save(User user, AsyncCallback<Void> callback);
@@ -84,5 +87,7 @@ public interface RoomReservationServiceAdministrationAsync {
 
 	void getInvitationsByUser(User user,
 			AsyncCallback<Vector<Invitation>> callback);
+
+
 
 }
