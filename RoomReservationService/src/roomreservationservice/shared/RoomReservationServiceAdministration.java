@@ -62,6 +62,15 @@ public interface RoomReservationServiceAdministration extends RemoteService {
 	public Event createEvent(String topic, Timestamp startDate, Timestamp endDate, Room room, User organizer, Vector <User> invitees)
 			throws IllegalArgumentException;
 	
+	/**
+	 * Invitation anlegen
+	 * @param eventId
+	 * @param userId
+	 * @return ein fertiges Invitationobjekt
+	 * @throws IllegalArgumentException
+	 */
+	public Invitation createInvitation(int eventId, int userId)
+			throws IllegalArgumentException;
 	
 	//Save-Methoden für Änderungen der Room, User, Event, Invitation-Objekte
 	
@@ -154,6 +163,38 @@ public interface RoomReservationServiceAdministration extends RemoteService {
 	 * @throws IllegalArgumentException
 	 */
 	public Vector<Invitation> getAllInvitations() throws IllegalArgumentException;
+	
+	/**
+	 * Raum anhand der Id finden
+	 * @param id
+	 * @return Room Objekt
+	 * @throws IllegalArgumentException
+	 */
+	public Room getRoomById(int id) throws IllegalArgumentException;
+	
+	/**
+	 * User anhand der Id finden
+	 * @param id
+	 * @return User- Objekt
+	 * @throws IllegalArgumentException
+	 */
+	public User getUserById(int id) throws IllegalArgumentException;
+	
+	/**
+	 * Event anhand der Id finden
+	 * @param id
+	 * @return EventObjekt 
+	 * @throws IllegalArgumentException
+	 */
+	public Event getEventById(int id) throws IllegalArgumentException;
+	
+	/**
+	 * Invitation anhand der Id finden
+	 * @param id
+	 * @return Invitation Objekt
+	 * @throws IllegalArgumentException
+	 */
+	public Invitation getInvitationById(int id) throws IllegalArgumentException;
 	
 	/**
 	 * Suchen eines User-Objektes, dessen Name bekannt ist
