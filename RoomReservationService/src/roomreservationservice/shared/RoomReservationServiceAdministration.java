@@ -322,6 +322,10 @@ public interface RoomReservationServiceAdministration extends RemoteService {
 	 * @throws IllegalException
 	 */
 	public Vector<Invitation> getInvitationsByUser(User user) throws IllegalArgumentException;
+	
+
+
+	
 }
 	
 	

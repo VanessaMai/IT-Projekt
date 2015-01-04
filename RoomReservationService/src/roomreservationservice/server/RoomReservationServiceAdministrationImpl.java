@@ -214,9 +214,9 @@ public class RoomReservationServiceAdministrationImpl extends
 			/*
 			 * lokale Variable der den Wert speichert, ob es bereits einen User
 			 * mit derselben EmailAdresse gibt oder nicht Dieser Wert ist
-			 * standardmäßig auf false gesetzt true bedeutet, diese Emailadresse
-			 * existiert bereits in der DB und der User kann dann nicht
-			 * gespeichert werden
+			 * standardmäßig auf false gesetzt. True bedeutet, diese
+			 * Emailadresse existiert bereits in der DB und der User kann dann
+			 * nicht gespeichert werden
 			 */
 			boolean ifExist = false;
 			// Überprüfung für jeden User in der Datenbank nur wenn es überhaupt
@@ -270,32 +270,46 @@ public class RoomReservationServiceAdministrationImpl extends
 			Timestamp endDate, Room room, User organizer, Vector<User> invitees)
 			throws IllegalArgumentException {
 
-		// nur wenn die Teilnehmerzahl kleiner oder gleich der Kapazität ist,
-		// kann das Event erstellt werden
 		try {
-			if (invitees.size() <= room.getRoomCapacity()) {
+			/*
+			 * nur wenn Raum zum Zeitraum startDate bis endDate nicht bereits
+			 * belegt ist dh. wenn der Vector der durch die folgende Methode
+			 * erzeugt wird nicht leer ist
+			 */
+			if (this.getEventsByRoomForPeriodOfTime(room, startDate, endDate) != null) {
 
-				// ID des Organisators erhalten.
-				int organizerId = organizer.getId();
-				// ID des Raumes erhalten.
-				int roomId = room.getId();
-				Event event = new Event(topic, startDate, endDate, roomId,
-						organizerId);
-				// Übergabe der Belegung an die DB ohne eingeladene Nutzer.
-				eMapper.insert(event);
-				// zugehörige Einladung mit zugehörigen Belegung und
-				// eingeladenen Nutzer
-				// an den iMapper weitergeben und in DB abspeichern mithilfe von
-				// {@link #insert(Invitation invitation)}
-				for (User i : invitees) {
-					this.createInvitation(event.getId(), i.getId());
+				// nur wenn die Teilnehmerzahl kleiner oder gleich der Kapazität
+				// ist,
+				// kann das Event erstellt werden
+				if (invitees.size() <= room.getRoomCapacity()) {
+
+					// ID des Organisators erhalten.
+					int organizerId = organizer.getId();
+					// ID des Raumes erhalten.
+					int roomId = room.getId();
+					Event event = new Event(topic, startDate, endDate, roomId,
+							organizerId);
+					// Übergabe der Belegung an die DB ohne eingeladene Nutzer.
+					eMapper.insert(event);
+					// zugehörige Einladung mit zugehörigen Belegung und
+					// eingeladenen Nutzer
+					// an den iMapper weitergeben und in DB abspeichern mithilfe
+					// von
+					// {@link #insert(Invitation invitation)}
+					for (User i : invitees) {
+						this.createInvitation(event.getId(), i.getId());
+					}
+					// Methode beenden.
+					return event;
+				} else {
+					logger.info("Teilnehmerzahl übersteigt Kapazität des Raumes, Event wird nicht hinzugefügt");
+					return null;
 				}
-				// Methode beenden.
-				return event;
 			} else {
-				logger.info("Teilnehmerzahl übersteigt Kapazität des Raumes, Raum wird nicht hinzugefügt");
+				logger.info("Raum bereits belegt. Event wird nicht hinzugefügt");
 				return null;
 			}
+
 		} catch (Exception e) {
 			logger.warning("Fehler bei Erstellung von Event" + e.getMessage());
 			return null;
@@ -306,8 +320,15 @@ public class RoomReservationServiceAdministrationImpl extends
 	@Override
 	public Invitation createInvitation(int eventId, int userId)
 			throws IllegalArgumentException {
-		Invitation invitation = new Invitation(eventId, userId);
-		return this.iMapper.insert(invitation);
+		try {
+			Invitation invitation = new Invitation(eventId, userId);
+
+			return this.iMapper.insert(invitation);
+		} catch (Exception e) {
+			logger.warning("Fehler bei der Erstellung von Einladung"
+					+ e.getMessage());
+			return null;
+		}
 	}
 
 	/**
@@ -351,7 +372,37 @@ public class RoomReservationServiceAdministrationImpl extends
 	 */
 	@Override
 	public void save(Invitation invitation) throws IllegalArgumentException {
-		iMapper.update(invitation);
+
+		// Variable in der gespeichert wird, ob der User bereits an einer
+		// anderen Veranstaltung teilnimmt zur gleichen Zeit
+		boolean ifBusy = false;
+
+		// Wenn er sowieso absagt, ist es egal
+		if (invitation.getParticipationStatus() == true) {
+
+			Vector<Invitation> invitations = this.getInvitationsByUser(this
+					.getUserById(invitation.getInviteeId()));
+			for (Invitation i : invitations) {
+				if (getEventById(i.getEventId()).getStartDate() == getEventById(
+						invitation.getEventId()).getStartDate()
+						&& i.getParticipationStatus() == true) {
+					ifBusy = true;
+					break;
+				}
+
+			}
+
+			if (ifBusy == false) {
+				iMapper.update(invitation);
+			} else {
+				return;
+
+			}
+
+		} else {
+
+			iMapper.update(invitation);
+		}
 	}
 
 	/**
@@ -481,7 +532,7 @@ public class RoomReservationServiceAdministrationImpl extends
 			throws IllegalArgumentException {
 		return this.iMapper.findAll();
 	}
-	
+
 	@Override
 	public Room getRoomById(int id) throws IllegalArgumentException {
 		return this.rMapper.findByKey(id);
@@ -607,7 +658,5 @@ public class RoomReservationServiceAdministrationImpl extends
 			throws IllegalArgumentException {
 		return this.iMapper.findAllByUser(user);
 	}
-
-
 
 }
