@@ -190,6 +190,21 @@ public class EventManagement extends Reaction{
 				 * erforderliche Widgets um eine Belegung zu bearbeiten oder zu loeschen
 				 */
 				
+				// Liste um Belegung zu waehlen
+				ListBox eventName = new ListBox();
+				eventName.addItem("Medienmärkte");
+				eventName.addItem("ADS");
+				eventName.addItem("Software Engineering");
+				eventName.addItem("Datenbanken");
+				eventName.addItem("Organisation");
+				//TODO DB-Connect
+				
+				// Button um die gewaehlten Werte zu uebernehmen & den Vorgang abzuschließen
+				Button confirmButton = new Button ("bearbeiten", new ClickHandler() {
+					public void onClick(ClickEvent event) {
+						//Loescht vorherige Anzeige auf contentPanel.
+						RootPanel.get("Content").clear ();
+				
 				// Kalender um Tag zu waehlen
 				DatePicker datePicker = new DatePicker();
 				
@@ -259,7 +274,7 @@ public class EventManagement extends Reaction{
 					}
 				});
 				
-				/*Anlegen einer 6x2 Matrix (Grid). Diese wird Mit Namen der Widgets und den Widgets mit ihren
+				/*Anlegen einer 7x2 Matrix (Grid). Diese wird Mit Namen der Widgets und den Widgets mit ihren
 				 * Inhalten gefuellt.
 				 */
 				Grid editEventButtonGrid = new Grid(7, 2);
@@ -292,6 +307,24 @@ public class EventManagement extends Reaction{
 				Label deleteButtonLabel = new Label("");
 				editEventButtonGrid.setWidget(6, 0, deleteButtonLabel);
 				editEventButtonGrid.setWidget(6, 1, deleteButton);
+				
+				}
+			});
+				
+				/*Anlegen einer 2x2 Matrix (Grid). Diese wird Mit Namen der Widgets und den Widgets mit ihren
+				 * Inhalten gefuellt.
+				 */
+				Grid chooseEventButtonGrid = new Grid(2, 2);
+				RootPanel.get("Content").add(chooseEventButtonGrid);
+					
+				Label eventNameLabel = new Label("Belegung wählen");
+				chooseEventButtonGrid.setWidget(0, 0, eventNameLabel);
+				chooseEventButtonGrid.setWidget(0, 1, eventName);
+				
+				Label confirmButtonLabel = new Label("");
+				chooseEventButtonGrid.setWidget(1, 0, confirmButtonLabel);
+				chooseEventButtonGrid.setWidget(1, 1, confirmButton);
+				
 			}
 		});
 		
