@@ -339,7 +339,13 @@ public class RoomReservationServiceAdministrationImpl extends
 	 */
 	@Override
 	public void save(Room room) throws IllegalArgumentException {
-		rMapper.update(room);
+		try {
+			logger.info("Änderung wird gespeichert");
+			rMapper.update(room);
+		} catch (Exception e) {
+			logger.warning("Änderung konnte nicht durchgeführt werden"
+					+ e.getMessage());
+		}
 	}
 
 	/**
@@ -350,7 +356,14 @@ public class RoomReservationServiceAdministrationImpl extends
 	 */
 	@Override
 	public void save(User user) throws IllegalArgumentException {
-		uMapper.update(user);
+		try {
+			logger.info("Änderung wird gespeichert");
+			uMapper.update(user);
+		} catch (Exception e) {
+			logger.warning("Änderung konnte nicht durchgeführt werden"
+					+ e.getMessage());
+		}
+
 	}
 
 	/**
@@ -361,7 +374,13 @@ public class RoomReservationServiceAdministrationImpl extends
 	 */
 	@Override
 	public void save(Event event) throws IllegalArgumentException {
-		eMapper.update(event);
+		try {
+			logger.info("Änderung wird gespeichert");
+			eMapper.update(event);
+		} catch (Exception e) {
+			logger.warning("Änderung konnte nicht durchgeführt werden"
+					+ e.getMessage());
+		}
 	}
 
 	/**
@@ -375,33 +394,40 @@ public class RoomReservationServiceAdministrationImpl extends
 
 		// Variable in der gespeichert wird, ob der User bereits an einer
 		// anderen Veranstaltung teilnimmt zur gleichen Zeit
-		boolean ifBusy = false;
+		try {
+			boolean ifBusy = false;
 
-		// Wenn er sowieso absagt, ist es egal
-		if (invitation.getParticipationStatus() == true) {
+			// Wenn er sowieso absagt, ist es egal
+			if (invitation.getParticipationStatus() == true) {
 
-			Vector<Invitation> invitations = this.getInvitationsByUser(this
-					.getUserById(invitation.getInviteeId()));
-			for (Invitation i : invitations) {
-				if (getEventById(i.getEventId()).getStartDate() == getEventById(
-						invitation.getEventId()).getStartDate()
-						&& i.getParticipationStatus() == true) {
-					ifBusy = true;
-					break;
+				Vector<Invitation> invitations = this.getInvitationsByUser(this
+						.getUserById(invitation.getInviteeId()));
+				for (Invitation i : invitations) {
+					if (getEventById(i.getEventId()).getStartDate() == getEventById(
+							invitation.getEventId()).getStartDate()
+							&& i.getParticipationStatus() == true) {
+						ifBusy = true;
+						break;
+					}
+
 				}
 
-			}
+				if (ifBusy == false) {
+					logger.info("Zusage wird gespeichert");
+					iMapper.update(invitation);
+				} else {
+					logger.info("Zusage nicht möglich, User nimmt an anderer Belegung teil");
+					return;
 
-			if (ifBusy == false) {
-				iMapper.update(invitation);
+				}
+
 			} else {
-				return;
-
+				logger.info("Zusage wird gespeichert");
+				iMapper.update(invitation);
 			}
-
-		} else {
-
-			iMapper.update(invitation);
+		} catch (Exception e) {
+			logger.warning("Änderung konnte nicht durchgeführt werden"
+					+ e.getMessage());
 		}
 	}
 
@@ -412,18 +438,23 @@ public class RoomReservationServiceAdministrationImpl extends
 	@Override
 	public void delete(Room room) throws IllegalArgumentException {
 
-		// Zuerst werden die Events gesucht, die in diesem Raum sind
-		Vector<Event> eventsOfRoom = this.getEventsByRoom(room);
+		try {
+			// Zuerst werden die Events gesucht, die in diesem Raum sind
+			Vector<Event> eventsOfRoom = this.getEventsByRoom(room);
 
-		// prüfen ob die Liste leer ist
-		if (eventsOfRoom != null) {
-			// einzelne Events in diesem Raum werden gelöscht
-			for (Event e : eventsOfRoom) {
-				this.delete(e);
+			// prüfen ob die Liste leer ist
+			if (eventsOfRoom != null) {
+				// einzelne Events in diesem Raum werden gelöscht
+				for (Event e : eventsOfRoom) {
+					logger.info("Event mit ID " + e.getId() + " wird gelöscht");
+					this.delete(e);
+				}
 			}
+			logger.info("Raum wird gelöscht");
+			this.rMapper.delete(room);
+		} catch (Exception e) {
+			logger.warning("Raum konnte nicht gelöscht werden" + e.getMessage());
 		}
-		this.rMapper.delete(room);
-
 	}
 
 	/**
@@ -435,28 +466,37 @@ public class RoomReservationServiceAdministrationImpl extends
 	 */
 	@Override
 	public void delete(User user) throws IllegalArgumentException {
-		// Zunächst müssen die Events gelöscht werden in denen er Organizer ist
-		Vector<Event> organizedEvents = this.getEventsByOrganizer(user);
 
-		// prüfen ob die Liste leer ist
-		if (organizedEvents != null) {
-			for (Event e : organizedEvents) {
-				this.delete(e);
+		try {// Zunächst müssen die Events gelöscht werden in denen er Organizer
+				// ist
+			Vector<Event> organizedEvents = this.getEventsByOrganizer(user);
+
+			// prüfen ob die Liste leer ist
+			if (organizedEvents != null) {
+				for (Event e : organizedEvents) {
+					logger.info("Event mit der ID " + e.getId()
+							+ " wird gelöscht");
+					this.delete(e);
+				}
 			}
-		}
 
-		// dann müssen noch die Invitations von diesem User zu Events gelöscht
-		// werden
-		// Ergebnisvektor hierfür vorbereiten
-		Vector<Invitation> invitations = this.getInvitationsByUser(user);
+			// dann müssen noch die Invitations von diesem User zu Events
+			// gelöscht
+			// werden
+			// Ergebnisvektor hierfür vorbereiten
+			Vector<Invitation> invitations = this.getInvitationsByUser(user);
 
-		// prüfen ob die Liste leer ist
-		if (invitations != null) {
-			for (Invitation i : invitations) {
-				this.delete(i);
+			// prüfen ob die Liste leer ist
+			if (invitations != null) {
+				for (Invitation i : invitations) {
+					logger.info("Invitation von User wird gelöscht");
+					this.delete(i);
+				}
 			}
-		}
+		} catch (Exception e) {
+			logger.warning("User konnte nicht gelöscht werden" + e.getMessage());
 
+		}
 	}
 
 	/**
@@ -469,25 +509,41 @@ public class RoomReservationServiceAdministrationImpl extends
 	 */
 	@Override
 	public void delete(Event event) throws IllegalArgumentException {
-		// alle Invitations dieses Events in einer Variablen festhalten
-		Vector<Invitation> invitationsOfEvent = this
-				.getInvitationsByEvent(event);
+		try {
 
-		// wenn diese Liste nicht leer ist
-		if (invitationsOfEvent != null) {
-			// dann, für jede invitation in dieser Liste
-			for (Invitation i : invitationsOfEvent) {
-				// invitation löschen
-				this.delete(i);
+			// alle Invitations dieses Events in einer Variablen festhalten
+			Vector<Invitation> invitationsOfEvent = this
+					.getInvitationsByEvent(event);
+
+			// wenn diese Liste nicht leer ist
+			if (invitationsOfEvent != null) {
+				// dann, für jede invitation in dieser Liste
+				for (Invitation i : invitationsOfEvent) {
+					// invitation löschen
+					logger.info("Invitation wird gelöscht");
+					this.delete(i);
+
+				}
 			}
+			// löschen des Events
+			logger.info("Event wird gelöscht");
+			this.eMapper.delete(event);
+
+		} catch (Exception e) {
+			logger.warning("Event konnte nicht gelöscht werden"
+					+ e.getMessage());
 		}
-		// löschen des Events
-		this.eMapper.delete(event);
 	}
 
 	@Override
 	public void delete(Invitation invitation) throws IllegalArgumentException {
-		this.iMapper.delete(invitation);
+		try {
+			logger.info("Invitation wird gelöscht");
+			this.iMapper.delete(invitation);
+		} catch (Exception e) {
+			logger.warning("Invitation konnte nicht gelöscht werden"
+					+ e.getMessage());
+		}
 
 	}
 
@@ -500,7 +556,14 @@ public class RoomReservationServiceAdministrationImpl extends
 	 */
 	@Override
 	public Vector<Room> getAllRooms() throws IllegalArgumentException {
-		return this.rMapper.findAll();
+
+		try {
+			return this.rMapper.findAll();
+		} catch (Exception e) {
+			logger.warning("Räume konnten nicht ausgegeben werden"
+					+ e.getMessage());
+			return null;
+		}
 	}
 
 	/**
@@ -512,7 +575,14 @@ public class RoomReservationServiceAdministrationImpl extends
 	 */
 	@Override
 	public Vector<User> getAllUsers() throws IllegalArgumentException {
-		return this.uMapper.findAll();
+		try {
+			return this.uMapper.findAll();
+		} catch (Exception e) {
+			logger.warning("User konnten nicht ausgegeben werden"
+					+ e.getMessage());
+			return null;
+		}
+
 	}
 
 	/**
@@ -524,118 +594,208 @@ public class RoomReservationServiceAdministrationImpl extends
 	 */
 	@Override
 	public Vector<Event> getAllEvents() throws IllegalArgumentException {
-		return this.eMapper.findAll();
+		try {
+			return this.eMapper.findAll();
+		} catch (Exception e) {
+			logger.warning("Events konnten nicht ausgegeben werden"
+					+ e.getMessage());
+			return null;
+		}
+
 	}
 
 	@Override
 	public Vector<Invitation> getAllInvitations()
 			throws IllegalArgumentException {
-		return this.iMapper.findAll();
+		try {
+			return this.iMapper.findAll();
+		} catch (Exception e) {
+			logger.warning("Invitations konnten nicht ausgegeben werden"
+					+ e.getMessage());
+			return null;
+		}
+
 	}
 
 	@Override
 	public Room getRoomById(int id) throws IllegalArgumentException {
-		return this.rMapper.findByKey(id);
+		try {
+			return this.rMapper.findByKey(id);
+		} catch (Exception e) {
+			logger.warning("Raum konnte nicht ausgegeben werden"
+					+ e.getMessage());
+			return null;
+		}
+
 	}
 
 	@Override
 	public User getUserById(int id) throws IllegalArgumentException {
-		return this.uMapper.findByKey(id);
+		try {
+			return this.uMapper.findByKey(id);
+		} catch (Exception e) {
+			logger.warning("User konnte nicht ausgegeben werden"
+					+ e.getMessage());
+			return null;
+		}
+
 	}
 
 	@Override
 	public Event getEventById(int id) throws IllegalArgumentException {
-		return this.eMapper.findByKey(id);
+		try {
+			return this.eMapper.findByKey(id);
+		} catch (Exception e) {
+			logger.warning("Event konnte nicht ausgegeben werden"
+					+ e.getMessage());
+			return null;
+		}
+
 	}
 
 	@Override
 	public Invitation getInvitationById(int id) throws IllegalArgumentException {
-		return this.iMapper.findByKey(id);
+		try {
+			return this.iMapper.findByKey(id);
+		} catch (Exception e) {
+			logger.warning("Invitation konnte nicht ausgegeben werden"
+					+ e.getMessage());
+			return null;
+		}
+
 	}
 
 	@Override
 	public Vector<User> getUsersByName(String name)
 			throws IllegalArgumentException {
+		try {
+			return this.uMapper.findAllByName(name);
+		} catch (Exception e) {
+			logger.warning("User konnten nicht ausgegeben werden"
+					+ e.getMessage());
+			return null;
+		}
 
-		return this.uMapper.findAllByName(name);
 	}
 
 	@Override
 	public User getOrganizerOfEvent(Event event)
 			throws IllegalArgumentException {
-		// zuerst die OrganizerId dieses events auslesen
-		int id = event.getOrganizerId();
-		// mit dieser kann man den entsprechenden User finden
-		return this.uMapper.findByKey(id);
+		try {
+			// zuerst die OrganizerId dieses events auslesen
+			int id = event.getOrganizerId();
+			// mit dieser kann man den entsprechenden User finden
+			return this.uMapper.findByKey(id);
+		} catch (Exception e) {
+			logger.warning("Organizer konnte nicht ausgegeben werden"
+					+ e.getMessage());
+			return null;
+		}
 
 	}
 
 	@Override
 	public Vector<User> getInviteesOfEvent(Event event)
 			throws IllegalArgumentException {
-		return this.uMapper.findAllInviteesOfEvent(event);
+		try {
+			return this.uMapper.findAllInviteesOfEvent(event);
+		} catch (Exception e) {
+			logger.warning("User konnten nicht ausgegeben werden"
+					+ e.getMessage());
+			return null;
+		}
+
 	}
 
 	@Override
 	public Vector<User> getUsersByParticipationStatusForEvent(Event event,
 			boolean participationStatus) throws IllegalArgumentException {
-		// Variable in der die Liste der User mit bestimmten Annahmestatus
-		// gespeichert werden
-		Vector<User> inviteesStatus = new Vector<User>();
-		// alle Einladungen dieses events
-		Vector<Invitation> invitationsOfEvent = this
-				.getInvitationsByEvent(event);
-
-		// für jede einladung in dieser Liste wird der Annahmestatus ausgelesen
-		// und
-		// mit dem übergebenen verglichen, falls diese übereinstimmen, wird der
-		// User
-		// dieser Einladung ausgelesen und InviteesStatus hinzugefügt
-		for (Invitation i : invitationsOfEvent) {
-			if (i.getParticipationStatus() == participationStatus) {
-				inviteesStatus.add(this.uMapper.findByKey(i.getInviteeId()));
-			}
+		try {
+			return this.uMapper.findAllUserByParticipationStatusForEvent(event,
+					participationStatus);
+		} catch (Exception e) {
+			logger.warning("User konnten nicht ausgegeben werden"
+					+ e.getMessage());
+			return null;
 		}
-		return inviteesStatus;
+
 	}
 
 	@Override
 	public Vector<Event> getEventsByRoom(Room room)
 			throws IllegalArgumentException {
-		return this.eMapper.findAllByRoom(room);
+		try {
+			return this.eMapper.findAllByRoom(room);
+		} catch (Exception e) {
+			logger.warning("Events konnten nicht ausgegeben werden"
+					+ e.getMessage());
+			return null;
+		}
+
 	}
 
 	@Override
 	public Vector<Event> getEventsByOrganizer(User user)
 			throws IllegalArgumentException {
-		return this.eMapper.findAllByOrganizer(user);
+		try {
+			return this.eMapper.findAllByOrganizer(user);
+		} catch (Exception e) {
+			logger.warning("Events konnten nicht ausgegeben werden"
+					+ e.getMessage());
+			return null;
+		}
 
 	}
 
 	@Override
 	public Vector<Event> getEventsByInvitees(User user)
 			throws IllegalArgumentException {
-		return this.eMapper.findAllByInvitee(user);
+		try {
+			return this.eMapper.findAllByInvitee(user);
+		} catch (Exception e) {
+			logger.warning("Events konnten nicht ausgegeben werden"
+					+ e.getMessage());
+			return null;
+		}
 	}
 
 	@Override
 	public Vector<Event> getEventsByPeriodOfTime(Timestamp startDate,
 			Timestamp endDate) throws IllegalArgumentException {
-		return this.eMapper.findAllForPeriodOfTime(startDate, endDate);
+		try {
+			return this.eMapper.findAllForPeriodOfTime(startDate, endDate);
+		} catch (Exception e) {
+			logger.warning("Events konnten nicht ausgegeben werden"
+					+ e.getMessage());
+			return null;
+		}
 	}
 
 	@Override
 	public Vector<Event> getEventsByTopic(String topic)
 			throws IllegalArgumentException {
-		return this.eMapper.findAllByTopic(topic);
+		try {
+			return this.eMapper.findAllByTopic(topic);
+		} catch (Exception e) {
+			logger.warning("Events konnten nicht ausgegeben werden"
+					+ e.getMessage());
+			return null;
+		}
 	}
 
 	@Override
 	public Vector<Event> getEventsByRoomForPeriodOfTime(Room room,
 			Timestamp startDate, Timestamp endDate)
 			throws IllegalArgumentException {
-		return this.eMapper.findAllByRoomForPeriodOfTime(room, startDate,
-				endDate);
+		try {
+			return this.eMapper.findAllByRoomForPeriodOfTime(room, startDate,
+					endDate);
+
+		} catch (Exception e) {
+			logger.warning("Events konnten nicht ausgegeben werden"
+					+ e.getMessage());
+			return null;
+		}
 	}
 
 	@Override
@@ -643,20 +803,39 @@ public class RoomReservationServiceAdministrationImpl extends
 			Timestamp startDate, Timestamp endDate)
 			throws IllegalArgumentException {
 
-		return this.eMapper.findAllByInviteeForPeriodOfTime(user, startDate,
-				endDate);
+		try {
+			return this.eMapper.findAllByInviteeForPeriodOfTime(user,
+					startDate, endDate);
+
+		} catch (Exception e) {
+			logger.warning("Events konnten nicht ausgegeben werden"
+					+ e.getMessage());
+			return null;
+		}
 	}
 
 	@Override
 	public Vector<Invitation> getInvitationsByEvent(Event event)
 			throws IllegalArgumentException {
-		return this.iMapper.findAllByEvent(event);
+		try {
+			return this.iMapper.findAllByEvent(event);
+		} catch (Exception e) {
+			logger.warning("Invitations konnten nicht ausgegeben werden"
+					+ e.getMessage());
+			return null;
+		}
 	}
 
 	@Override
 	public Vector<Invitation> getInvitationsByUser(User user)
 			throws IllegalArgumentException {
-		return this.iMapper.findAllByUser(user);
+		try {
+			return this.iMapper.findAllByUser(user);
+		} catch (Exception e) {
+			logger.warning("Invitations konnten nicht ausgegeben werden"
+					+ e.getMessage());
+			return null;
+		}
 	}
 
 }
