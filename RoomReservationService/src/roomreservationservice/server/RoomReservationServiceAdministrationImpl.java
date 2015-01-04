@@ -497,18 +497,11 @@ implements RoomReservationServiceAdministration{
 			throws IllegalArgumentException {
 		return this.iMapper.findAllByEvent(event);
 	}
-<<<<<< HEAD
-		
-=======
 
 	@Override
 	public Vector<Invitation> getInvitationsByUser(User user)
 			throws IllegalArgumentException {
 		return this.iMapper.findAllByUser(user);
-	}
-
-
->>>>>>> refs/heads/vanessa
-	
+	}	
 	
 }
