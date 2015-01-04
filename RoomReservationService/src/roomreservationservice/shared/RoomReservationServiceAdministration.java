@@ -165,6 +165,38 @@ public interface RoomReservationServiceAdministration extends RemoteService {
 	public Vector<Invitation> getAllInvitations() throws IllegalArgumentException;
 	
 	/**
+	 * Raum anhand der Id finden
+	 * @param id
+	 * @return Room Objekt
+	 * @throws IllegalArgumentException
+	 */
+	public Room getRoomById(int id) throws IllegalArgumentException;
+	
+	/**
+	 * User anhand der Id finden
+	 * @param id
+	 * @return User- Objekt
+	 * @throws IllegalArgumentException
+	 */
+	public User getUserById(int id) throws IllegalArgumentException;
+	
+	/**
+	 * Event anhand der Id finden
+	 * @param id
+	 * @return EventObjekt 
+	 * @throws IllegalArgumentException
+	 */
+	public Event getEventById(int id) throws IllegalArgumentException;
+	
+	/**
+	 * Invitation anhand der Id finden
+	 * @param id
+	 * @return Invitation Objekt
+	 * @throws IllegalArgumentException
+	 */
+	public Invitation getInvitationById(int id) throws IllegalArgumentException;
+	
+	/**
 	 * Suchen eines User-Objektes, dessen Name bekannt ist
 	 * @param name Name eines User-Objektes (kann vor oder Nachname sein)
 	 * @return Vector-Objekt mit allen Customer-Objekten, welche die Suchkriterien erfüllen

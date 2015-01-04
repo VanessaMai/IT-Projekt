@@ -481,6 +481,26 @@ public class RoomReservationServiceAdministrationImpl extends
 			throws IllegalArgumentException {
 		return this.iMapper.findAll();
 	}
+	
+	@Override
+	public Room getRoomById(int id) throws IllegalArgumentException {
+		return this.rMapper.findByKey(id);
+	}
+
+	@Override
+	public User getUserById(int id) throws IllegalArgumentException {
+		return this.uMapper.findByKey(id);
+	}
+
+	@Override
+	public Event getEventById(int id) throws IllegalArgumentException {
+		return this.eMapper.findByKey(id);
+	}
+
+	@Override
+	public Invitation getInvitationById(int id) throws IllegalArgumentException {
+		return this.iMapper.findByKey(id);
+	}
 
 	@Override
 	public Vector<User> getUsersByName(String name)
@@ -587,5 +607,7 @@ public class RoomReservationServiceAdministrationImpl extends
 			throws IllegalArgumentException {
 		return this.iMapper.findAllByUser(user);
 	}
+
+
 
 }
