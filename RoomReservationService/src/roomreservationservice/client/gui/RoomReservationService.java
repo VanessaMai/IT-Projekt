@@ -26,7 +26,7 @@ public class RoomReservationService implements EntryPoint {
 	 * 
 	 * danach haben wir einen VerticalPanel eingefuegt, der den jeweiligen Content,
 	 * der Seite anzeigt und somit als Container dient.
-	 * @author:Mazurkiewicz, Elisabeth und Gertz, Steven
+	 * @author:Mazurkiewicz, Elisabeth
 	 */
 	
 	
@@ -36,7 +36,7 @@ public class RoomReservationService implements EntryPoint {
 	   * <code>public void onModuleLoad()</code>. Diese ist das GWT-Pendant der
 	   * <code>main()</code>-Methode normaler Java-Applikationen." Bankprojekt
 	   */
-
+@Override
 	public void onModuleLoad() {
 		/* Der Navigator ist als einspaltige Aneinanderreihung von Buttons
 	     * realisiert. Daher bietet sich ein HorizontalPanel an.

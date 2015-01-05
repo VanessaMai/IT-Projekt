@@ -1,9 +1,12 @@
 package roomreservationservice.client.gui;
 
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.RootPanel;
+
 /*
  *  GUI-Klasse für die folgenden "Seiten": Einladung die per Mail an User versendet wird.
  *  (Siehe GUI-Prototyp 2.0)
- **  @author: Steven Gertz, Nicholas Gertz, Elisabeth Mazurkiewicz
+ **  @author: Elisabeth Mazurkiewicz
  */
 
 public class InvitationManagement extends Reaction{
@@ -15,10 +18,16 @@ public class InvitationManagement extends Reaction{
 
 	@Override
 	protected void run() {
-		// TODO Auto-generated method stub
+		Button reject = new Button ("Ablehnen");
+		Button accept = new Button ("Annehmen");
+		
+
+	    // Add the widgets to the page
+		RootPanel.get("Content").add(reject);
+	 	RootPanel.get("Content").add(accept);
+		
 		
 	}
-	//TODO ClickHandler fuer invitationManagement anlegen 
-	//TODO Buttons und ClickHandlder in Einladungsverwaltung anlegen: Zusagen, Absagen
+	//TODO Wie werden Informationen eingeleitet ClickHanlder in Einladungsverwaltung anlegen: Zusagen, Absagen
 
 }
