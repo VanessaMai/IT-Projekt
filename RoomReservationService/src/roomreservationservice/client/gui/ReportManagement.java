@@ -1,26 +1,12 @@
 package roomreservationservice.client.gui;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-import java.util.Timer;
 
 import com.google.gwt.user.client.ui.Grid;
-import com.google.gwt.cell.client.TextCell;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.i18n.client.DateTimeFormat;
-import com.google.gwt.user.cellview.client.CellList;
-import com.google.gwt.user.cellview.client.SimplePager;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
-import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.datepicker.client.DatePicker;
-import com.google.gwt.view.client.HasData;
+
 
 /*
  *  GUI-Klasse fuerr die folgenden "Seiten": Datum mit Raum ODER Nutzer waehlen
@@ -92,9 +78,10 @@ public class ReportManagement extends Reaction{
 	// setting this value to 1 turns it into a drop-down list.
 		userList.setVisibleItemCount(1);
 		
-		ReportManagementGrid.add(datePicker);
+		/*ReportManagementGrid.add(datePicker);
 		ReportManagementGrid.add(roomList);
-		ReportManagementGrid.add(userList);
+		ReportManagementGrid.add(userList);*/
+		
 	/*TODO: Liste soll die User aus der Datenbank beinhalten. 
 	 * Wenn ein User ausgewaehlt wird soll es nicht mehr moeglich sein, einen Raum auszuwaehlen.
 	 * User den User ausgewaehlt hat muss gemerkt werden.
