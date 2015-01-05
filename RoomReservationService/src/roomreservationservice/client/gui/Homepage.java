@@ -39,8 +39,6 @@ public class Homepage extends Reaction{
 		
 		
 	}
-	/*TODO Aufrufen der Startseite
-	 * wird auch in General nach anmeldung aufgerufen werden.
-	 */
-
+	
+	
 }

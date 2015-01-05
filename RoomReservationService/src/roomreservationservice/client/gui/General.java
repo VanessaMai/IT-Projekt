@@ -5,6 +5,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.PasswordTextBox;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 
 /*
@@ -20,24 +21,37 @@ public class General {
 		return "Anmelden";
 	}
 	
+
+	protected void run() {
+		
+	
 	//Neues Eingabefeld fuer E-Mail und Passwort.
 	final TextBox email = new TextBox();	
 	final PasswordTextBox password = new PasswordTextBox();
-	
+
 	//neuer Button fuer die Anmeldung.
+	
+	
 	final Button submit = new Button ("Anmelden");
 	
-	//Hinzufuegen der Widgets zum contentPanel
-	contentPanel.add(email);
-	contentPanel.add(password);
-	contentPanel.add(submit);
+	//Hinzufuegen der Widgets zum ContentPanel 
+	RootPanel.get("Content").add(email);
+	RootPanel.get("Content").add(password);
+	RootPanel.get("Content").add(submit);
 
-
+	
+	
 		
-	registrationButton2.addClickHandler(new ClickHandler();
+	
 	
 	}
+	}
+
 	/*TODO: ClickHandler implementieren
 	 */
+
+	/*TODO: Oauth2.0 implementieren
+	 */
+	
 
 	

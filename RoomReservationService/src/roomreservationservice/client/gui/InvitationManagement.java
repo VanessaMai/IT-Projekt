@@ -19,6 +19,6 @@ public class InvitationManagement extends Reaction{
 		
 	}
 	//TODO ClickHandler fuer invitationManagement anlegen 
-	//TODO Buttons und ClickHanlder in Einladungsverwaltung anlegen: Zusagen, Absagen
+	//TODO Buttons und ClickHandlder in Einladungsverwaltung anlegen: Zusagen, Absagen
 
 }

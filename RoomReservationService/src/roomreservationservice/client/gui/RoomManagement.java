@@ -33,9 +33,9 @@ public class RoomManagement extends Reaction{
 	/*Anlegen einer 3x2 Matrix (Grid). Diese wird Buttons gefühlt.
 	 */
 	Grid RoomManagementGrid = new Grid(3, 2);
-	this.add(RoomManagementGrid);
+	RootPanel.get("Content").add(RoomManagementGrid);
 	
-	/* Buttons um auf die Seiten "Raum modifizieren" und "Raum erstellen" zu gelangen
+	/* Buttons um auf die Seiten "Raum modifizieren" und "Raum erstellen" zu gelangen,
 	 */
 	Button modify = new Button ("Raum modifizieren");
 	Button setup = new Button ("Raum erstellen");
@@ -50,13 +50,23 @@ public class RoomManagement extends Reaction{
 	
 	  modify.addClickHandler(new ClickHandler() {
 		    public void onClick(ClickEvent event) {
-		      // handle the click event
+		    	
+		    //Loescht vorherige Anzeige auf contentPanel.
+			RootPanel.get("Content").clear ();
+			
+			Button changeName = new Button ("Name ändern");
+			Button changeCapacity = new Button ("Kapazität ändern");	
+			
+			RoomManagementGrid.setWidget(0, 0, changeName);
+			RoomManagementGrid.setWidget(0, 1, changeCapacity);
 		    }
 		  });
 	
 	setup.addClickHandler(new ClickHandler() {
 		public void onClick(ClickEvent event) {
-			// handle the click event
+			
+		 //Loescht vorherige Anzeige auf contentPanel.
+		RootPanel.get("Content").clear ();
 			}
 		});
 	}
