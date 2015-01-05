@@ -1,12 +1,14 @@
 package roomreservationservice.server.db;
 
 import java.sql.Connection;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.Vector;
+import java.util.logging.Logger;
+
+import roomreservationservice.server.ServersideSettings;
 import roomreservationservice.shared.bo.Event;
 import roomreservationservice.shared.bo.User;
 
@@ -26,6 +28,11 @@ public class UserMapper {
 	 * 
 	 */
 	private static UserMapper userMapper = null;
+
+	/**
+	 * Serverseitigen Loggerinstanz holen.
+	 */
+	private Logger logger = ServersideSettings.getLogger();
 
 	/**
 	 * Geschützter Konstruktor - verhindert die Möglichkeit, mit <code>new</code> neue Instanzen dieser Klasse zu
@@ -63,6 +70,9 @@ public class UserMapper {
 		// DB-Verbindung holen
 		Connection con = DBConnection.connection();
 
+		// Der Standardwert des Ergebnisses ist <code>null</code>
+		User result = null;
+
 		try {
 			// Leeres SQL-Statement (JDBC) anlegen
 			Statement stmt = con.createStatement();
@@ -99,17 +109,14 @@ public class UserMapper {
 				user.setCreationDate(creationDate);
 				user.setId(userID);
 
-				// Zuletzt wird das User-Objekt zurückgegebn.
-				return user;
+				// Objekt der Ergebnisvariable zuweisen.
+				result = user;
 			}
-			// wenn das Resultset leer ist, wird <code>null</code> zurückgegeben.
-			else {
-				return null;
-			}
+			return result;
 		}
 		// SQL Exception abfangen, sollte etwas schiefgehen.
-		catch (SQLException e1) {
-			e1.printStackTrace();
+		catch (SQLException e) {
+			logger.severe("Fehler bei DB-Query: " + e.getMessage());
 			return null;
 		}
 
@@ -142,17 +149,12 @@ public class UserMapper {
 					// Hinzufügen des neuen Objekts zum Ergebnisvektor
 					result.addElement(user);
 				} while (resultSet.next());
-
-				// Ergebnisvektor zurückgeben
-				return result;
 			}
-			// wenn das Resultset leer ist, wird <code>null</code> zurückgegeben.
-			else {
-				return null;
-			}
+			// Ergebnisvector zurückgeben.
+			return result;
 		} // SQL Exception abfangen, sollte etwas schiefgehen.
-		catch (SQLException e1) {
-			e1.printStackTrace();
+		catch (SQLException e) {
+			logger.severe("Fehler bei DB-Query: " + e.getMessage());
 			return null;
 		}
 
@@ -168,6 +170,9 @@ public class UserMapper {
 	 */
 	public User insert(User user) {
 		Connection con = DBConnection.connection();
+
+		// Der Standardwert des Ergebnisses ist <code>null</code>
+		User result = null;
 
 		try {
 			Statement stmt = con.createStatement();
@@ -202,19 +207,20 @@ public class UserMapper {
 						+ user.getAccessTokenSecret() + "', '" + user.getCreationDate() + "')");
 
 				/*
-				 * Rückgabe, des nun veränderten Raum Objekts. Es hat von der DB eine ID zugewiesen bekommen, die sie
-				 * fortanverwendet, falls man den Datenastz zum Beispiel aus der DB löschen oder ihn updaten möchte.
+				 * Zuweisen des nun veränderten User Objekts zur Ergebnisvariable. Es hat von der DB eine ID zugewiesen
+				 * bekommen, die sie fortanverwendet, falls man den Datenastz zum Beispiel aus der DB löschen oder ihn
+				 * updaten möchte.
 				 */
-
-				return user;
+				
+				// Objekt der Ergebnisvariable zuweisen.
+				result = user;
 			}
 			// wenn das Resultset leer ist, wird <code>null</code> zurückgegeben.
-			else {
-				return null;
-			}
+			return result;
+
 		} // SQL Exception abfangen, sollte etwas schiefgehen.
-		catch (SQLException e1) {
-			e1.printStackTrace();
+		catch (SQLException e) {
+			logger.severe("Fehler bei DB-Query: " + e.getMessage());
 			return null;
 		}
 	}
@@ -241,13 +247,13 @@ public class UserMapper {
 			return user;
 
 		} // SQL Exception abfangen, sollte etwas schiefgehen.
-		catch (SQLException e1) {
-			e1.printStackTrace();
+		catch (SQLException e) {
+			logger.severe("Fehler bei DB-Query: " + e.getMessage());
 			return null;
 		}
 		// Wenn kein Eintrag vorhanden ist.
-		catch (NullPointerException e2) {
-			e2.printStackTrace();
+		catch (NullPointerException e) {
+			logger.severe("Fehler bei DB-Query: " + e.getMessage());
 			return null;
 		}
 
@@ -266,12 +272,12 @@ public class UserMapper {
 			Statement stmt = con.createStatement();
 
 			stmt.executeUpdate("DELETE FROM users WHERE id= " + user.getId());
-		} catch (SQLException e1) {
-			e1.printStackTrace();
+		} catch (SQLException e) {
+			logger.severe("Fehler bei DB-Query: " + e.getMessage());
 		}
 		// Falls auf etwas verwiesen wird, das nicht vorhanden ist.
-		catch (NullPointerException e2) {
-			e2.printStackTrace();
+		catch (NullPointerException e) {
+			logger.severe("Fehler bei DB-Query: " + e.getMessage());
 		}
 	}
 
@@ -302,21 +308,18 @@ public class UserMapper {
 					result.addElement(user);
 				} while (resultSet.next());
 
-				return result;
 			}
-			// wenn das Resultset leer ist, wird <code>null</code> zurückgegeben.
-			else {
-				return null;
-			}
+			// Ergebnisvector zurückgeben.
+			return result;
 
 		} // SQL Exception abfangen, sollte etwas schiefgehen.
-		catch (SQLException e1) {
-			e1.printStackTrace();
+		catch (SQLException e) {
+			logger.severe("Fehler bei DB-Query: " + e.getMessage());
 			return null;
 		}
 		// Wenn kein Eintrag vorhanden ist.
-		catch (NullPointerException e2) {
-			e2.printStackTrace();
+		catch (NullPointerException e) {
+			logger.severe("Fehler bei DB-Query: " + e.getMessage());
 			return null;
 		}
 
@@ -348,21 +351,18 @@ public class UserMapper {
 
 				} while (resultSet.next());
 
-				// Ergebnisvector zurückgeben.
-				return result;
 			}
-			// wenn das Resultset leer ist, wird <code>null</code> zurückgegeben.
-			else {
-				return null;
-			}
+			// Ergebnisvector zurückgeben.
+			return result;
+
 		} // SQL Exception abfangen, sollte etwas schiefgehen.
-		catch (SQLException e1) {
-			e1.printStackTrace();
+		catch (SQLException e) {
+			logger.severe("Fehler bei DB-Query: " + e.getMessage());
 			return null;
 		}
 		// Wenn kein Eintrag vorhanden ist.
-		catch (NullPointerException e2) {
-			e2.printStackTrace();
+		catch (NullPointerException e) {
+			logger.severe("Fehler bei DB-Query: " + e.getMessage());
 			return null;
 		}
 
@@ -396,18 +396,17 @@ public class UserMapper {
 				// Ergebnisvector zurückgeben.
 				return result;
 			}
-			// wenn das Resultset leer ist, wird <code>null</code> zurückgegeben.
-			else {
-				return null;
-			}
+			// Ergebnisvector zurückgeben.
+			return result;
+			
 		} // SQL Exception abfangen, sollte etwas schiefgehen.
-		catch (SQLException e1) {
-			e1.printStackTrace();
+		catch (SQLException e) {
+			logger.severe("Fehler bei DB-Query: " + e.getMessage());
 			return null;
 		}
 		// Wenn kein Eintrag vorhanden ist.
-		catch (NullPointerException e2) {
-			e2.printStackTrace();
+		catch (NullPointerException e) {
+			logger.severe("Fehler bei DB-Query: " + e.getMessage());
 			return null;
 		}
 	}
@@ -423,6 +422,9 @@ public class UserMapper {
 		// DB Connection vorbereiten
 		Connection con = DBConnection.connection();
 
+		// Der Standardwert des Ergebnisses ist <code>null</code>
+		User result = null;
+
 		try {
 			// Statement vorbereiten.
 			Statement stmt = con.createStatement();
@@ -432,21 +434,21 @@ public class UserMapper {
 
 			if (resultSet.next()) {
 				User user = userMapper.findByKey(resultSet.getInt("event_organizer"));
-				return user;
+				
+				// Objekt der Ergebnisvariable zuweisen.
+				result = user;
 			}
-			// wenn das Resultset leer ist, wird <code>null</code> zurückgegeben.
-			else {
-				return null;
-			}
+			return result;
+
 
 		} // SQL Exception abfangen, sollte etwas schiefgehen.
-		catch (SQLException e1) {
-			e1.printStackTrace();
+		catch (SQLException e) {
+			logger.severe("Fehler bei DB-Query: " + e.getMessage());
 			return null;
 		}
 		// Wenn kein Eintrag vorhanden ist.
-		catch (NullPointerException e2) {
-			e2.printStackTrace();
+		catch (NullPointerException e) {
+			logger.severe("Fehler bei DB-Query: " + e.getMessage());
 			return null;
 		}
 

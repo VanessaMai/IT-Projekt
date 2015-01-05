@@ -24,9 +24,12 @@ public class RoomMapper {
 	 * einzige Instanz dieser Klasse.
 	 * 
 	 */
-	
-	Logger logger = ServersideSettings.getLogger();
-	
+
+	/**
+	 * Serverseitigen Loggerinstanz holen.
+	 */
+	private Logger logger = ServersideSettings.getLogger();
+
 	private static RoomMapper roomMapper = null;
 
 	/**
@@ -64,6 +67,8 @@ public class RoomMapper {
 	public Room findByKey(int id) {
 		// DB-Verbindung holen
 		Connection con = DBConnection.connection();
+		// Der Standardwert des Ergebnisses ist <code>null</code>
+		Room result = null;
 
 		try {
 			// Leeres SQL-Statement (JDBC) anlegen
@@ -87,24 +92,26 @@ public class RoomMapper {
 				 * ...und anschließend an den Konstruktor für ein neues Room-Objekt übergeben.
 				 */
 				Room room = new Room(roomName, roomCapacity);
-				
+
 				/*
 				 * Setzen der ID und des Erstellungszeitpunktes aus der DB.
 				 */
 				room.setId(roomID);
 				room.setCreationDate(creationDate);
 
-				// Zuletzt wird das Room-Objekt zurückgegebn.
-				return room;
+				// Objekt der Ergebnisvariable zuweisen.
+				result = room;
 			}
-			// wenn das Resultset leer ist, wird <code>null</code> zurückgegeben.
-			else {
-				return null;
-			}
+			return result;
 		}
 		// SQL Exception abfangen, sollte etwas schiefgehen.
-		catch (SQLException e1) {
-			e1.printStackTrace();
+		catch (SQLException e) {
+			logger.severe("Fehler bei DB-Query: " + e.getMessage());
+			return null;
+		}
+		// Falls auf etwas verwiesen wird, das nicht vorhanden ist.
+		catch (NullPointerException e) {
+			logger.severe("Fehler bei DB-Query: " + e.getMessage());
 			return null;
 		}
 
@@ -118,30 +125,20 @@ public class RoomMapper {
 	public Vector<Room> findAll() {
 		Connection con = DBConnection.connection();
 
-		if (con != null){
-			logger.info("DB Verbindung vorhanden");
-		}
-		else {
-			logger.severe("Keine DB-Con");
-		} 
-		
-		
 		// Ergebnisvektor vorbereiten.
 		Vector<Room> result = new Vector<Room>();
-		
+
 		try {
 			Statement stmt = con.createStatement();
 
 			ResultSet resultSet = stmt.executeQuery("SELECT * FROM rooms " + "ORDER BY id");
 
-			if (resultSet != null){
+			if (resultSet != null) {
 				logger.info("DB Query mit Ergebnis vorhanden");
-			}
-			else {
+			} else {
 				logger.severe("Kein Ergebnis der DB-Query");
-			} 
-			
-			
+			}
+
 			// Prüfen, ob Einträge gefunden wurden.
 			if (resultSet.next()) {
 				// Für jeden Eintrag im Suchergebnis wird nun ein Room-Objekt erstellt.
@@ -153,17 +150,18 @@ public class RoomMapper {
 					// Hinzufügen des neuen Objekts zum Ergebnisvektor
 					result.addElement(room);
 				} while (resultSet.next());
+			}
+			// Ergebnisvector zurückgeben.
+			return result;
 
-				// Rückgabe Ergebnisvektor
-				return result;
-			}
-			// wenn das Resultset leer ist, wird <code>null</code> zurückgegeben.
-			else {
-				return null;
-			}
 		} // SQL Exception abfangen, sollte etwas schiefgehen.
-		catch (SQLException e1) {
-			e1.printStackTrace();
+		catch (SQLException e) {
+			logger.severe("Fehler bei DB-Query: " + e.getMessage());
+			return null;
+		}
+		// Falls auf etwas verwiesen wird, das nicht vorhanden ist.
+		catch (NullPointerException e) {
+			logger.severe("Fehler bei DB-Query: " + e.getMessage());
 			return null;
 		}
 	}
@@ -178,6 +176,9 @@ public class RoomMapper {
 	 */
 	public Room insert(Room room) {
 		Connection con = DBConnection.connection();
+
+		// Der Standardwert des Ergebnisses ist <code>null</code>
+		Room result = null;
 
 		try {
 			Statement stmt = con.createStatement();
@@ -205,18 +206,20 @@ public class RoomMapper {
 				 * fortanverwendet, falls man den Datenastz zum Beispiel aus der DB löschen oder ihn updaten möchte.
 				 */
 
-				return room;
+				// Objekt der Ergebnisvariable zuweisen.
+				result = room;
 			}
-			// wenn das Resultset leer ist, wird <code>null</code> zurückgegeben.
-			else {
-				return null;
-			}
+			return result;
 
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.severe("Fehler bei DB-Query: " + e.getMessage());
 			return null;
 		}
-
+		// Falls auf etwas verwiesen wird, das nicht vorhanden ist.
+		catch (NullPointerException e) {
+			logger.severe("Fehler bei DB-Query: " + e.getMessage());
+			return null;
+		}
 	}
 
 	/**
@@ -235,20 +238,21 @@ public class RoomMapper {
 
 			stmt.executeUpdate("UPDATE rooms SET name= '" + room.getRoomName() + "', capacity= "
 					+ room.getRoomCapacity() + " WHERE id= " + room.getId());
-			
+
 			// Um Analogie zu insert(Room room) zu wahren, geben wir das Room-Objekt wieder zurück.
 			return room;
 
 		} // SQL Exception abfangen, sollte etwas schiefgehen.
-		catch (SQLException e1) {
-			e1.printStackTrace();
+		catch (SQLException e) {
+			logger.severe("Fehler bei DB-Query: " + e.getMessage());
 			return null;
 		}
 		// Falls auf etwas verwiesen wird, das nicht vorhanden ist.
-		catch (NullPointerException e2) {
-			e2.printStackTrace();
+		catch (NullPointerException e) {
+			logger.severe("Fehler bei DB-Query: " + e.getMessage());
 			return null;
 		}
+
 	}
 
 	/**
@@ -265,11 +269,11 @@ public class RoomMapper {
 
 			stmt.executeUpdate("DELETE FROM rooms " + "WHERE id=" + room.getId());
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.severe("Fehler bei DB-Query: " + e.getMessage());
 		}
 		// Falls auf etwas verwiesen wird, das nicht vorhanden ist.
-		catch (NullPointerException e2) {
-			e2.printStackTrace();
+		catch (NullPointerException e) {
+			logger.severe("Fehler bei DB-Query: " + e.getMessage());
 		}
 
 	}

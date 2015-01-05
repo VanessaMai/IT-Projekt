@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.Vector;
+import java.util.logging.Logger;
 
 import roomreservationservice.server.ServersideSettings;
 import roomreservationservice.shared.bo.Event;
@@ -30,6 +31,11 @@ public class EventMapper {
 	 * 
 	 */
 	private static EventMapper eventMapper = null;
+
+	/**
+	 * Serverseitigen Loggerinstanz holen.
+	 */
+	private Logger logger = ServersideSettings.getLogger();
 
 	/**
 	 * Geschützter Konstruktor - verhindert die Möglichkeit, mit <code>new</code> neue Instanzen dieser Klasse zu
@@ -67,18 +73,21 @@ public class EventMapper {
 		// DB-Verbindung holen
 		Connection con = DBConnection.connection();
 
+		// Der Standardwert des Ergebnisses ist <code>null</code>
+		Event result = null;
+
 		try {
 			// Leeres SQL-Statement (JDBC) anlegen
 			Statement stmt = con.createStatement();
-
 			// Statement ausfüllen und als Query an die DB schicken
-			ResultSet resultSet = stmt.executeQuery("SELECT * FROM events " + "WHERE id=" + id);
+			ResultSet resultSet = stmt.executeQuery("SELECT * FROM events " + "WHERE id= " + id);
 
 			/*
 			 * Da die ID der Primärschlüssel ist, kann max. nur ein Tupel zurückgegeben werden. Prüfe, ob ein Ergebnis
 			 * vorliegt.
 			 */
 			if (resultSet.next()) {
+				logger.info("Datensatz für ID gefunden");
 				// Zuerst werden die Attribute einzeln aus der DB abgefragt...
 				String topic = resultSet.getString("topic");
 				Timestamp startDate = resultSet.getTimestamp("start_date");
@@ -102,19 +111,16 @@ public class EventMapper {
 				event.setId(eventID);
 				event.setCreationDate(creationDate);
 
-				// Zuletzt wird das Event-Objekt zurückgegebn.
-				return event;
+				// Objekt der Ergebnisvariable zuweisen.
+				result = event;
 			}
-
-			// wenn das Resultset leer ist, wird <code>null</code> zurückgegeben.
-			else {
-				return null;
-			}
+			// Schlussendlich wird das Ergebnis zurückgegeben.
+			return result;
 
 		}
 		// SQL Exception abfangen, sollte etwas schiefgehen.
-		catch (SQLException e1) {
-			e1.printStackTrace();
+		catch (SQLException e) {
+			logger.severe("Fehler bei DB-Query: " + e.getMessage());
 			return null;
 		}
 	}
@@ -137,7 +143,7 @@ public class EventMapper {
 
 			// Prüfen, ob Einträge gefunden wurden.
 			if (resultSet.next()) {
-
+				logger.info("Datensätze gefunden");
 				// Für jeden Eintrag im Suchergebnis wird nun ein Room-Objekt erstellt.
 				do {
 
@@ -147,17 +153,14 @@ public class EventMapper {
 					// Hinzufügen des neuen Objekts zum Ergebnisvektor
 					result.addElement(event);
 				} while (resultSet.next());
+			}
 
-				// Ergebnisvektor zurückgeben
-				return result;
-			}
-			// wenn das Resultset leer ist, wird <code>null</code> zurückgegeben.
-			else {
-				return null;
-			}
+			// Ergebnisvector zurückgeben.
+			return result;
+
 		} // SQL Exception abfangen, sollte etwas schiefgehen.
-		catch (SQLException e1) {
-			e1.printStackTrace();
+		catch (SQLException e) {
+			logger.severe("Fehler bei DB-Query: " + e.getMessage());
 			return null;
 		}
 
@@ -174,6 +177,8 @@ public class EventMapper {
 	public Event insert(Event event) {
 		Connection con = DBConnection.connection();
 
+		// Der Standardwert des Ergebnisses ist <code>null</code>
+		Event result = null;
 		try {
 			Statement stmt = con.createStatement();
 
@@ -208,18 +213,19 @@ public class EventMapper {
 						+ event.getCreationDate() + "')");
 
 				/*
-				 * Rückgabe, des nun veränderten Raum Objekts. Es hat von der DB eine ID zugewiesen bekommen, die sie
-				 * fortanverwendet, falls man den Datenastz zum Beispiel aus der DB löschen oder ihn updaten möchte.
+				 * Zuweisen des nun veränderten Raum Objekts zur Ergebnisvariable. Es hat von der DB eine ID zugewiesen
+				 * bekommen, die sie fortanverwendet, falls man den Datenastz zum Beispiel aus der DB löschen oder ihn
+				 * updaten möchte.
 				 */
-				return event;
+				result = event;
 
-			} else {
-				return null;
 			}
 
+			return result;
+
 		} // SQL Exception abfangen, sollte etwas schiefgehen.
-		catch (SQLException e1) {
-			e1.printStackTrace();
+		catch (SQLException e) {
+			logger.severe("Fehler bei DB-Query: " + e.getMessage());
 			return null;
 		}
 
@@ -235,7 +241,8 @@ public class EventMapper {
 	 */
 	public Event update(Event event) {
 		Connection con = DBConnection.connection();
-
+		// Der Standardwert des Ergebnisses ist <code>null</code>
+		Event result = null;
 		try {
 			Statement stmt = con.createStatement();
 
@@ -244,16 +251,16 @@ public class EventMapper {
 					+ event.getRoomId() + " WHERE id= " + event.getId());
 
 			// Um Analogie zu insert(Event event) zu wahren, geben wir das Event-Objekt wieder zurück.
-			return event;
+			return result;
 
 		} // SQL Exception abfangen, sollte etwas schiefgehen.
-		catch (SQLException e1) {
-			e1.printStackTrace();
+		catch (SQLException e) {
+			logger.severe("Fehler bei DB-Query: " + e.getMessage());
 			return null;
 		}
 		// Wenn kein Eintrag vorhanden ist.
-		catch (NullPointerException e2) {
-			e2.printStackTrace();
+		catch (NullPointerException e) {
+			logger.severe("Fehler bei DB-Query: " + e.getMessage());
 			return null;
 		}
 
@@ -272,12 +279,14 @@ public class EventMapper {
 			Statement stmt = con.createStatement();
 
 			stmt.executeUpdate("DELETE FROM events WHERE id= " + event.getId());
-		} catch (SQLException e1) {
-			e1.printStackTrace();
+		} catch (SQLException e) {
+			logger.severe("Fehler bei DB-Query: " + e.getMessage());
+
 		}
 		// Falls auf etwas verwiesen wird, das nicht vorhanden ist.
-		catch (NullPointerException e2) {
-			e2.printStackTrace();
+		catch (NullPointerException e) {
+			logger.severe("Fehler bei DB-Query: " + e.getMessage());
+
 		}
 	}
 
@@ -305,32 +314,30 @@ public class EventMapper {
 			// Prüfen, ob Einträge gefunden wurden.
 			if (resultSet.next()) {
 				do {
-					// wenn ja, wird die ID ausgelesen und das dazugehörige Objekt mit Hilfe der findByKey-Methode
-					// erstellt
+					/**
+					 * wenn ja, wird die ID ausgelesen und das dazugehörige Objekt mit Hilfe der findByKey-Methode
+					 * erstellt
+					 */
 					Event event = findByKey(resultSet.getInt("id"));
 
 					// Objekt zum Ergebnisvektor hinzufügen
 					result.addElement(event);
 				} while (resultSet.next());
 
-				// Um Analogie zu insert(Event event) zu wahren, geben wir das Event-Objekt wieder zurück.
-				return result;
 			}
-			// wenn das Resultset leer ist, wird <code>null</code> zurückgegeben.
-			else {
-				return null;
-			}
+			// Ergebnisvector zurückgeben.
+			return result;
 
 		}
 
 		// SQL Exception abfangen, sollte etwas schiefgehen.
-		catch (SQLException e1) {
-			e1.printStackTrace();
+		catch (SQLException e) {
+			logger.severe("Fehler bei DB-Query: " + e.getMessage());
 			return null;
 		}
 		// Falls auf etwas verwiesen wird, das nicht vorhanden ist.
-		catch (NullPointerException e2) {
-			e2.printStackTrace();
+		catch (NullPointerException e) {
+			logger.severe("Fehler bei DB-Query: " + e.getMessage());
 			return null;
 		}
 
@@ -361,31 +368,29 @@ public class EventMapper {
 			// Prüfen, ob Einträge gefunden wurden.
 			if (resultSet.next()) {
 				do {
-					// wenn ja, wird die ID ausgelesen und das dazugehörige Objekt mit Hilfe der findByKey-Methode
-					// erstellt
+					/**
+					 * wenn ja, wird die ID ausgelesen und das dazugehörige Objekt mit Hilfe der findByKey-Methode
+					 * erstellt
+					 */
 					Event event = findByKey(resultSet.getInt("invitation_event"));
 
 					// Objekt zum Ergebnisvektor hinzufügen
 					result.addElement(event);
 				} while (resultSet.next());
-				// Um Analogie zu insert(Event event) zu wahren, geben wir das Event-Objekt wieder zurück.
-				return result;
 			}
-			// wenn das Resultset leer ist, wird <code>null</code> zurückgegeben.
-			else {
-				return null;
-			}
+			// Ergebnisvector zurückgeben.
+			return result;
 
 		}
 
 		// SQL Exception abfangen, sollte etwas schiefgehen.
-		catch (SQLException e1) {
-			e1.printStackTrace();
+		catch (SQLException e) {
+			logger.severe("Fehler bei DB-Query: " + e.getMessage());
 			return null;
 		}
 		// Falls auf etwas verwiesen wird, das nicht vorhanden ist.
-		catch (NullPointerException e2) {
-			e2.printStackTrace();
+		catch (NullPointerException e) {
+			logger.severe("Fehler bei DB-Query: " + e.getMessage());
 			return null;
 		}
 
@@ -415,32 +420,30 @@ public class EventMapper {
 			// Prüfen, ob Einträge gefunden wurden.
 			if (resultSet.next()) {
 				do {
-					// wenn ja, wird die ID ausgelesen und das dazugehörige Objekt mit Hilfe der findByKey-Methode
-					// erstellt
+					/**
+					 * wenn ja, wird die ID ausgelesen und das dazugehörige Objekt mit Hilfe der findByKey-Methode
+					 * erstellt
+					 */
 					Event event = findByKey(resultSet.getInt("id"));
 
 					// Objekt zum Ergebnisvektor hinzufügen
 					result.addElement(event);
 
 				} while (resultSet.next());
-				// Rückgabe Ergebnisvektor
-				return result;
-			}
-			// wenn das Resultset leer ist, wird <code>null</code> zurückgegeben.
-			else {
-				return null;
-			}
 
+			}
+			// Ergebnisvector zurückgeben.
+			return result;
 		}
 
 		// SQL Exception abfangen, sollte etwas schiefgehen.
-		catch (SQLException e1) {
-			e1.printStackTrace();
+		catch (SQLException e) {
+			logger.severe("Fehler bei DB-Query: " + e.getMessage());
 			return null;
 		}
 		// Falls auf etwas verwiesen wird, das nicht vorhanden ist.
-		catch (NullPointerException e2) {
-			e2.printStackTrace();
+		catch (NullPointerException e) {
+			logger.severe("Fehler bei DB-Query: " + e.getMessage());
 			return null;
 		}
 
@@ -474,31 +477,29 @@ public class EventMapper {
 			// Prüfen, ob Einträge gefunden wurden.
 			if (resultSet.next()) {
 				do {
-					// wenn ja, wird die ID ausgelesen und das dazugehörige Objekt mit Hilfe der findByKey-Methode
-					// erstellt
+					/**
+					 * wenn ja, wird die ID ausgelesen und das dazugehörige Objekt mit Hilfe der findByKey-Methode
+					 * erstellt
+					 */
 					Event event = findByKey(resultSet.getInt("id"));
 
 					// Objekt zum Ergebnisvektor hinzufügen
 					result.addElement(event);
 				} while (resultSet.next());
-				// Rückgabe Ergebnisvektor
-				return result;
 			}
-			// wenn das Resultset leer ist, wird <code>null</code> zurückgegeben.
-			else {
-				return null;
-			}
+			// Ergebnisvector zurückgeben.
+			return result;
 
 		}
 
 		// SQL Exception abfangen, sollte etwas schiefgehen.
-		catch (SQLException e1) {
-			e1.printStackTrace();
+		catch (SQLException e) {
+			logger.severe("Fehler bei DB-Query: " + e.getMessage());
 			return null;
 		}
 		// Falls auf etwas verwiesen wird, das nicht vorhanden ist.
-		catch (NullPointerException e2) {
-			e2.printStackTrace();
+		catch (NullPointerException e) {
+			logger.severe("Fehler bei DB-Query: " + e.getMessage());
 			return null;
 		}
 
@@ -535,32 +536,29 @@ public class EventMapper {
 			// Prüfen, ob Einträge gefunden wurden.
 			if (resultSet.next()) {
 				do {
-					// wenn ja, wird die ID ausgelesen und das dazugehörige Objekt mit Hilfe der findByKey-Methode
-					// erstellt
+					/**
+					 * wenn ja, wird die ID ausgelesen und das dazugehörige Objekt mit Hilfe der findByKey-Methode
+					 * erstellt
+					 */
 					Event event = findByKey(resultSet.getInt("id"));
 
 					// Objekt zum Ergebnisvektor hinzufügen
 					result.addElement(event);
 				} while (resultSet.next());
-
-				// Rückgabe Ergebnisvektor
-				return result;
 			}
-			// wenn das Resultset leer ist, wird <code>null</code> zurückgegeben.
-			else {
-				return null;
-			}
+			// Ergebnisvector zurückgeben.
+			return result;
 
 		}
 
 		// SQL Exception abfangen, sollte etwas schiefgehen.
-		catch (SQLException e1) {
-			e1.printStackTrace();
+		catch (SQLException e) {
+			logger.severe("Fehler bei DB-Query: " + e.getMessage());
 			return null;
 		}
 		// Falls auf etwas verwiesen wird, das nicht vorhanden ist.
-		catch (NullPointerException e2) {
-			e2.printStackTrace();
+		catch (NullPointerException e) {
+			logger.severe("Fehler bei DB-Query: " + e.getMessage());
 			return null;
 		}
 
@@ -602,32 +600,30 @@ public class EventMapper {
 			// Prüfen, ob Einträge gefunden wurden.
 			if (resultSet.next()) {
 				do {
-					// wenn ja, wird die ID ausgelesen und das dazugehörige Objekt mit Hilfe der findByKey-Methode
-					// erstellt
+					/**
+					 * wenn ja, wird die ID ausgelesen und das dazugehörige Objekt mit Hilfe der findByKey-Methode
+					 * erstellt
+					 */
 					Event event = findByKey(resultSet.getInt("invitation_event"));
 
 					// Objekt zum Ergebnisvektor hinzufügen
 					result.addElement(event);
 				} while (resultSet.next());
+			}
 
-				// Rückgabe Ergebnisvektor
-				return result;
-			}
-			// wenn das Resultset leer ist, wird <code>null</code> zurückgegeben.
-			else {
-				return null;
-			}
+			// Ergebnisvector zurückgeben.
+			return result;
 
 		}
 
 		// SQL Exception abfangen, sollte etwas schiefgehen.
-		catch (SQLException e1) {
-			e1.printStackTrace();
+		catch (SQLException e) {
+			logger.severe("Fehler bei DB-Query: " + e.getMessage());
 			return null;
 		}
 		// Falls auf etwas verwiesen wird, das nicht vorhanden ist.
-		catch (NullPointerException e2) {
-			e2.printStackTrace();
+		catch (NullPointerException e) {
+			logger.severe("Fehler bei DB-Query: " + e.getMessage());
 			return null;
 		}
 
@@ -652,9 +648,9 @@ public class EventMapper {
 		// Ergebnisvektor vorbereiten.
 		Vector<Event> result = new Vector<Event>();
 
-		ServersideSettings.getLogger().severe("Room, beim Mapper: " + room.toString() + " " +startDate +" " + endDate);
+		ServersideSettings.getLogger()
+				.severe("Room, beim Mapper: " + room.toString() + " " + startDate + " " + endDate);
 
-		
 		try {
 			// Leeres SQL-Statement (JDBC) anlegen
 			Statement stmt = con.createStatement();
@@ -665,40 +661,35 @@ public class EventMapper {
 			ResultSet resultSet = stmt.executeQuery("SELECT id FROM events WHERE events.start_date >= '" + startDate
 					+ "' AND events.end_date <= '" + endDate + "' AND event_room = " + room.getId());
 
-			
 			ServersideSettings.getLogger().severe("Angekommen Mapper, ResultSet: " + resultSet.toString());
 			// Prüfen, ob Einträge gefunden wurden.
 			if (resultSet.next()) {
 				do {
-					// wenn ja, wird die ID ausgelesen und das dazugehörige Objekt mit Hilfe der findByKey-Methode
-					// erstellt
+					/**
+					 * wenn ja, wird die ID ausgelesen und das dazugehörige Objekt mit Hilfe der findByKey-Methode
+					 * erstellt
+					 */
 					Event event = findByKey(resultSet.getInt("id"));
 
 					// Objekt zum Ergebnisvektor hinzufügen
 					result.addElement(event);
+
 				} while (resultSet.next());
 
-				// Rückgabe Ergebnisvektor
-				
-				ServersideSettings.getLogger().severe("Rückgabe Mapper: " + result.toString());
-
-				return result;
 			}
-			// wenn das Resultset leer ist, wird <code>null</code> zurückgegeben.
-			else {
-				return null;
-			}
+			// Ergebnisvector zurückgeben.
+			return result;
 
 		}
 
 		// SQL Exception abfangen, sollte etwas schiefgehen.
-		catch (SQLException e1) {
-			e1.printStackTrace();
+		catch (SQLException e) {
+			logger.severe("Fehler bei DB-Query: " + e.getMessage());
 			return null;
 		}
 		// Falls auf etwas verwiesen wird, das nicht vorhanden ist.
-		catch (NullPointerException e2) {
-			e2.printStackTrace();
+		catch (NullPointerException e) {
+			logger.severe("Fehler bei DB-Query: " + e.getMessage());
 			return null;
 		}
 

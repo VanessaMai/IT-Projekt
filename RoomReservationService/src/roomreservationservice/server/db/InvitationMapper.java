@@ -6,10 +6,12 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.Vector;
+import java.util.logging.Logger;
 
+import roomreservationservice.server.ServersideSettings;
 import roomreservationservice.shared.bo.Event;
 import roomreservationservice.shared.bo.Invitation;
-import roomreservationservice.shared.bo.User;
+
 /**
  * Klasse, die Methoden bereitstellt um die Daten eines Einladungs-Objekts auf eine relationiale Datenbank abzubilden.
  * Datensäte können erstellt, geändert und gelöscht werden. Aus einem Datensatz kann zudem wieder ein Java-Objekt
@@ -26,6 +28,11 @@ public class InvitationMapper {
 	 * 
 	 */
 	private static InvitationMapper invitationMapper = null;
+
+	/**
+	 * Serverseitigen Loggerinstanz holen.
+	 */
+	private Logger logger = ServersideSettings.getLogger();
 
 	/**
 	 * Geschützter Konstruktor - verhindert die Möglichkeit, mit <code>new</code> neue Instanzen dieser Klasse zu
@@ -63,6 +70,9 @@ public class InvitationMapper {
 		// DB-Verbindung holen
 		Connection con = DBConnection.connection();
 
+		// Der Standardwert des Ergebnisses ist <code>null</code>
+		Invitation result = null;
+
 		try {
 			// Leeres SQL-Statement (JDBC) anlegen
 			Statement stmt = con.createStatement();
@@ -94,17 +104,14 @@ public class InvitationMapper {
 				invitation.setId(invitationId);
 				invitation.setParticipationStatus(participationStatus);
 
-				// Zuletzt wird das Room-Objekt zurückgegebn.
-				return invitation;
+				// Objekt der Ergebnisvariable zuweisen.
+				result = invitation;
 			}
-			// wenn das Resultset leer ist, wird <code>null</code> zurückgegeben.
-			else {
-				return null;
-			}
+			return result;
 		}
 		// SQL Exception abfangen, sollte etwas schiefgehen.
-		catch (SQLException e1) {
-			e1.printStackTrace();
+		catch (SQLException e) {
+			logger.severe("Fehler bei DB-Query: " + e.getMessage());
 			return null;
 		}
 
@@ -139,16 +146,13 @@ public class InvitationMapper {
 					result.addElement(invitation);
 				} while (resultSet.next());
 
-				// Ergebnisvektor zurückgeben
-				return result;
 			}
-			// wenn das Resultset leer ist, wird <code>null</code> zurückgegeben.
-			else {
-				return null;
-			}
+			// Ergebnisvector zurückgeben.
+			return result;
+
 		} // SQL Exception abfangen, sollte etwas schiefgehen.
-		catch (SQLException e1) {
-			e1.printStackTrace();
+		catch (SQLException e) {
+			logger.severe("Fehler bei DB-Query: " + e.getMessage());
 			return null;
 		}
 
@@ -164,6 +168,9 @@ public class InvitationMapper {
 	 */
 	public Invitation insert(Invitation invitation) {
 		Connection con = DBConnection.connection();
+
+		// Der Standardwert des Ergebnisses ist <code>null</code>
+		Invitation result = null;
 
 		try {
 			Statement stmt = con.createStatement();
@@ -194,17 +201,21 @@ public class InvitationMapper {
 						+ invitation.getInviteeId()
 						+ ", '"
 						+ invitation.getCreationDate() + "')");
+
+				/*
+				 * Zuweisen des nun veränderten Invitation Objekts zur Ergebnisvariable. Es hat von der DB eine ID
+				 * zugewiesen bekommen, die sie fortanverwendet, falls man den Datenastz zum Beispiel aus der DB löschen
+				 * oder ihn updaten möchte.
+				 */
+				result = invitation;
+
 			}
 
-			/*
-			 * Rückgabe, des nun veränderten Invitation-Objekts. Es hat von der DB eine ID zugewiesen bekommen, die sie
-			 * fortanverwendet, falls man den Datenastz zum Beispiel aus der DB löschen oder ihn updaten möchte.
-			 */
+			return result;
 
-			return invitation;
 		} // SQL Exception abfangen, sollte etwas schiefgehen.
-		catch (SQLException e1) {
-			e1.printStackTrace();
+		catch (SQLException e) {
+			logger.severe("Fehler bei DB-Query: " + e.getMessage());
 			return null;
 		}
 
@@ -231,13 +242,13 @@ public class InvitationMapper {
 			return invitation;
 
 		} // SQL Exception abfangen, sollte etwas schiefgehen.
-		catch (SQLException e1) {
-			e1.printStackTrace();
+		catch (SQLException e) {
+			logger.severe("Fehler bei DB-Query: " + e.getMessage());
 			return null;
 		}
 		// Wenn kein Eintrag vorhanden ist.
-		catch (NullPointerException e2) {
-			e2.printStackTrace();
+		catch (NullPointerException e) {
+			logger.severe("Fehler bei DB-Query: " + e.getMessage());
 			return null;
 		}
 
@@ -264,8 +275,8 @@ public class InvitationMapper {
 			e1.printStackTrace();
 		}
 		// Wenn kein Eintrag vorhanden ist.
-		catch (NullPointerException e2) {
-			e2.printStackTrace();
+		catch (NullPointerException e) {
+			logger.severe("Fehler bei DB-Query: " + e.getMessage());
 		}
 	}
 
@@ -299,23 +310,18 @@ public class InvitationMapper {
 					// Hinzufügen des neuen Objekts zum Ergebnisvektor
 					result.addElement(invitation);
 				} while (resultSet.next());
-
-				return result;
-
 			}
-			// wenn das Resultset leer ist, wird <code>null</code> zurückgegeben.
-			else {
-				return null;
-			}
+			// Ergebnisvector zurückgeben.
+			return result;
 
 		} // SQL Exception abfangen, sollte etwas schiefgehen.
-		catch (SQLException e1) {
-			e1.printStackTrace();
+		catch (SQLException e) {
+			logger.severe("Fehler bei DB-Query: " + e.getMessage());
 			return null;
 		}
 		// Wenn kein Eintrag vorhanden ist.
-		catch (NullPointerException e2) {
-			e2.printStackTrace();
+		catch (NullPointerException e) {
+			logger.severe("Fehler bei DB-Query: " + e.getMessage());
 			return null;
 		}
 
