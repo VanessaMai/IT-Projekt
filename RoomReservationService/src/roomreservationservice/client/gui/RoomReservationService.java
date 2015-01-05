@@ -89,7 +89,7 @@ public class RoomReservationService implements EntryPoint {
 		/*
 		  * Reaction instantiieren.
 		  */
-				Reaction reaction = new Hompage ();
+				Reaction reaction = new Homepage ();
 				
 		/*
 		 * Fuer die Ausgaben haben wir ein separates DIV-Element namens "Content"
