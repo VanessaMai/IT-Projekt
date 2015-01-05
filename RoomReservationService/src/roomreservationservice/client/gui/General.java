@@ -14,6 +14,10 @@ import com.google.gwt.user.client.ui.TextBox;
  *  @author: Steven Gertz, Nicholas Gertz, Elisabeth Mazurkiewicz
  */
 
+/*hallo
+ * 
+ */
+
 public class General {
 
 
