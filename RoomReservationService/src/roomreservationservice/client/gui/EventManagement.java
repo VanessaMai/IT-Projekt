@@ -11,8 +11,8 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.datepicker.client.DatePicker;
 
 /*
- *  GUI-Klasse für die folgenden "Seiten": Belegung erstellen, Belegungsübersicht,
- *  Belegung editieren/löschen (Siehe GUI-Prototyp 2.0)
+ *  GUI-Klasse für die folgenden "Seiten": Belegung erstellen, Belegungsuebersicht,
+ *  Belegung editieren/loeschen (Siehe GUI-Prototyp 2.0)
  *  @author: Gertz, Steven
  */
 
@@ -25,7 +25,7 @@ public class EventManagement extends Reaction{
 
 	@Override
 	protected void run() {
-		
+				
 		/*
 		 * erforderliche Buttons fuer die Belegungsverwaltung
 		 */
@@ -39,50 +39,22 @@ public class EventManagement extends Reaction{
 				/*
 				 * erforderliche Widgets um eine Belegung zu erstellen
 				 */
-				
-				// Kalender um Tag zu waehlen
-				DatePicker datePicker = new DatePicker();
-				
-				/*
-				 TODO funktioniert nur mit DB-Connect oder?
-				 * Wert im Kalender setzen wenn der Nutzer ein Datum waehlt
 
-			    datePicker.addValueChangeHandler(new ValueChangeHandler<Date>() {
-			      public void onValueChange(ValueChangeEvent<Date> event) {
-			        Date date = event.getValue();
-			        String dateString = DateTimeFormat.getMediumDateFormat().format(date);
-			        text.setText(dateString);
-			      }
-			    });
-
-			    Setzen des Default-Wertes
-			    
-			    datePicker.setValue(new Date(), true);
-				*/
+				// Methodenaufruf um Kalender-Widget zu erzeugen
+				DatePicker datePicker = Widgets.createDatePicker();
 				
-				// Liste um Raum zu waehlen
-				ListBox roomNumber = new ListBox();
-				roomNumber.addItem("Raum 01");
-				roomNumber.addItem("Raum 02");
-				roomNumber.addItem("Raum 03");
-				roomNumber.addItem("Raum 04");
-				roomNumber.addItem("Raum 05");
-				//TODO DB-Connect
+				// Methodenaufruf um ListBox-Widget fuer Raeume zu erzeugen
+				ListBox roomList = Widgets.createRoomList();
 				
-				// Liste um Zeitslot zu waehlen
-				ListBox timeSlot = new ListBox();
-				timeSlot.addItem("09 bis 11 Uhr");
-				timeSlot.addItem("11 bis 13 Uhr");
-				timeSlot.addItem("13 bis 15 Uhr");
-				timeSlot.addItem("15 bis 17 Uhr");
-				//TODO DB-Connect
+				// Methodenaufruf um ListBox-Widget fuer Zeitslots zu erzeugen
+				ListBox timeSlotList = Widgets.createTimeSlotList();
 				
 				// Liste um Nutzer einzuladen
 				ListBox userInvitation = new ListBox();
 				userInvitation.addItem("User 01");
 				userInvitation.addItem("User 02");
 				userInvitation.addItem("User 03");
-				//TODO DB-Connect
+				//TODO neue Lösung finden
 
 				// Button um die gewaehlten Werte zu uebernehmen & den Vorgang abzuschließen
 				Button confirmButton = new Button ("Erstellen", new ClickHandler() {
@@ -103,13 +75,13 @@ public class EventManagement extends Reaction{
 				createEventGrid.setWidget(0, 0, datePickerLabel);
 				createEventGrid.setWidget(0, 1, datePicker);
 					
-				Label roomNumberLabel = new Label("Raum wählen");
-				createEventGrid.setWidget(1, 0, roomNumberLabel);
-				createEventGrid.setWidget(1, 1, roomNumber);
+				Label roomListLabel = new Label("Raum wählen");
+				createEventGrid.setWidget(1, 0, roomListLabel);
+				createEventGrid.setWidget(1, 1, roomList);
 					
 				Label timeSlotLabel = new Label("Zeitslot wählen");
 				createEventGrid.setWidget(2, 0, timeSlotLabel);
-				createEventGrid.setWidget(2, 1, timeSlot);	
+				createEventGrid.setWidget(2, 1, timeSlotList);	
 				
 				Label userInvitationLabel = new Label("Nutzer einladen");
 				createEventGrid.setWidget(3, 0, userInvitationLabel);
@@ -131,15 +103,6 @@ public class EventManagement extends Reaction{
 				 * erforderliche Widgets um eine Belegungsübersicht zu erstellen
 				 */
 				
-				// Liste um Raum zu waehlen
-				ListBox roomNumber = new ListBox();
-				roomNumber.addItem("Raum 01");
-				roomNumber.addItem("Raum 02");
-				roomNumber.addItem("Raum 03");
-				roomNumber.addItem("Raum 04");
-				roomNumber.addItem("Raum 05");
-				//TODO DB-Connect
-				
 				// Liste um Kalenderwoche oder aehnliches. zu waehlen
 				ListBox calendarWeek = new ListBox();
 				calendarWeek.addItem("11");
@@ -147,7 +110,10 @@ public class EventManagement extends Reaction{
 				calendarWeek.addItem("31");
 				calendarWeek.addItem("42");
 				calendarWeek.addItem("51");
-				//TODO DB-Connect
+				//TODO neue Lösung finden
+				
+				// Methodenaufruf um ListBox-Widget fuer Raeume zu erzeugen
+				ListBox roomList = Widgets.createRoomList();
 				
 				// Button um die gewaehlten Werte zu uebernehmen & den Vorgang abzuschließen
 				Button confirmButton = new Button ("Übersicht anzeigen", new ClickHandler() {
@@ -156,7 +122,7 @@ public class EventManagement extends Reaction{
 						RootPanel.get("Content").clear ();
 						//TODO DB-Connect mit Erfolgsmeldung
 						
-						//TODO Uebersichtstabelle mit , Vanessa fragen.	
+						//TODO Uebersichtstabelle // Vanessa fragen.	
 					}
 				});
 				
@@ -172,7 +138,7 @@ public class EventManagement extends Reaction{
 					
 				Label roomNumberLabel = new Label("Raum wählen");
 				eventOverviewGrid.setWidget(1, 0, roomNumberLabel);
-				eventOverviewGrid.setWidget(1, 1, roomNumber);
+				eventOverviewGrid.setWidget(1, 1, roomList);
 				
 				Label confirmButtonLabel = new Label("");
 				eventOverviewGrid.setWidget(2, 0, confirmButtonLabel);
@@ -205,42 +171,14 @@ public class EventManagement extends Reaction{
 						//Loescht vorherige Anzeige auf contentPanel.
 						RootPanel.get("Content").clear ();
 				
-				// Kalender um Tag zu waehlen
-				DatePicker datePicker = new DatePicker();
+				// Methodenaufruf um Kalender-Widget zu erzeugen
+				DatePicker datePicker = Widgets.createDatePicker();
 				
-				/*
-				 TODO funktioniert nur mit DB-Connect oder?
-				 * Wert im Kalender setzen wenn der Nutzer ein Dateum waehlt
-
-			    datePicker.addValueChangeHandler(new ValueChangeHandler<Date>() {
-			      public void onValueChange(ValueChangeEvent<Date> event) {
-			        Date date = event.getValue();
-			        String dateString = DateTimeFormat.getMediumDateFormat().format(date);
-			        text.setText(dateString);
-			      }
-			    });
-
-			    Setzen des Default-Wertes
-			    
-			    datePicker.setValue(new Date(), true);
-				*/
+				// Methodenaufruf um ListBox-Widget fuer Raeume zu erzeugen
+				ListBox roomList = Widgets.createRoomList();
 				
-				// Liste um Raum zu waehlen
-				ListBox roomNumber = new ListBox();
-				roomNumber.addItem("Raum 01");
-				roomNumber.addItem("Raum 02");
-				roomNumber.addItem("Raum 03");
-				roomNumber.addItem("Raum 04");
-				roomNumber.addItem("Raum 05");
-				//TODO DB-Connect
-				
-				// Liste um Zeitslot zu waehlen
-				ListBox timeSlot = new ListBox();
-				timeSlot.addItem("09 bis 11 Uhr");
-				timeSlot.addItem("11 bis 13 Uhr");
-				timeSlot.addItem("13 bis 15 Uhr");
-				timeSlot.addItem("15 bis 17 Uhr");
-				//TODO DB-Connect
+				// Methodenaufruf um ListBox-Widget fuer Zeitslots zu erzeugen
+				ListBox timeSlotList = Widgets.createTimeSlotList();
 				
 				// Liste um Nutzer einzuladen
 				ListBox userInvitation = new ListBox();
@@ -286,17 +224,17 @@ public class EventManagement extends Reaction{
 					
 				Label roomNumberLabel = new Label("Raum wählen");
 				editEventButtonGrid.setWidget(1, 0, roomNumberLabel);
-				editEventButtonGrid.setWidget(1, 1, roomNumber);
+				editEventButtonGrid.setWidget(1, 1, roomList);
 					
 				Label timeSlotLabel = new Label("Zeitslot wählen");
 				editEventButtonGrid.setWidget(2, 0, timeSlotLabel);
-				editEventButtonGrid.setWidget(2, 1, timeSlot);	
+				editEventButtonGrid.setWidget(2, 1, timeSlotList);	
 				
 				Label userInvitationLabel = new Label("Nutzer einladen");
 				editEventButtonGrid.setWidget(3, 0, userInvitationLabel);
 				editEventButtonGrid.setWidget(3, 1, userInvitation);
 				
-				Label userAcceptanceLabel = new Label("Zusagen");
+				Label userAcceptanceLabel = new Label("Zugesagte Nutzer");
 				editEventButtonGrid.setWidget(4, 0, userAcceptanceLabel);
 				editEventButtonGrid.setWidget(4, 1, userAcceptance);
 
@@ -346,9 +284,5 @@ public class EventManagement extends Reaction{
 		EventManagementGrid.setWidget(2, 0, editEventLabel);
 		EventManagementGrid.setWidget(2, 1, editEventButton);					
 	}
-	
-	/*TODO Belegungsuebersicht
-	 * Kalender darstellen durch Tabelle mit Spalten= Wochentag + Zeilen = Uhrzeit
-	 */
 	
 }
