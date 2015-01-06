@@ -37,7 +37,8 @@ public class Homepage extends Reaction{
 		Grid HomepageGrid = new Grid(3, 2);
 		this.add(HomepageGrid);
 
-		Label HomepageLabel = new Label("Willkommen auf der Startseite. Bitte nutzen Sie die Navigationsleiste, um zu dem gewünschten Bereich zu gelangen.");
+		Label HomepageLabel = new Label(
+				"Willkommen auf der Startseite. Bitte nutzen Sie die Navigationsleiste, um zu dem gewünschten Bereich zu gelangen.");
 		HomepageGrid.setWidget(0, 0, HomepageLabel);		
 	}
 }
